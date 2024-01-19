@@ -2,56 +2,69 @@
 title: User API Documentation
 ---
 
-User Signup Endpoint
-POST /api/user/signup/:user_type
+<!-- User create -->
+
+# User Signup API
+
+## Endpoint
+
+`POST /api/user/signup/:user_type`
+
 This endpoint is used for user registration, allowing the creation of different user types based on the user_type parameter.
 
-Request Parameters
-user_type (URL parameter): The type of user to be created. Should be a non-empty string.
-Request Body Parameters
-first_name (Body parameter): The first name of the user. Should be a non-empty string.
-country_code (Body parameter): The country code of the user. Should be a non-empty string.
-mobile_no (Body parameter): The mobile number of the user. Should be a non-empty string.
-Middleware
+#### Request Parameters
+`user_type` (URL parameter): The type of user to be created. Should be a non-empty string.
+
+####  Request Body Parameters
+`first_name` (Body parameter): The first name of the user. Should be a non-empty string.
+`country_code` (Body parameter): The country code of the user. Should be a non-empty string.
+`mobile_no` (Body parameter): The mobile number of the user. Should be a non-empty string.
+
+####  Middleware
 The endpoint utilizes a middleware function, userCreateMid, which performs input validation and invokes the user creation process.
 
-Validation
+####  Validation
 The middleware employs Express Validator to validate request parameters and body data. Validation includes checking for empty values and validating email format.
 
-User Creation Process
-Input Validation:
+#### User Creation Process
+#### Input Validation:
 
 Checks for validation errors using Express Validator.
 If errors are found, returns a validation response.
-Email Validation:
+
+#### Email Validation:
 
 If the user provides an email (user_email), validates its format.
 If the email is invalid, returns a validation response with a specific message.
-User Type Handling:
+
+####  User Type Handling:
 
 Determines the numeric user type based on the provided user_type.
 If the user type is neither "jobseeker" nor "business," returns an error response.
-User Data Formatting:
+
+####  User Data Formatting:
 
 Formats user data based on user type for database insertion.
-User Creation:
+
+####  User Creation:
 
 Creates a user record using the userModel with the formatted data.
 Returns a success response if the user is created; otherwise, returns an error response.
-Error Handling
+
+####  Error Handling:
 Errors during the user creation process are appropriately handled, and detailed error messages are returned in the response.
 
-User Controller Functions
+####  User Controller Functions: 
 userCreateMid(req: Request, res: Response)
 Middleware function for user creation, performing input validation and triggering the user creation API.
 
-userCreateApi(data: any, callback: Function)
+####  userCreateApi(data: any, callback: Function)
 Controller function for creating a user based on the provided data. Handles user type validation, data formatting, and database insertion.
 
-User Model
+####  User Model
 The user model (userModel) is used to interact with the database for user creation.
 
-User Data Structure
+####  User Data Structure
 The structure of the user data includes various fields such as first_name, country_code, mobile_no, user_email, etc., with optional fields based on the user type.
 
 This documentation provides an overview of the POST /api/user/signup/:user_type endpoint, including request parameters, body parameters, middleware, validation, user creation process, error handling, and relevant controller functions and models.
@@ -200,11 +213,7 @@ Response header
 ```
 
 
-
-
----
-title: User Login API Documentation
----
+<!-- Login -->
 
 # User Login API
 
@@ -214,7 +223,7 @@ title: User Login API Documentation
 
 This endpoint facilitates user login by requiring the user's country code and mobile number for authentication.
 
-## Parameters
+#### Parameters
 - `country_code` (string, required): The country code of the user's phone number.
 - `mobile_no` (string, required): The user's mobile number.
 
@@ -260,43 +269,48 @@ If any invalid data enter, then below response will received.
 }
 ```
 
-Middleware
+#### Middleware
 The endpoint utilizes a middleware function, loginMid, which performs input validation and invokes the user login process.
 
-Validation
+#### Validation
 The middleware employs Express Validator to validate request parameters. Validation includes checking for empty values and ensuring numeric format for country code and mobile number.
 
-Login Process
+#### Login Process
 Input Validation:
 
 Checks for validation errors using Express Validator.
 If errors are found, returns a validation response.
-User Authentication:
+
+#### User Authentication:
 
 Validates the user's credentials using the userModel.
-OTP Generation and Sending:
+
+#### OTP Generation and Sending:
 
 If the user is authenticated, generates and sends an OTP to the user's mobile number.
-Error Handling
+
+#### Error Handling:
 Errors during the login process are appropriately handled, and detailed error messages are returned in the response.
 
-Controller Functions
+#### Controller Functions:
+
 loginMid(req: Request, res: Response)
 Middleware function for user login, performing input validation and triggering the user login API.
 
-login(data: any, callback: Function)
+#### login(data: any, callback: Function)
 Controller function for user login based on the provided data. Handles validation, user authentication, and OTP generation.
 
-User Model
+#### User Model
 The user model (userModel) is used to interact with the database for user authentication.
 
-User Data Structure
+#### User Data Structure
 The structure of the user data includes various fields such as first_name, country_code, mobile_no, user_email, etc.
 
 This documentation provides an overview of the POST /api/user/login endpoint, including request parameters, body parameters, middleware, validation, login process, error handling, and relevant controller functions and models.
 
 
 
+<!-- Verify OTP -->
 
 
 # User Verification API
@@ -308,8 +322,6 @@ Endpoint to verify user identity using OTP.
 ### Request
 
 - URL: `POST /api/user/verify-otp`
-- Headers: 
-  - Content-Type: application/json
 
 #### Request Body
 
@@ -319,8 +331,10 @@ Endpoint to verify user identity using OTP.
   "mobile_no": "655597453t",
   "otp": 1234
 }
+```
 
 Response header
+
 ```json
 {
     "status": 200,
