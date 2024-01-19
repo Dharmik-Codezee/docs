@@ -1,14 +1,14 @@
 ---
-title: User API Document
+title: User API Documentation
 ---
-
-# User API Documentation
 
 ## Endpoint: /api/user/signup/:user_type
 
-This endpoint is used to create a new user.
+This endpoint is utilized to create a new user.
 
-### Request
+For the User type Jobseeker, the following request body should be sent with the user_type parameter value 'jobseeker' and a valid email address. The keys first_name, country_code, mobile_no, and language are mandatory for every user_type. The language value 1 is used for English, and 2 is used for Thai.
+
+### Request body for Jobseeker
 
 ```json
 {
@@ -59,5 +59,94 @@ Response header
     "__v": 0
   },
   "msg": "User created successfully"
+}
+```
+
+
+For the User type Business, the following request body should be sent with the user_type parameter value 'business' and a valid email address.
+
+### Request body
+
+```json
+{
+  "first_name": "Somchai Anant",
+  "country_code": "66",
+  "mobile_no": "655-597-453",
+  "user_email": "somchai@gmail.com",
+  "language": 1
+}
+```
+
+Response header
+```json
+{
+  "status": 200,
+  "err": 0,
+  "data": {
+    "first_name": "Somchai Anant",
+    "country_code": "66",
+    "mobile_no": "655-597-453",
+    "user_email": "somchai@gmail.com",
+    "user_type": 2,
+    "skills": [],
+    "notification": true,
+    "open_to_work": false,
+    "language": 1,
+    "deleted": false,
+    "created_at": "2024-01-19T04:35:07.124Z",
+    "updated_at": "2024-01-19T04:35:07.124Z",
+    "_id": "65a9fbfb53076bf0636d06d0",
+    "__v": 0
+  },
+  "msg": "User created successfully"
+}
+```
+
+
+If an invalid email address is entered, the following response will be received.
+
+Response header
+```json
+{
+  "status": 406,
+  "err": 1,
+  "data": {
+    "errors": []
+  },
+  "msg": "Please enter valid email address"
+}
+```
+
+If an invalid value for any key, whose value type does not match its schema data type, is entered, the response will be as follows.
+
+Response header
+```json
+{
+  "status": 200,
+  "err": 0,
+  "data": {},
+  "msg": {
+    "errors": {
+      "language": {
+        "stringValue": "\"abc\"",
+        "valueType": "string",
+        "kind": "Number",
+        "value": "abc",
+        "path": "language",
+        "reason": {
+          "generatedMessage": true,
+          "code": "ERR_ASSERTION",
+          "actual": false,
+          "expected": true,
+          "operator": "=="
+        },
+        "name": "CastError",
+        "message": "Cast to Number failed for value \"abc\" (type string) at path \"language\""
+      }
+    },
+    "_message": "user validation failed",
+    "name": "ValidationError",
+    "message": "user validation failed: language: Cast to Number failed for value \"abc\" (type string) at path \"language\""
+  }
 }
 ```
