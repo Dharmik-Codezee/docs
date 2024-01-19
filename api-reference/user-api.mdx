@@ -2,11 +2,59 @@
 title: User API Documentation
 ---
 
-## Endpoint: /api/user/signup/:user_type
+User Signup Endpoint
+POST /api/user/signup/:user_type
+This endpoint is used for user registration, allowing the creation of different user types based on the user_type parameter.
 
-This endpoint is utilized to create a new user.
+Request Parameters
+user_type (URL parameter): The type of user to be created. Should be a non-empty string.
+Request Body Parameters
+first_name (Body parameter): The first name of the user. Should be a non-empty string.
+country_code (Body parameter): The country code of the user. Should be a non-empty string.
+mobile_no (Body parameter): The mobile number of the user. Should be a non-empty string.
+Middleware
+The endpoint utilizes a middleware function, userCreateMid, which performs input validation and invokes the user creation process.
 
-For the User type Jobseeker, the following request body should be sent with the user_type parameter value 'jobseeker' and a valid email address. The keys first_name, country_code, mobile_no, and language are mandatory for every user_type. The language value 1 is used for English, and 2 is used for Thai.
+Validation
+The middleware employs Express Validator to validate request parameters and body data. Validation includes checking for empty values and validating email format.
+
+User Creation Process
+Input Validation:
+
+Checks for validation errors using Express Validator.
+If errors are found, returns a validation response.
+Email Validation:
+
+If the user provides an email (user_email), validates its format.
+If the email is invalid, returns a validation response with a specific message.
+User Type Handling:
+
+Determines the numeric user type based on the provided user_type.
+If the user type is neither "jobseeker" nor "business," returns an error response.
+User Data Formatting:
+
+Formats user data based on user type for database insertion.
+User Creation:
+
+Creates a user record using the userModel with the formatted data.
+Returns a success response if the user is created; otherwise, returns an error response.
+Error Handling
+Errors during the user creation process are appropriately handled, and detailed error messages are returned in the response.
+
+User Controller Functions
+userCreateMid(req: Request, res: Response)
+Middleware function for user creation, performing input validation and triggering the user creation API.
+
+userCreateApi(data: any, callback: Function)
+Controller function for creating a user based on the provided data. Handles user type validation, data formatting, and database insertion.
+
+User Model
+The user model (userModel) is used to interact with the database for user creation.
+
+User Data Structure
+The structure of the user data includes various fields such as first_name, country_code, mobile_no, user_email, etc., with optional fields based on the user type.
+
+This documentation provides an overview of the POST /api/user/signup/:user_type endpoint, including request parameters, body parameters, middleware, validation, user creation process, error handling, and relevant controller functions and models.
 
 ### Request body for Jobseeker
 
@@ -14,8 +62,8 @@ For the User type Jobseeker, the following request body should be sent with the 
 {
     "first_name": "Somchai",  
     "last_name": "Anant",
-    "country_code": "66",
-    "mobile_no": "655-597-453",
+    "country_code": "+66",
+    "mobile_no": "655597453",
     "user_email": "somchai@gmail.com",
     "date_of_birth":"2024-01-18",
     "gender": "male",
@@ -36,8 +84,8 @@ Response header
   "data": {
     "first_name": "Somchai",
     "last_name": "Anant",
-    "country_code": "66",
-    "mobile_no": "655-597-453",
+    "country_code": "+66",
+    "mobile_no": "655597453",
     "user_email": "somchai@gmail.com",
     "date_of_birth": "2024-01-18T00:00:00.000Z",
     "gender": "male",
@@ -70,8 +118,8 @@ For the User type Business, the following request body should be sent with the u
 ```json
 {
   "first_name": "Somchai Anant",
-  "country_code": "66",
-  "mobile_no": "655-597-453",
+  "country_code": "+66",
+  "mobile_no": "655597453",
   "user_email": "somchai@gmail.com",
   "language": 1
 }
@@ -84,8 +132,8 @@ Response header
   "err": 0,
   "data": {
     "first_name": "Somchai Anant",
-    "country_code": "66",
-    "mobile_no": "655-597-453",
+    "country_code": "+66",
+    "mobile_no": "655597453",
     "user_email": "somchai@gmail.com",
     "user_type": 2,
     "skills": [],
@@ -148,5 +196,157 @@ Response header
     "name": "ValidationError",
     "message": "user validation failed: language: Cast to Number failed for value \"abc\" (type string) at path \"language\""
   }
+}
+```
+
+
+
+
+---
+title: User Login API Documentation
+---
+
+# User Login API
+
+## Endpoint
+
+`POST /api/user/login`
+
+This endpoint facilitates user login by requiring the user's country code and mobile number for authentication.
+
+## Parameters
+- `country_code` (string, required): The country code of the user's phone number.
+- `mobile_no` (string, required): The user's mobile number.
+
+## Request
+
+### Body
+
+```json
+{
+  "country_code": "+66",
+  "mobile_no": "655597453"
+}
+```
+
+Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "Otp sent to your mobile no"
+}
+```
+
+If any invalid data enter, then below response will received.
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": "655597453t",
+                "msg": "Invalid value",
+                "path": "mobile_no",
+                "location": "body"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+Middleware
+The endpoint utilizes a middleware function, loginMid, which performs input validation and invokes the user login process.
+
+Validation
+The middleware employs Express Validator to validate request parameters. Validation includes checking for empty values and ensuring numeric format for country code and mobile number.
+
+Login Process
+Input Validation:
+
+Checks for validation errors using Express Validator.
+If errors are found, returns a validation response.
+User Authentication:
+
+Validates the user's credentials using the userModel.
+OTP Generation and Sending:
+
+If the user is authenticated, generates and sends an OTP to the user's mobile number.
+Error Handling
+Errors during the login process are appropriately handled, and detailed error messages are returned in the response.
+
+Controller Functions
+loginMid(req: Request, res: Response)
+Middleware function for user login, performing input validation and triggering the user login API.
+
+login(data: any, callback: Function)
+Controller function for user login based on the provided data. Handles validation, user authentication, and OTP generation.
+
+User Model
+The user model (userModel) is used to interact with the database for user authentication.
+
+User Data Structure
+The structure of the user data includes various fields such as first_name, country_code, mobile_no, user_email, etc.
+
+This documentation provides an overview of the POST /api/user/login endpoint, including request parameters, body parameters, middleware, validation, login process, error handling, and relevant controller functions and models.
+
+
+
+
+
+# User Verification API
+
+## Verify OTP
+
+Endpoint to verify user identity using OTP.
+
+### Request
+
+- URL: `POST /api/user/verify-otp`
+- Headers: 
+  - Content-Type: application/json
+
+#### Request Body
+
+```json
+{
+  "country_code": "+66",
+  "mobile_no": "655597453t",
+  "otp": 1234
+}
+
+Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "Otp matched"
+}
+```
+If wrong otp enterd, below response will received.
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Invalid otp"
+}
+```
+
+If wrong mobile no entered, below response will received.
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "OTP not generated for entered mobile no"
 }
 ```
