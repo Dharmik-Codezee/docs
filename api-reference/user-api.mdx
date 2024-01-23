@@ -285,9 +285,9 @@ If errors are found, returns a validation response.
 
 Validates the user's credentials using the userModel.
 
-#### OTP Generation and Sending:
+#### OTP Delete, Generation and Sending:
 
-If the user is authenticated, generates and sends an OTP to the user's mobile number.
+If the user is authenticated, it will delete all previous otp that country code and mobile no after that new otp will generate and send an OTP to the user's mobile number.
 
 #### Error Handling:
 Errors during the login process are appropriately handled, and detailed error messages are returned in the response.
@@ -323,7 +323,13 @@ Endpoint to verify user identity using OTP.
 
 - URL: `POST /api/user/verify-otp`
 
-#### Request Body
+### Request Body
+
+### Input Parameters
+
+- `country_code` (string): The country code of the user's phone number.
+- `mobile_no` (string): The user's mobile phone number.
+- `otp` (string): The One-Time Password (OTP) entered by the user.
 
 ```json
 {
@@ -337,13 +343,22 @@ Response header
 
 ```json
 {
-    "status": 200,
-    "err": 0,
-    "data": {},
-    "msg": "Otp matched"
+  "data": {
+    "findUser": {
+      "_id": "user_id",
+      "country_code": "+1",
+      "mobile_no": "1234567890",
+      // Other user details...
+    },
+    "token_data": {
+      "token": "generated_jwt_token",
+      "tokenType": "Bearer"
+    }
+  },
+  "msg": "Otp verified"
 }
 ```
-If wrong otp enterd, below response will received.
+If wrong otp enterd:
 
 ```json
 {
@@ -354,7 +369,7 @@ If wrong otp enterd, below response will received.
 }
 ```
 
-If wrong mobile no entered, below response will received.
+If wrong mobile no entered:
 
 ```json
 {
@@ -364,3 +379,53 @@ If wrong mobile no entered, below response will received.
     "msg": "OTP not generated for entered mobile no"
 }
 ```
+
+If user not exist:
+
+```json
+{
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+#### Implementation Details
+
+- This API verifies the OTP entered by the user against the stored OTP for the given mobile number.
+- If the OTP is valid, it generates a JWT (JSON Web Token) for the user's authentication.
+- The generated token is then stored in the database for future authentication.
+- Various error messages are provided in case of invalid OTP, missing OTP, or non-existent user.
+
+
+
+# Logout User API
+
+## Endpoint
+
+- **URL**: `/api/user/logout`
+- **Method**: `POST`
+
+## Summary
+
+This API endpoint is used to log out a user.
+
+## Request
+
+### Headers
+
+- **authorization (required)**: Authorization token in the format `Bearer token`.
+
+## Responses
+
+### Success Response (200 OK)
+
+- **Status Code**: `200`
+- **Content Type**: `application/json`
+- **Body Example**:
+
+```json
+{
+  "status": 200,
+  "msg": "Logout Successfully"
+}
