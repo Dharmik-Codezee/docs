@@ -319,9 +319,9 @@ This documentation provides an overview of the POST /api/user/login endpoint, in
 
 Endpoint to verify user identity using OTP.
 
-### Request
+### Endpoint
 
-- URL: `POST /api/user/verify-otp`
+`POST /api/user/verify-otp`
 
 ### Request Body
 
@@ -403,8 +403,7 @@ If user not exist:
 
 ## Endpoint
 
-- **URL**: `/api/user/logout`
-- **Method**: `POST`
+`POST /api/user/logout`
 
 ## Summary
 
@@ -429,3 +428,68 @@ This API endpoint is used to log out a user.
   "status": 200,
   "msg": "Logout Successfully"
 }
+```
+
+If token is expired:
+
+```json
+{
+    "status": 401,
+    "err": 0,
+    "data": {},
+    "msg": "Token Expired"
+}
+```
+
+
+
+# Delete Account API
+
+## Endpoint
+
+`GET /api/user/delete-account`
+
+## Summary
+
+This API endpoint is used to delete a user account.
+
+## Request
+
+### Headers
+
+- **authorization (required)**: Authorization token in the format `Bearer token`.
+
+## Responses
+
+### Success Response (200 OK)
+
+```json
+{
+  "status": 200,
+  "err": 0,
+  "msg": "Account deleted successfully",
+  "data": {
+    "user_data": "<user_data>",
+  }
+}
+```
+
+### Error Response (User Not Exist)
+
+```json{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response (If token is expired):
+
+```json{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "Token Expired"
+}
+```
