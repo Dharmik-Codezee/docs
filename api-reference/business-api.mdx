@@ -1,0 +1,757 @@
+---
+title: Business API
+excludeFromToc: true
+---
+
+
+# Add Business API
+
+## Endpoint
+
+`POST /api/business/add`
+
+This endpoint is used for add business, allowing the creation of different user types based on the user_type parameter.
+
+### Request Parameters
+#### Authorization Header
+Valid Bearer type JWT token for authentication.
+
+#### Body Parameters
+`owner_id` (Body parameter): Unique identifier of the business owner (minimum length: 24 characters).
+`business_name` (Body parameter): Name of the business.
+
+Additional parameters as per the business creation requirements.
+
+####  Middleware
+This middleware function addBusinessMid is responsible for validating the incoming request for adding a new business. It checks the presence and format of required fields in the request body and ensures that the request is authenticated with a valid authorization header.
+
+####  Validation
+- Validates request parameters using express-validator.
+- Checks for valid email format if business_email is provided.
+- Responds with appropriate error messages if validation fails.
+
+#### Add business Process
+
+Controller function ADD_BUSINESS handles the business creation process. It validates user existence, owner existence, and ensures that the business name is unique. If all validations pass, it creates a new business and associates it with a location. Adress, city and zip_code is required to add atleast one location of business. 
+
+### Request body
+
+```json
+{
+    "owner_id": "65b0d318d14ea49e250c4818",
+    "business_name": "Thai Hotel",
+    "business_country_code": "+66",
+    "business_mobile_no": "655597453",
+    "business_email": "thai@gmail.com",
+    "business_details": "Thai food hotel",
+    "logo": "images/photo.jpeg",
+    "address": "101, Main Street",
+    "city": "Bangkok",
+    "zip_code": "987654"
+}
+```
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "owner_id": "65b0d318d14ea49e250c4818",
+        "business_name": "Thai Hote",
+        "business_country_code": "+66",
+        "business_mobile_no": "655597453",
+        "business_email": "thai@gmail.com",
+        "business_details": "Thai food hotel",
+        "deleted": false,
+        "created_by": "65b0d318d14ea49e250c4818",
+        "updated_by": "65b0d318d14ea49e250c4818",
+        "created_at": "2024-01-25T07:15:44.523Z",
+        "updated_at": "2024-01-25T07:15:44.523Z",
+        "_id": "65b20aa03e01620f97431c45",
+        "__v": 0
+    },
+    "msg": "Business created successfully"
+}
+```
+If business name already exist:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Business name already exist"
+}
+```
+
+If owner of business not exist:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Owner not exist"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+
+
+
+# Add Location API
+
+## Endpoint
+
+`POST /api/business/add-location`
+
+This endpoint is used to add a new location for a business.
+
+### Request Headers
+- `authorization` (Header): Authorization token for user authentication.
+
+### Request Body Parameters
+- `business_id` (Body parameter): The ID of the business. Should be a non-empty string with a minimum length of 24 characters.
+- `address` (Body parameter): The address of the location. Should be a non-empty string.
+- `city` (Body parameter): The city of the location. Should be a non-empty string.
+- `zip_code` (Body parameter): The ZIP code of the location. Should be a non-empty string.
+
+### Middleware
+The endpoint utilizes a middleware function, `addLocationMid`, which performs input validation and invokes the location addition process.
+
+### Validation
+The middleware employs Express Validator to validate request headers and body data. Validation includes checking for empty values and ensuring the business ID meets the required length.
+
+### Location Addition Process
+
+#### Input Validation:
+- Checks for validation errors using Express Validator.
+- If errors are found, returns a validation response.
+
+#### Authorization Decoding:
+- Decodes the authorization token to retrieve user information.
+
+#### Business Location Addition:
+- Validates the user existence.
+- Validates the business existence.
+- Checks for existing business location.
+- Adds a new business location if all conditions are met.
+
+### Request body
+
+```json
+{
+    "business_id": "65b0d9a2d98de3215b512534",
+    "address": "100, First Street",
+    "city": "Bangkok",
+    "zip_code": "987654",
+    "latitude": "13.7563° N",
+    "longitude": "100.5018° E"
+}
+```
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "business_id": "65b0d9a2d98de3215b512534",
+        "address": "100, First Street",
+        "city": "Bangkok",
+        "zip_code": "987654",
+        "latitude": "13.7563° N",
+        "longitude": "100.5018° E",
+        "deleted": false,
+        "created_by": "65b0d318d14ea49e250c4818",
+        "updated_by": "65b0d318d14ea49e250c4818",
+        "created_at": "2024-01-25T07:30:49.611Z",
+        "updated_at": "2024-01-25T07:30:49.611Z",
+        "_id": "65b20e293e01620f97431c58",
+        "__v": 0
+    },
+    "msg": "Business Location added successfully"
+}
+```
+If business location already exist:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Business location already exist"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+### Response
+The API returns a JSON response with status, data, and message fields.
+
+- Successful Response:
+  - Status: 200
+  - Data: Details of the added business location.
+  - Message: "Business Location added successfully."
+
+- Error Responses:
+  - Validation Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: Details of the validation error.
+
+  - User Not Exist Error:
+    - Status: 401
+    - Data: Empty
+    - Message: "User not exist."
+
+  - Business Not Exist Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: "Business not exist."
+
+  - Business Location Exist Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: "Business location already exists."
+
+  - Business Location Addition Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: "Business Location not added, please try again."
+
+
+
+
+# Business List API
+
+## Endpoint
+
+`GET /api/business/list`
+
+This endpoint is used to retrieve a list of businesses associated with the authenticated user.
+
+### Request Headers
+- `authorization` (Header): Authorization token for user authentication.
+
+### Middleware
+The endpoint utilizes a middleware function, `listBusinessMid`, which performs input validation and invokes the business listing process.
+
+### Validation
+The middleware employs Express Validator to validate request headers. Validation includes checking for empty values.
+
+### Business Listing Process
+
+#### Input Validation:
+- Checks for validation errors using Express Validator.
+- If errors are found, returns a validation response.
+
+#### Authorization Decoding:
+- Decodes the authorization token to retrieve user information.
+
+#### Business Listing:
+- Validates the user existence.
+- Retrieves the list of businesses associated with the user, along with the latest location details for each business.
+
+#### MongoDB Aggregation Pipeline:
+- Uses MongoDB aggregation pipeline to fetch business details along with the latest location data.
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65b0d9a2d98de3215b512534",
+            "owner_id": "65b0d318d14ea49e250c4818",
+            "business_name": "Thai restaurant",
+            "business_country_code": "+66",
+            "business_mobile_no": "655597453",
+            "business_email": "thai@gmail.com",
+            "business_details": "Thai food restaurant",
+            "deleted": false,
+            "created_at": "2024-01-24T09:34:26.233Z",
+            "logo": "images/photo.jpeg",
+            "location": "Bangkok"
+        },
+        {
+            "_id": "65b0d9b6d98de3215b512543",
+            "owner_id": "65b0d318d14ea49e250c4818",
+            "business_name": "Thai Hotel",
+            "business_country_code": "+66",
+            "business_mobile_no": "655597453",
+            "business_email": "thai@gmail.com",
+            "business_details": "Thai Food hotel",
+            "deleted": false,
+            "created_at": "2024-01-24T09:34:46.979Z",
+            "logo": "images/photo.jpeg",
+            "location": "Bangkok"
+        }
+    ],
+    "msg": "Business list"
+}
+```
+If no business exist of login user:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": [],
+    "msg": "Please add atleast one business"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+#### Response
+The API returns a JSON response with status, data, and message fields.
+
+- Successful Response:
+  - Status: 200
+  - Data: List of businesses with their details.
+  - Message: "Business list."
+
+- Error Responses:
+  - Validation Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: Details of the validation error.
+
+  - User Not Exist Error:
+    - Status: 401
+    - Data: Empty
+    - Message: "User not exist."
+
+  - No Business Exist Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: "Please add at least one business."
+
+
+
+
+
+# View Business API
+
+## Endpoint
+
+`GET /api/business/view/:business_id`
+
+This endpoint is used to retrieve details of a specific business.
+
+### Request Parameters
+- `business_id` (URL parameter): The ID of the business to view. Should be a non-empty string with a minimum length of 24 characters.
+
+### Request Headers
+- `authorization` (Header): Authorization token for user authentication.
+
+### Middleware
+The endpoint utilizes middleware to validate request parameters and headers. The middleware function, `viewBusinessMid`, checks for validation errors and decodes the authorization token.
+
+### Validation
+The middleware employs Express Validator to validate the business ID parameter and authorization header. Validation includes checking for empty values and ensuring the business ID meets the required length.
+
+### Business Viewing Process
+
+#### Input Validation:
+- Checks for validation errors using Express Validator.
+- If errors are found, returns a validation response.
+
+#### Authorization Decoding:
+- Decodes the authorization token to retrieve user information.
+
+#### Business Viewing:
+- Validates the user existence.
+- Retrieves details of the specified business, along with its location data.
+
+#### MongoDB Aggregation Pipeline:
+- Uses MongoDB aggregation pipeline to fetch business details along with associated location data.
+
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65b0d9a2d98de3215b512534",
+            "owner_id": "65b0d318d14ea49e250c4818",
+            "business_name": "Thai restaurant",
+            "business_country_code": "+66",
+            "business_mobile_no": "655597453",
+            "business_email": "thai@gmail.com",
+            "business_details": "Thai food restaurant",
+            "deleted": false,
+            "created_at": "2024-01-24T09:34:26.233Z",
+            "logo": "images/photo.jpeg",
+            "locationData": [
+                {
+                    "_id": "65b0d9a2d98de3215b512539",
+                    "address": "101, Main Street",
+                    "city": "Bangkok",
+                    "zip_code": "987654",
+                    "created_at": "2024-01-24T09:34:26.395Z"
+                },
+                {
+                    "_id": "65b0ddea4fb27e80cf4d9141",
+                    "address": "100, First Street",
+                    "city": "Bangkok",
+                    "zip_code": "987654",
+                    "created_at": "2024-01-24T09:52:42.370Z"
+                },
+                {
+                    "_id": "65b20e293e01620f97431c58",
+                    "address": "99, First Street",
+                    "city": "Bangkok",
+                    "zip_code": "987654",
+                    "created_at": "2024-01-25T07:30:49.611Z"
+                }
+            ]
+        }
+    ],
+    "msg": "Business list"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+#### Response
+The API returns a JSON response with status, data, and message fields.
+
+- Successful Response:
+  - Status: 200
+  - Data: Details of the specified business, including location data.
+  - Message: "Business details retrieved successfully."
+
+- Error Responses:
+  - Validation Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: Details of the validation error.
+
+  - User Not Exist Error:
+    - Status: 401
+    - Data: Empty
+    - Message: "User not exist."
+
+  - Business Not Exist Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: "Business not exist."
+
+
+
+
+
+# Update Business API
+
+## Endpoint
+
+`POST /api/business/update/:business_id`
+
+This endpoint is used to update details of a specific business.
+
+### Request Parameters
+- `business_id` (URL parameter): The ID of the business to update. Should be a non-empty string with a minimum length of 24 characters.
+
+### Request Headers
+- `authorization` (Header): Authorization token for user authentication.
+
+### Request Body Parameters
+- `owner_id` (Body parameter): The ID of the business owner. Should be a non-empty string with a minimum length of 24 characters.
+- `business_name` (Body parameter): The name of the business. Should be a non-empty string.
+- `business_country_code` (Body parameter): The country code of the business.
+- `business_mobile_no` (Body parameter): The mobile number of the business.
+- `business_email` (Body parameter): The email address of the business.
+- `business_details` (Body parameter): Additional details of the business.
+- `deleted` (Body parameter): Flag indicating if the business is deleted.
+
+### Middleware
+The endpoint utilizes middleware to validate request parameters, headers, and perform additional email validation.
+
+### Validation
+The middleware employs Express Validator to validate the business ID parameter, authorization header, and owner ID. Validation includes checking for empty values, ensuring the business ID and owner ID meet the required length, and validating email format.
+
+### Business Update Process
+
+#### Input Validation:
+- Checks for validation errors using Express Validator.
+- Validates the email address format.
+- If errors are found, returns a validation response.
+
+#### Authorization Decoding:
+- Decodes the authorization token to retrieve user information.
+
+#### Business Owner Validation:
+- Validates the existence of the business owner.
+
+#### Business Update:
+- Validates the user existence.
+- Validates the business existence.
+- Checks for existing business name.
+- Updates the business details if all conditions are met.
+
+
+### Request body
+
+```json
+{
+    "owner_id": "65b0d318d14ea49e250c4818",
+    "business_name": "Thai Hotel",
+    "business_country_code": "+66",
+    "business_mobile_no": "655597453",
+    "business_email": "thai@gmail.com",
+    "business_details": "Thai Food hotel",
+    "logo": "images/photo.jpeg",
+    "address": "101, Main Street",
+    "city": "Bangkok",
+    "zip_code": "987654",
+    "deleted": false
+}
+```
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65b0d9b6d98de3215b512543",
+        "owner_id": "65b0d318d14ea49e250c4818",
+        "business_name": "Thai Hotel",
+        "business_country_code": "+66",
+        "business_mobile_no": "655597453",
+        "business_email": "thai@gmail.com",
+        "business_details": "Thai Food hotel",
+        "deleted": false,
+        "created_by": "65b0d318d14ea49e250c4818",
+        "updated_by": "65b0d318d14ea49e250c4818",
+        "created_at": "2024-01-24T09:34:46.979Z",
+        "updated_at": "2024-01-25T05:32:34.747Z",
+        "__v": 0,
+        "logo": "images/photo.jpeg"
+    },
+    "msg": "Business updated"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+#### Response
+The API returns a JSON response with status, data, and message fields.
+
+- Successful Response:
+  - Status: 200
+  - Data: Updated details of the business.
+  - Message: "Business updated."
+
+- Error Responses:
+  - Validation Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: Details of the validation error.
+
+  - User Not Exist Error:
+    - Status: 401
+    - Data: Empty
+    - Message: "User not exist."
+
+  - Owner Not Exist Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: "Owner not exist."
+
+  - Business Name Exist Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: "Business name already exists."
+
+  - Business Update Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: "Business not updated, please try again."
+
+
+
+
+
+# Update Business Location API
+
+## Endpoint
+
+`POST /api/business/update-location/:location_id`
+
+This endpoint is used to update details of a specific business location.
+
+### Request Parameters
+- `location_id` (URL parameter): The ID of the location to update. Should be a non-empty string with a minimum length of 24 characters.
+
+### Request Headers
+- `authorization` (Header): Authorization token for user authentication.
+
+### Request Body Parameters
+- `business_id` (Body parameter): The ID of the business. Should be a non-empty string with a minimum length of 24 characters.
+- `address` (Body parameter): The address of the location. Should be a non-empty string.
+- `city` (Body parameter): The city of the location. Should be a non-empty string.
+- `zip_code` (Body parameter): The ZIP code of the location. Should be a non-empty string.
+- `latitude` (Body parameter): The latitude of the location.
+- `longitude` (Body parameter): The longitude of the location.
+- `deleted` (Body parameter): Flag indicating if the location is deleted.
+
+### Middleware
+The endpoint utilizes middleware to validate request parameters, headers, and perform additional checks.
+
+### Validation
+The middleware employs Express Validator to validate the location ID parameter, authorization header, and business ID. Validation includes checking for empty values, ensuring the location ID and business ID meet the required length.
+
+### Location Update Process
+
+#### Input Validation:
+- Checks for validation errors using Express Validator.
+- If errors are found, returns a validation response.
+
+#### Authorization Decoding:
+- Decodes the authorization token to retrieve user information.
+
+#### Business Existence Validation:
+- Validates the existence of the business.
+
+#### Business Location Update:
+- Validates the user existence.
+- Validates the business existence.
+- Checks for existing business location.
+- Updates the business location details if all conditions are met.
+
+
+### Request body
+
+```json
+{
+    "business_id": "65b0d9a2d98de3215b512534",
+    "address": "100, First Street",
+    "city": "Bangkok",
+    "zip_code": "987654",
+    "latitude": "13.7564° N",
+    "longitude": "100.5019° E",
+    "deleted": false
+}
+```
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65b0ddea4fb27e80cf4d9141",
+        "business_id": "65b0d9a2d98de3215b512534",
+        "address": "100, First Street",
+        "city": "Bangkok",
+        "zip_code": "987654",
+        "longitude": "100.5019° E",
+        "deleted": false,
+        "created_by": "65b0d318d14ea49e250c4818",
+        "updated_by": "65b0d318d14ea49e250c4818",
+        "created_at": "2024-01-24T09:52:42.370Z",
+        "updated_at": "2024-01-25T06:13:34.065Z",
+        "__v": 0,
+        "latitude": "13.7564° N"
+    },
+    "msg": "Business location updated"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+#### Response
+The API returns a JSON response with status, data, and message fields.
+
+- Successful Response:
+  - Status: 200
+  - Data: Updated details of the business location.
+  - Message: "Business location updated."
+
+- Error Responses:
+  - Validation Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: Details of the validation error.
+
+  - User Not Exist Error:
+    - Status: 401
+    - Data: Empty
+    - Message: "User not exist."
+
+  - Business Not Exist Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: "Business not exist."
+
+  - Business Location Exist Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: "Business location already exists."
+
+  - Business Location Update Error:
+    - Status: Corresponding HTTP status code
+    - Data: Empty
+    - Message: "Business location not updated, please try again."

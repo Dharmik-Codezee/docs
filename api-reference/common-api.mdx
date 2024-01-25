@@ -1,0 +1,89 @@
+---
+title: Common API
+excludeFromToc: true
+---
+
+
+# User Verification API
+
+## Verify OTP
+
+Endpoint to verify user identity using OTP.
+
+### Endpoint
+
+`POST /api/user/verify-otp`
+
+### Request Body
+
+### Input Parameters
+
+- `country_code` (string): The country code of the user's phone number.
+- `mobile_no` (string): The user's mobile phone number.
+- `otp` (string): The One-Time Password (OTP) entered by the user.
+
+```json
+{
+  "country_code": "+66",
+  "mobile_no": "655597453t",
+  "otp": 1234
+}
+```
+
+Response header
+
+```json
+{
+  "data": {
+    "findUser": {
+      "_id": "user_id",
+      "country_code": "+1",
+      "mobile_no": "1234567890",
+      // Other user details...
+    },
+    "token_data": {
+      "token": "generated_jwt_token",
+      "tokenType": "Bearer"
+    }
+  },
+  "msg": "Otp verified"
+}
+```
+If wrong otp enterd:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Invalid otp"
+}
+```
+
+If wrong mobile no entered:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "OTP not generated for entered mobile no"
+}
+```
+
+If user not exist:
+
+```json
+{
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+#### Implementation Details
+
+- This API verifies the OTP entered by the user against the stored OTP for the given mobile number.
+- If the OTP is valid, it generates a JWT (JSON Web Token) for the user's authentication.
+- The generated token is then stored in the database for future authentication.
+- Various error messages are provided in case of invalid OTP, missing OTP, or non-existent user.

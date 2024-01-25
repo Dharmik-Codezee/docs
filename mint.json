@@ -72,7 +72,9 @@
       "group": "API Documentation",
       "pages": [
         "api-reference/introduction",
-        "api-reference/user-api"
+        "api-reference/user-api",
+        "api-reference/business-api",
+        "api-reference/common-api"
       ]
     },
     {
