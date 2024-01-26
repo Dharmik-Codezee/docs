@@ -404,43 +404,34 @@ The middleware employs Express Validator to validate the business ID parameter a
 {
     "status": 200,
     "err": 0,
-    "data": [
-        {
-            "_id": "65b0d9a2d98de3215b512534",
-            "owner_id": "65b0d318d14ea49e250c4818",
-            "business_name": "Thai restaurant",
-            "business_country_code": "+66",
-            "business_mobile_no": "655597453",
-            "business_email": "thai@gmail.com",
-            "business_details": "Thai food restaurant",
-            "deleted": false,
-            "created_at": "2024-01-24T09:34:26.233Z",
-            "logo": "images/photo.jpeg",
-            "locationData": [
-                {
-                    "_id": "65b0d9a2d98de3215b512539",
-                    "address": "101, Main Street",
-                    "city": "Bangkok",
-                    "zip_code": "987654",
-                    "created_at": "2024-01-24T09:34:26.395Z"
-                },
-                {
-                    "_id": "65b0ddea4fb27e80cf4d9141",
-                    "address": "100, First Street",
-                    "city": "Bangkok",
-                    "zip_code": "987654",
-                    "created_at": "2024-01-24T09:52:42.370Z"
-                },
-                {
-                    "_id": "65b20e293e01620f97431c58",
-                    "address": "99, First Street",
-                    "city": "Bangkok",
-                    "zip_code": "987654",
-                    "created_at": "2024-01-25T07:30:49.611Z"
-                }
-            ]
-        }
-    ],
+    "data": {
+        "_id": "65b0d9a2d98de3215b512534",
+        "owner_id": "65b0d318d14ea49e250c4818",
+        "business_name": "Thai restaurant",
+        "business_country_code": "+66",
+        "business_mobile_no": "655597453",
+        "business_email": "thai@gmail.com",
+        "business_details": "Thai food restaurant",
+        "deleted": false,
+        "created_at": "2024-01-24T09:34:26.233Z",
+        "logo": "images/photo.jpeg",
+        "locationData": [
+            {
+                "_id": "65b0d9a2d98de3215b512539",
+                "address": "101, Main Street",
+                "city": "Bangkok",
+                "zip_code": "987654",
+                "created_at": "2024-01-24T09:34:26.395Z"
+            },
+            {
+                "_id": "65b0ddea4fb27e80cf4d9141",
+                "address": "10, First Street",
+                "city": "Bangkok",
+                "zip_code": "987654",
+                "created_at": "2024-01-24T09:52:42.370Z"
+            }
+        ]
+    },
     "msg": "Business list"
 }
 ```
