@@ -1,0 +1,416 @@
+---
+title: Job API
+excludeFromToc: true
+---
+
+# Job Post API
+
+## Create Job Post
+
+Endpoint to create a job post for a specific business.
+
+### Endpoint
+
+`POST /api/job/create/:business_id`
+
+### Request Headers
+
+- `authorization`: User authentication token.
+
+### URL Parameters
+
+- `business_id` (string): ID of the business for which the job post is created.
+
+### Request Parameters
+
+#### Input Parameters
+
+- `job_title` (string): Title of the job post.
+- `business_location_id` (string, optional): ID of the business location for the job post.
+- `work_exp_from` (string, optional): Minimum required work experience.
+- `work_exp_to` (string, optional): Maximum required work experience.
+- `workplace_type` (string, optional): Type of workplace.
+- `job_type` (string, optional): Type of job (e.g., full-time, part-time).
+- `description` (string, optional): Job post description.
+- `description_img` (string, optional): Image URL for job post description.
+- `status` (string, optional): Status of the job post (e.g., active, inactive).
+
+### Middleware
+
+The endpoint utilizes middleware for input validation.
+
+#### Validation
+
+The middleware employs Express Validator to validate the input parameters, including the job title, business ID, and optional parameters for work experience, workplace type, job type, description, description image, and status. Validation includes checking for empty values and ensuring the validity of the business location ID if provided.
+
+### Request Body
+
+```json
+{
+    "job_title": "HR Manager",
+    "business_location_id": "65b0d9a2d98de3215b512539",
+    "work_exp_from": "1 Yesr",
+    "work_exp_to": "2 Year",
+    "workplace_type": 1,
+    "job_type": 1,
+    "salary": "30k",
+    "description": "Lorem ipsum dolor sit amet.",
+    "description_img": "images/photo.jpeg"
+}
+```
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+  "status": 200,
+  "err": 0,
+  "data": {
+    "_id": "68b0f5a2d98de3215b515632",
+    "job_title": "HR Manager",
+    "business_location_id": "65b0d9a2d98de3215b512539",
+    "work_exp_from": "1 Yesr",
+    "work_exp_to": "2 Year",
+    "workplace_type": 1,
+    "job_type": 1,
+    "salary": "30k",
+    "description": "Lorem ipsum dolor sit amet.",
+    "description_img": "images/photo.jpeg"
+    "created_by": "65b0d318d14ea49e250c4818",
+    "updated_by": "65b0d318d14ea49e250c4818",
+    "created_at": "2024-01-27T07:20:37.838Z",
+    "updated_at": "2024-01-27T07:20:37.838Z",
+    "_id": "65b4aec543885c8ba31ea738",
+    "__v": 0
+    },
+  },
+  "msg": "Job post created successfully"
+}
+```
+
+Job Title Already Exist:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "Job title already exist"
+}
+
+```
+
+Business Location Not Found:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "Business location not found"
+}
+
+```
+
+You Are Not Allowed:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "You are not allowed to create a job post for this business"
+}
+```
+
+
+
+
+# Job List API
+
+## Endpoint
+
+`GET /api/job/list/:business_id`
+
+This endpoint is used to retrieve the list of job posts for a specific business.
+
+### Request Headers
+- **Authorization:** Bearer type JWT token for authentication.
+
+### URL Parameters
+- `business_id` (string): ID of the business for which the job posts are requested.
+
+### Middleware
+This middleware function `listPostMid` is responsible for validating the incoming request to retrieve the list of job posts. It checks the presence and format of required fields in the request, and ensures that the request is authenticated with a valid authorization header.
+
+### Validation
+- Validates request parameters using express-validator.
+- Responds with appropriate error messages if validation fails.
+
+### Job List Retrieval Process
+
+Controller function `LIST_POST` retrieves the list of job posts for a specific business. It validates user existence, owner existence, and ensures that the user has permission to view job posts for the given business. If all validations pass, it fetches the list of job posts along with relevant details.
+
+### Request Body Example
+N/A (This is a GET request)
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "job_id_1",
+            "business_name": "Business Name",
+            "job_title": "Job Title",
+            "salary": "Salary",
+            "description_img": "Image URL",
+            "created_at": "2024-01-25T07:15:44.523Z",
+            "updated_at": "2024-01-25T07:15:44.523Z",
+            "location": "City"
+        },
+        // ... more job posts
+    ],
+    "msg": "List of job"
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+User does not have permission to view job posts for this business
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "You are not allowed to view job posts for this business"
+}
+```
+
+No job posts found
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": [],
+    "msg": "No job posts found"
+}
+```
+
+
+
+
+# View Job Post API
+
+## Endpoint
+
+`GET /api/job/view/:job_id`
+
+This endpoint is used to retrieve details of a specific job post.
+
+### Request Headers
+- **Authorization:** Bearer type JWT token for authentication.
+
+### URL Parameters
+- `job_id` (string): ID of the job post to view.
+
+### Middleware
+This middleware function `viewPostMid` is responsible for validating the incoming request to view a specific job post. It checks the presence and format of required fields in the request, and ensures that the request is authenticated with a valid authorization header.
+
+### Validation
+- Validates request parameters using express-validator.
+- Responds with appropriate error messages if validation fails.
+
+### Job Post Viewing Process
+
+Controller function `VIEW_POST` retrieves details of a specific job post. It validates user existence, checks if the user has permission to view the job post, and then fetches the job post details.
+
+### Request Body Example
+N/A (This is a GET request)
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "job_id",
+        "business_name": "Business Name",
+        "job_title": "Job Title",
+        "salary": "Salary",
+        "description_img": "Image URL",
+        "created_at": "2024-01-25T07:15:44.523Z",
+        "updated_at": "2024-01-25T07:15:44.523Z",
+        // ... other job details
+    },
+    "msg": "Job data"
+}
+```
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+Job post does not exist
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Job post not exist"
+}
+```
+
+User does not have permission to view this job post
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "You are not allowed to view this job post"
+}
+```
+
+
+
+
+# Update Job Post API
+
+## Endpoint
+
+`POST /api/job/update/:job_id`
+
+This endpoint is used to update details of a specific job post.
+
+### Request Headers
+- **Authorization:** Bearer type JWT token for authentication.
+
+### URL Parameters
+- `job_id` (string): ID of the job post to update.
+
+### Middleware
+This middleware function `updatePostMid` is responsible for validating the incoming request to update a specific job post. It checks the presence and format of required fields in the request, and ensures that the request is authenticated with a valid authorization header.
+
+### Validation
+- Validates request parameters using express-validator.
+- Responds with appropriate error messages if validation fails.
+
+### Job Post Updating Process
+
+Controller function `UPDATE_POST` updates details of a specific job post. It validates user existence, checks if the user has permission to update the job post, and then updates the job post details.
+
+### Request Body Example
+
+```json
+{
+    "job_title": "New Job Title",
+    "business_location_id": "business_location_id",
+    "work_exp_from": "2",
+    "work_exp_to": "5",
+    "workplace_type": "Office",
+    "job_type": "Full-time",
+    "description": "Updated job description",
+    "description_img": "images/updated_photo.jpeg",
+    "status": "Active",
+    "deleted": false
+}
+```
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+  "status": 200,
+  "err": 0,
+  "data": {
+    "_id": "68b0f5a2d98de3215b515632",
+    "job_title": "HR Manager",
+    "business_location_id": "65b0d9a2d98de3215b512539",
+    "work_exp_from": "1 Yesr",
+    "work_exp_to": "2 Year",
+    "workplace_type": 1,
+    "job_type": 1,
+    "salary": "30k",
+    "description": "Lorem ipsum dolor sit amet.",
+    "description_img": "images/photo.jpeg"
+    "created_by": "65b0d318d14ea49e250c4818",
+    "updated_by": "65b0d318d14ea49e250c4818",
+    "created_at": "2024-01-27T07:20:37.838Z",
+    "updated_at": "2024-01-27T07:20:37.838Z",
+    "_id": "65b4aec543885c8ba31ea738",
+    "__v": 0
+    },
+  },
+  "msg": "Job post created successfully"
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+Job post does not exist
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Job post not exist"
+}
+```
+
+Job title already exists
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Job title already exists"
+}
+```
+
+User does not have permission to update this job post
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "You are not allowed to update this job post"
+}
+```
