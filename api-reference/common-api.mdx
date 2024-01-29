@@ -87,3 +87,83 @@ If user not exist:
 - If the OTP is valid, it generates a JWT (JSON Web Token) for the user's authentication.
 - The generated token is then stored in the database for future authentication.
 - Various error messages are provided in case of invalid OTP, missing OTP, or non-existent user.
+
+
+
+
+# Upload File API
+
+## Endpoint
+
+`POST /api/common/upload`
+
+This endpoint is used to upload a file.
+
+### Request Headers
+- **Authorization:** Bearer type JWT token for authentication.
+
+### Request Body Parameters
+- `file` (Body parameter): The file to be uploaded.
+
+### Middleware
+This middleware function `uploadFileMid` is responsible for validating the incoming request to upload a file. It checks the presence and format of the authorization header and ensures that a file is provided in the request body.
+
+### Validation
+- Validates request parameters using express-validator.
+- Responds with appropriate error messages if validation fails.
+
+### File Upload Process
+
+Controller function `UPLOAD_FILE` handles the file upload process. It validates user existence and then checks if the file has been successfully uploaded. The API responds with success if the file is uploaded, and provides the filename. In case of failure, it returns an appropriate error message.
+
+### Request Body Example
+
+```json
+{
+    "file": abc.jpeg
+}
+```
+
+Response header
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "file": "abc.jpeg"
+    },
+    "msg": "File uploaded successfully"
+}
+
+```
+
+If user not exist:
+
+```json
+{
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+File not uploaded
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "File not uploaded"
+}
+```
+
+Other errors
+```json
+{
+    "status": <status_code>,
+    "err": 1,
+    "data": {},
+    "msg": <error_message>
+}
+```
