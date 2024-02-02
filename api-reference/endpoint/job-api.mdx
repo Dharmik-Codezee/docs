@@ -47,12 +47,12 @@ The middleware employs Express Validator to validate the input parameters, inclu
 
 ```json
 {
-    "job_title": "HR Manager",
-    "business_location_id": "65b0d9a2d98de3215b512539",
-    "work_exp_from": "1 Yesr",
-    "work_exp_to": "2 Year",
+    "job_title": "Test Junior Manager",
+    "business_location_id": "65bcc4eb492a720b902eb5b5",
+    "experience": 1,
     "workplace_type": 1,
     "job_type": 1,
+    "specialization_id": "65b8c4ed5c60878b99602caa",
     "salary": "30k",
     "description": "Lorem ipsum dolor sit amet.",
     "description_img": "images/photo.jpeg"
@@ -65,28 +65,30 @@ The middleware employs Express Validator to validate the input parameters, inclu
 
 ```json
 {
-  "status": 200,
-  "err": 0,
-  "data": {
-    "_id": "68b0f5a2d98de3215b515632",
-    "job_title": "HR Manager",
-    "business_location_id": "65b0d9a2d98de3215b512539",
-    "work_exp_from": "1 Yesr",
-    "work_exp_to": "2 Year",
-    "workplace_type": 1,
-    "job_type": 1,
-    "salary": "30k",
-    "description": "Lorem ipsum dolor sit amet.",
-    "description_img": "images/photo.jpeg"
-    "created_by": "65b0d318d14ea49e250c4818",
-    "updated_by": "65b0d318d14ea49e250c4818",
-    "created_at": "2024-01-27T07:20:37.838Z",
-    "updated_at": "2024-01-27T07:20:37.838Z",
-    "_id": "65b4aec543885c8ba31ea738",
-    "__v": 0
+    "status": 200,
+    "err": 0,
+    "data": {
+        "job_title": "Test Junior Manager",
+        "business_id": "65bcc4eb492a720b902eb5a8",
+        "business_location_id": "65bcc4eb492a720b902eb5b5",
+        "experience": 1,
+        "workplace_type": 1,
+        "job_type": 1,
+        "salary": 0,
+        "specialization_id": "65b8c4ed5c60878b99602caa",
+        "description": "Lorem ipsum dolor sit amet.",
+        "description_img": "images/photo.jpeg",
+        "status": 0,
+        "verified": false,
+        "deleted": false,
+        "created_by": "65bcc4ea492a720b902eb5a2",
+        "updated_by": "65bcc4ea492a720b902eb5a2",
+        "created_at": "2024-02-02T10:37:18.220Z",
+        "updated_at": "2024-02-02T10:37:18.220Z",
+        "_id": "65bcc5de492a720b902eb5d2",
+        "__v": 0
     },
-  },
-  "msg": "Job post created successfully"
+    "msg": "Job post create successfully"
 }
 ```
 
@@ -327,16 +329,13 @@ Controller function `UPDATE_POST` updates details of a specific job post. It val
 
 ```json
 {
-    "job_title": "New Job Title",
-    "business_location_id": "business_location_id",
-    "work_exp_from": "2",
-    "work_exp_to": "5",
-    "workplace_type": "Office",
-    "job_type": "Full-time",
-    "description": "Updated job description",
-    "description_img": "images/updated_photo.jpeg",
-    "status": "Active",
-    "deleted": false
+    "job_title": "Test Supervisor",
+    "experience": 1,
+    "workplace_type": 1,
+    "job_type": 1,
+    "salary": 30,
+    "description": "Lorem ipsum dolor sit amet.",
+    "description_img": "images/photo.jpeg"
 }
 ```
 
@@ -346,28 +345,30 @@ Controller function `UPDATE_POST` updates details of a specific job post. It val
 
 ```json
 {
-  "status": 200,
-  "err": 0,
-  "data": {
-    "_id": "68b0f5a2d98de3215b515632",
-    "job_title": "HR Manager",
-    "business_location_id": "65b0d9a2d98de3215b512539",
-    "work_exp_from": "1 Yesr",
-    "work_exp_to": "2 Year",
-    "workplace_type": 1,
-    "job_type": 1,
-    "salary": "30k",
-    "description": "Lorem ipsum dolor sit amet.",
-    "description_img": "images/photo.jpeg"
-    "created_by": "65b0d318d14ea49e250c4818",
-    "updated_by": "65b0d318d14ea49e250c4818",
-    "created_at": "2024-01-27T07:20:37.838Z",
-    "updated_at": "2024-01-27T07:20:37.838Z",
-    "_id": "65b4aec543885c8ba31ea738",
-    "__v": 0
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65bc9a4f31e4bb6a9aed7d5b",
+        "job_title": "Test Supervisor",
+        "business_id": "65bc8b03ee10fd14593b0cfb",
+        "business_location_id": "65bc8b03ee10fd14593b0d08",
+        "experience": 1,
+        "workplace_type": 1,
+        "job_type": 1,
+        "salary": 30,
+        "specialization_id": null,
+        "description": "Lorem ipsum dolor sit amet.",
+        "description_img": "images/photo.jpeg",
+        "status": 0,
+        "verified": false,
+        "deleted": false,
+        "created_by": "65bc7b14bf1407cea573a9c6",
+        "updated_by": "65bc7b14bf1407cea573a9c6",
+        "created_at": "2024-02-02T07:31:27.815Z",
+        "updated_at": "2024-02-02T12:49:50.489Z",
+        "__v": 0
     },
-  },
-  "msg": "Job post created successfully"
+    "msg": "Job updated"
 }
 ```
 
@@ -414,3 +415,117 @@ User does not have permission to update this job post
     "msg": "You are not allowed to update this job post"
 }
 ```
+
+
+
+
+---
+title: Job Feed API Documentation
+---
+
+# Job Feed API
+
+## Endpoint: `/api/job/feed`
+
+This API endpoint is used to fetch job feed based on provided criteria.
+
+### Implementation Details
+
+This API endpoint is implemented in the jobFeedMid middleware function, which in turn calls the JOB_FEED controller function. The middleware handles validation, authentication, and error handling.
+
+The JOB_FEED controller function performs the necessary data processing and MongoDB aggregation to retrieve the job feed based on the provided criteria.
+
+For detailed information about the MongoDB aggregation pipeline used, refer to the pipeLine array in the JOB_FEED controller function.
+
+For any issues or questions, please refer to the API documentation or contact the system administrator.
+
+
+### Request
+
+- **Method:** POST
+- **Headers:**
+  - `authorization`: JWT token for authentication
+
+#### Body (Form Data)
+
+- `category_id`: (optional) ID of the job category.
+- `specialization_id`: (optional) ID of the job specialization.
+- `latitude`: (optional) Latitude for location-based search.
+- `longitude`: (optional) Longitude for location-based search.
+- `distance`: (optional) Distance (in meters) for location-based search.
+- `last_update`: (optional) Integer representing the number of days for last update filter.
+- `city`: (optional) City for location-based search.
+- `job_title`: (optional) Job title to filter by.
+- `salary_from`: (optional) Minimum salary for salary filter.
+- `salary_to`: (optional) Maximum salary for salary filter.
+- `job_type`: (optional) Integer representing the job type.
+- `experience`: (optional) Integer representing the required experience.
+
+```json
+{
+    "experience": 2,
+    "job_type": 1,
+    "latitude": 13.7563,
+    "longitude": 99.503,
+    "distance": 8000,
+    "city": "Bangkok",
+    "last_update": 6,
+    "salary_from": 10,
+    "salary_to": 70,
+    "specialization_id": "65b8c4d05c60878b99602ca8",
+    "category_id": "65b8c331d3aa1143d135b72c",
+    "job_title": "Front Desk Supervisor"
+}
+```
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65b490eeecfab2db05caf05a",
+            "job_title": "Front Desk Supervisor",
+            "salary": 60,
+            "business_name": "Thai restaurant",
+            "job_location": "Bangkok"
+        },
+        {
+            "_id": "65b9cbe0fce44a5cc636aac1",
+            "job_title": "Front Desk Supervisor",
+            "salary": 15,
+            "business_name": "Thai restaurant",
+            "job_location": "Bangkok"
+        }
+    ],
+    "msg": "List of job"
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+If not found any job for applied filter
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": [],
+    "msg": "Not found any job"
+}
+```
+
+

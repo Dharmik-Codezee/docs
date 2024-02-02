@@ -38,16 +38,19 @@ Controller function ADD_BUSINESS handles the business creation process. It valid
 
 ```json
 {
-    "owner_id": "65b0d318d14ea49e250c4818",
-    "business_name": "Thai Hotel",
+    "owner_id": "65bc7b14bf1407cea573a9c6",
+    "business_name": "Test Case Motel 3",
     "business_country_code": "+66",
     "business_mobile_no": "655597453",
     "business_email": "thai@gmail.com",
+    "business_category_id": "65b8c331d3aa1143d135b72c",
     "business_details": "Thai food hotel",
     "logo": "images/photo.jpeg",
-    "address": "101, Main Street",
-    "city": "Bangkok",
-    "zip_code": "987654"
+    "address": "101, Last Street",
+    "city": "Bangkok, Thailand",
+    "zip_code": "987654",
+    "longitude": 100.9925,
+    "latitude": 15.8700
 }
 ```
 
@@ -62,6 +65,7 @@ Controller function ADD_BUSINESS handles the business creation process. It valid
         "business_country_code": "+66",
         "business_mobile_no": "655597453",
         "business_email": "thai@gmail.com",
+        "business_category_id": "65b8c331d3aa1143d135b72c",
         "business_details": "Thai food hotel",
         "deleted": false,
         "created_by": "65b0d318d14ea49e250c4818",
@@ -533,6 +537,7 @@ The middleware employs Express Validator to validate the business ID parameter, 
     "business_country_code": "+66",
     "business_mobile_no": "655597453",
     "business_email": "thai@gmail.com",
+    "business_category_id": "65b8c331d3aa1143d135b72c",
     "business_details": "Thai Food hotel",
     "logo": "images/photo.jpeg",
     "address": "101, Main Street",
@@ -554,6 +559,7 @@ The middleware employs Express Validator to validate the business ID parameter, 
         "business_country_code": "+66",
         "business_mobile_no": "655597453",
         "business_email": "thai@gmail.com",
+        "business_category_id": "65b8c331d3aa1143d135b72c",
         "business_details": "Thai Food hotel",
         "deleted": false,
         "created_by": "65b0d318d14ea49e250c4818",
@@ -746,3 +752,89 @@ The API returns a JSON response with status, data, and message fields.
     - Status: Corresponding HTTP status code
     - Data: Empty
     - Message: "Business location not updated, please try again."
+
+
+
+
+
+# Add Member to Business API
+
+## Endpoint
+
+`POST /api/business/add-member`
+
+This endpoint is used to add a new member to a business.
+
+### Request Parameters
+- None
+
+### Request Headers
+- `authorization` (Header): Authorization token for user authentication.
+
+### Request Body
+
+- `business_id`: Business ID (24 characters)
+- `full_name`: Full name of the member
+- `country_code`: Numeric country code
+- `mobile_no`: Numeric mobile number
+- `role`: Numeric role code
+- `user_email` (optional): Email address of the user
+
+### Validation
+
+- `business_id` must not be empty and must be 24 characters long.
+- `full_name` must not be empty.
+- `country_code` must not be empty and must be numeric.
+- `mobile_no` must not be empty and must be numeric.
+- `role` must not be empty and must be numeric.
+- If `user_email` is provided, it must be a valid email address.
+
+### Response
+
+- Status: 200 OK if successful, error status otherwise.
+- Body: JSON response with relevant data.
+
+### Examples
+
+#### Request Example
+
+```json
+{
+  "authorization": "your_auth_token",
+  "business_id": "your_business_id",
+  "full_name": "John Doe",
+  "country_code": 1,
+  "mobile_no": 1234567890,
+  "role": 2,
+  "user_email": "john.doe@example.com"
+}
+```
+
+Successful Response Example
+
+```json
+{
+  "status": 200,
+  "data": {
+    "message": "Staff member added successfully",
+    "member_info": {
+      "business_id": "your_business_id",
+      "user_id": "member_user_id",
+      "full_name": "John Doe",
+      "role": 2,
+      "status": 1
+    }
+  }
+}
+```
+Error Response Example
+
+```json
+{
+  "status": 400,
+  "error": {
+    "message": "Validation error",
+    "details": ["Please enter a valid mobile number"]
+  }
+}
+```

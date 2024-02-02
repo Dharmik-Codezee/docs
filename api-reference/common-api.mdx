@@ -30,25 +30,36 @@ Endpoint to verify user identity using OTP.
 }
 ```
 
-Response header
+Response header for jobseeker
 
 ```json
 {
-  "data": {
-    "findUser": {
-      "_id": "user_id",
-      "country_code": "+1",
-      "mobile_no": "1234567890",
-      // Other user details...
+    "status": 200,
+    "err": 0,
+    "data": {
+        "user": {
+            "_id": "65bc8a08ee10fd14593b0ce5",
+            "country_code": "+66",
+            "mobile_no": "111111111",
+            "first_name": "Test Chaisom",
+            "last_name": "Test Anant",
+            "user_email": "owner@gmail.com",
+            "user_type": 1,
+            "language": 1,
+            "deleted": false,
+            "created_at": "2024-02-02T06:22:00.930Z",
+            "updated_at": "2024-02-02T06:22:00.930Z",
+            "__v": 0
+        },
+        "token_data": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJjOGEwOGVlMTBmZDE0NTkzYjBjZTUiLCJjb3VudHJ5X2NvZGUiOiIrNjYiLCJtb2JpbGVfbm8iOiIxMTExMTExMTEiLCJpYXQiOjE3MDY4NzY2OTR9.9eUfqQYhIwr_V9xDg7zAFYxEBszqC8E2grsC1gyzmvs",
+            "tokenType": "Bearer"
+        }
     },
-    "token_data": {
-      "token": "generated_jwt_token",
-      "tokenType": "Bearer"
-    }
-  },
-  "msg": "Otp verified"
+    "msg": "Otp verified"
 }
 ```
+
 If wrong otp enterd:
 
 ```json
@@ -75,9 +86,10 @@ If user not exist:
 
 ```json
 {
-  "err": 1,
-  "data": {},
-  "msg": "User not exist"
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Account not exist, please create"
 }
 ```
 
@@ -103,7 +115,7 @@ This endpoint is used to upload a file.
 - **Authorization:** Bearer type JWT token for authentication.
 
 ### Request Body Parameters
-- `file` (Body parameter): The file to be uploaded.
+- `file` (Body parameter): The file to be uploaded.(Note: Ensure that the file is uploaded using the "form-data" option in the request body.)
 
 ### Middleware
 This middleware function `uploadFileMid` is responsible for validating the incoming request to upload a file. It checks the presence and format of the authorization header and ensures that a file is provided in the request body.
