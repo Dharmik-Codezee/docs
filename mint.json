@@ -75,6 +75,7 @@
         "api-reference/user-api",
         "api-reference/business-api",
         "api-reference/job-api",
+        "api-reference/jobseeker-api",
         "api-reference/common-api"
       ]
     },
