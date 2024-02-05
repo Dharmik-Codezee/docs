@@ -70,13 +70,45 @@
     },
     {
       "group": "API Documentation",
-      "pages": [
-        "api-reference/introduction",
-        "api-reference/user-api",
-        "api-reference/business-api",
-        "api-reference/job-api",
-        "api-reference/jobseeker-api",
-        "api-reference/common-api"
+      "tabs": [
+        {
+          "name": "User API",
+          "url": "api-reference/user-api"
+        },
+        {
+          "name": "Business API",
+          "url": "api-reference/business-api"
+        },
+        {
+          "name": "Job API",
+          "url": "api-reference/job-api"
+        },
+        {
+          "name": "Employment API",
+          "url": "api-reference/employment-api"
+        },
+        {
+          "name": "Jobseeker API",
+          "url": "api-reference/jobseeker-api",
+          "tabs": [
+            {
+              "name": "Endpoint 1",
+              "url": "api-reference/jobseeker-api/endpoint-1"
+            },
+            {
+              "name": "Endpoint 2",
+              "url": "api-reference/jobseeker-api/endpoint-2"
+            },
+            {
+              "name": "Endpoint 3",
+              "url": "api-reference/jobseeker-api/endpoint-3"
+            }
+          ]
+        },
+        {
+          "name": "Common API",
+          "url": "api-reference/common-api"
+        }
       ]
     },
     {
