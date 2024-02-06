@@ -1,0 +1,379 @@
+---
+title: Business API
+excludeFromToc: true
+---
+
+
+# Add Education for Jobseeker API
+
+## Endpoint
+
+`POST /api/jobseeker/education/add`
+
+This endpoint is used to add education details for a jobseeker.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Body
+
+- `education_type`: Numeric identifier for the type of education.
+- `institute`: Name of the educational institute.
+- `duration_from`: Start date of the education (formatted as a date).
+- `duration_to`: End date of the education (formatted as a date).
+
+### Validation
+
+- `education_type` must not be empty and must be numeric.
+- `institute` must not be empty.
+- `duration_from` must not be empty and must be a valid date.
+- `duration_to` must not be empty and must be a valid date.
+
+### Response
+
+- Status: 200 OK if successful, error status otherwise.
+- Body: JSON response with relevant data.
+
+### Notes
+
+- Ensure to include the authorization token in the request header.
+- The API supports adding education details with appropriate validation checks.
+- Check the response for success or error messages.
+
+### Examples
+
+#### Request Example
+
+```json
+{
+    "education_type": 2,
+    "institute": "VNSG",
+    "course": "B",
+    "specialization": "Gujarat",
+    "duration_from": "2020-06-15",
+    "duration_to":"2023-04-10",
+    "grading": "89"
+}
+```
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "education_type": 2,
+        "institute": "VNSG",
+        "course": "B",
+        "specialization": "Gujarat",
+        "duration_from": "2020-06-15T00:00:00.000Z",
+        "duration_to": "2023-04-10T00:00:00.000Z",
+        "grading": "89",
+        "deleted": false,
+        "created_by": "65bc8a08ee10fd14593b0ce5",
+        "updated_by": "65bc8a08ee10fd14593b0ce5",
+        "created_at": "2024-02-06T11:18:45.773Z",
+        "updated_at": "2024-02-06T11:18:45.773Z",
+        "_id": "65c21595efc3645b106f4cb5",
+        "__v": 0
+    },
+    "msg": "Education added successfully"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+If same detail already exist:
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Education detail already exist"
+}
+```
+
+
+
+
+# List Education for Jobseeker API
+
+## Endpoint
+
+`GET /api/jobseeker/education/list`
+
+This endpoint is used to retrieve a list of education details for a jobseeker.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+### Response
+
+- Status: 200 OK if successful, error status otherwise.
+- Body: JSON response with a list of education details.
+
+### Notes
+
+- Ensure to include the authorization token in the request header.
+- The API retrieves education details associated with the authenticated jobseeker.
+- If education details are found, they are returned in the response.
+- If no education details are found, an empty array is returned in the response.
+- Check the response for success or error messages.
+
+---
+
+```http
+GET /api/jobseeker/education/list
+Authorization: your_auth_token
+```
+
+### Response header
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65c1dd3a58cd49faf0bd7905",
+            "user_id": "65bc8a08ee10fd14593b0ce5",
+            "education_type": 2,
+            "institute": "VNSGU",
+            "course": "BA",
+            "specialization": "Gujarat",
+            "duration_from": "2020-06-15T00:00:00.000Z",
+            "duration_to": "2023-04-10T00:00:00.000Z",
+            "grading": "89",
+            "deleted": false,
+            "created_by": "65c1dce3859b40422dd26d42",
+            "updated_by": "65bc8a08ee10fd14593b0ce5",
+            "created_at": "2024-02-06T07:18:18.433Z",
+            "updated_at": "2024-02-06T09:53:35.159Z",
+            "__v": 0
+        },
+        {
+            "_id": "65c21595efc3645b106f4cb5",
+            "user_id": "65bc8a08ee10fd14593b0ce5",
+            "education_type": 2,
+            "institute": "VNSG",
+            "course": "B",
+            "specialization": "Gujarat",
+            "duration_from": "2020-06-15T00:00:00.000Z",
+            "duration_to": "2023-04-10T00:00:00.000Z",
+            "grading": "89",
+            "deleted": false,
+            "created_by": "65bc8a08ee10fd14593b0ce5",
+            "updated_by": "65bc8a08ee10fd14593b0ce5",
+            "created_at": "2024-02-06T11:18:45.773Z",
+            "updated_at": "2024-02-06T11:18:45.773Z",
+            "__v": 0
+        }
+    ],
+    "msg": "List of education"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+
+
+
+# View Education Details for Jobseeker API
+
+## Endpoint
+
+`GET /api/jobseeker/education/view/:education_id`
+
+This endpoint is used to retrieve details of a specific education entry for a jobseeker.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `education_id` (URL parameter): The ID of the education entry to view. Should be a non-empty string with a minimum length of 24 characters.
+
+### Response
+
+- Status: 200 OK if successful, error status otherwise.
+- Body: JSON response with relevant education details.
+
+### Notes
+
+- Ensure to include the authorization token in the request header.
+- The API retrieves education details associated with the authenticated jobseeker.
+- If the education entry is found, its details are returned in the response.
+- If the education entry is not found, an empty object is returned in the response.
+- Check the response for success or error messages.
+
+### Response header
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65c1dd3a58cd49faf0bd7905",
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "education_type": 1,
+        "institute": "VNSGU",
+        "course": "BA",
+        "specialization": "Gujarati",
+        "duration_from": "2020-06-15T00:00:00.000Z",
+        "duration_to": "2023-04-10T00:00:00.000Z",
+        "grading": "89",
+        "deleted": false,
+        "created_by": "65c1dce3859b40422dd26d42",
+        "updated_by": "65c1dce3859b40422dd26d42",
+        "created_at": "2024-02-06T07:18:18.433Z",
+        "updated_at": "2024-02-06T07:18:18.433Z",
+        "__v": 0
+    },
+    "msg": "Education data"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+
+
+
+# Update Education for Jobseeker API
+
+## Endpoint
+
+`PATCH /api/jobseeker/education/update/:education_id`
+
+This endpoint is used to update details of a specific education entry for a jobseeker.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `education_id` (URL parameter): The ID of the education entry to update. Should be a non-empty string with a minimum length of 24 characters.
+
+#### Body
+
+- `education_type`: Numeric value representing the type of education.
+- `institute`: Name of the institute.
+- `course`: Name of the course.
+- `specialization`: Specialization in the course.
+- `duration_from`: Start date of the education period.
+- `duration_to`: End date of the education period.
+- `grading` (optional): Grading information.
+
+### Response
+
+- Status: 200 OK if successful, error status otherwise.
+- Body: JSON response with updated education details.
+
+### Notes
+
+- Ensure to include the authorization token in the request header.
+- Provide valid values for education details in the request body.
+- The API updates education details associated with the authenticated jobseeker.
+- If the education entry is updated successfully, the updated details are returned in the response.
+- If the education entry is not found, an error message is returned in the response.
+- Check the response for success or error messages.
+
+#### Request Example
+
+```json
+{
+    "education_type": 1,
+    "institute": "VNSGU",
+    "course": "BA",
+    "specialization": "Gujarati",
+    "duration_from": "2020-06-15",
+    "duration_to":"2023-04-10",
+    "grading": "89"
+}
+
+```
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65c1dd4158cd49faf0bd7910",
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "education_type": 1,
+        "institute": "VNSGU",
+        "course": "BA",
+        "specialization": "Gujarati",
+        "duration_from": "2020-06-15T00:00:00.000Z",
+        "duration_to": "2023-04-10T00:00:00.000Z",
+        "grading": "89",
+        "deleted": false,
+        "created_by": "65c1dce3859b40422dd26d42",
+        "updated_by": "65bc8a08ee10fd14593b0ce5",
+        "created_at": "2024-02-06T07:18:25.161Z",
+        "updated_at": "2024-02-06T11:30:55.690Z",
+        "__v": 0
+    },
+    "msg": "Education updated successfully"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+If same detail already exist:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Education detail already exist"
+}
