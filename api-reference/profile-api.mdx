@@ -1,0 +1,308 @@
+---
+title: Profile API
+excludeFromToc: true
+---
+
+
+
+
+# View Jobseeker Profile API
+
+## Endpoint
+
+`GET /api/jobseeker/profile/view`
+
+This endpoint is used to view the profile of a jobseeker.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+### Response
+
+- Status: 200 OK if successful, error status otherwise.
+- Body: JSON response containing the profile data of the jobseeker.
+
+### Profile Data Structure
+
+- `user_id`: The ID of the user.
+- `country_code`: The country code of the user's phone number.
+- `mobile_no`: The mobile number of the user.
+- `user_email`: The email address of the user.
+- `user_type`: The type of user (e.g., jobseeker).
+- `language`: The language preference of the user.
+- `first_name`: The first name of the user.
+- `last_name`: The last name of the user.
+- `full_name`: The full name of the user (concatenation of first name and last name).
+- `date_of_birth`: The date of birth of the jobseeker.
+- `about`: Information about the jobseeker.
+- `gender`: The gender of the jobseeker.
+- `location`: The location of the jobseeker.
+- `work_position`: The current work position of the jobseeker.
+- `work_status`: The work status of the jobseeker.
+- `profile_img`: The profile image URL of the jobseeker.
+- `identity_type`: The type of identity document (e.g., passport) of the jobseeker.
+- `identity_card`: The identity card information of the jobseeker.
+- `skills`: The skills of the jobseeker.
+- `known_language`: The known languages of the jobseeker.
+- `resume`: The resume of the jobseeker.
+- `notification`: Notification settings of the jobseeker.
+- `open_to_work`: Whether the jobseeker is open to work.
+- `available_to_join`: Availability of the jobseeker to join.
+- `employmentData`: Array containing employment history of the jobseeker.
+- `educationData`: Array containing education history of the jobseeker.
+- `certificateData`: Array containing certificate information of the jobseeker.
+
+### Notes
+
+- Ensure to include the authorization token in the request header.
+- The profile data includes various details about the jobseeker such as personal information, work history, education history, and certificate information.
+- If the profile data is successfully retrieved, it is returned in the response body.
+- If the profile data is not found or there are errors, appropriate error messages are returned in the response.
+
+---
+### Examples
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65bc8a08ee10fd14593b0ce5",
+        "country_code": "+66",
+        "mobile_no": "111111111",
+        "first_name": "Test Chaisom",
+        "last_name": "Test Anand",
+        "user_email": "job_seeker@gmail.com",
+        "user_type": 1,
+        "language": 1,
+        "employmentData": [
+            {
+                "_id": "65c07d3fdc66fe20326180a9",
+                "currently_employed": false,
+                "job_title": "Test Supervisor",
+                "company_name": "Test Hotel",
+                "work_from": "2023-05-17T00:00:00.000Z",
+                "work_to": "2024-02-15T00:00:00.000Z",
+                "exp_year": 1,
+                "exp_month": 2,
+                "work_description": "Hotel supervisor"
+            },
+            {
+                "_id": "65c09e4e552400c23d1a6acf",
+                "currently_employed": true,
+                "job_title": "Test supervisor",
+                "company_name": "Test Hotel",
+                "work_from": "2024-02-16T00:00:00.000Z",
+                "work_to": null,
+                "exp_year": 1,
+                "exp_month": 2,
+                "work_description": "Hotel supervisor"
+            },
+        ],
+        "educationData": [
+            {
+                "_id": "65c1dd3a58cd49faf0bd7905",
+                "education_type": 2,
+                "institute": "VNSGU",
+                "course": "BA",
+                "specialization": "Gujarat",
+                "duration_from": "2020-06-15T00:00:00.000Z",
+                "duration_to": "2023-04-10T00:00:00.000Z",
+                "grading": "89"
+            },
+            {
+                "_id": "65c1dd4158cd49faf0bd7910",
+                "education_type": 1,
+                "institute": "VNSGU",
+                "course": "BA",
+                "specialization": "Gujarati",
+                "duration_from": "2020-06-15T00:00:00.000Z",
+                "duration_to": "2023-04-10T00:00:00.000Z",
+                "grading": "89"
+            },
+        ],
+        "certificateData": [
+            {
+                "_id": "65c325eebfe0f967574792fc",
+                "certificate_name": "Degree",
+                "file_url": "images/certificate.text"
+            },
+            {
+                "_id": "65c325ffbfe0f96757479304",
+                "certificate_name": "Degree_1",
+                "file_url": "images/certificate.text"
+            },
+        ],
+        "full_name": "Test Chaisom Test Anand",
+        "date_of_birth": "1995-11-25T00:00:00.000Z",
+        "about": "I am Jobseeker",
+        "gender": 1,
+        "location": "Bangkok, Thailand",
+        "work_position": "Hotel Manager",
+        "work_status": 1,
+        "profile_img": "images/photo.jpeg",
+        "identity_type": 1,
+        "identity_card": "images/id_card.jpeg",
+        "skills": [
+            "Supervision",
+            "Data analysis",
+            "Management"
+        ],
+        "known_language": [
+            "Gujarati",
+            "English",
+            "Thai"
+        ],
+        "notification": true,
+        "open_to_work": true,
+        "available_to_join": 1
+    },
+    "msg": "Profile data"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+
+
+
+# Update Jobseeker Profile API
+
+## Endpoint
+
+`PATCH /api/jobseeker/profile/update`
+
+This endpoint is used to update the profile of a jobseeker.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Body
+
+The request body should contain the following fields for updating the jobseeker's profile:
+
+- `about`: Information about the jobseeker.
+- `first_name`: The updated first name of the jobseeker.
+- `last_name`: The updated last name of the jobseeker.
+- `user_email`: The updated email address of the jobseeker.
+- `country_code`: The updated country code of the user's phone number.
+- `mobile_no`: The updated mobile number of the user.
+- `date_of_birth`: The updated date of birth of the jobseeker.
+- `gender`: The updated gender of the jobseeker.
+- `location`: The updated location of the jobseeker.
+- `work_status`: The updated work status of the jobseeker.
+- `available_to_join`: The updated availability of the jobseeker to join.
+- `known_language`: An array of updated known languages of the jobseeker.
+- `skills`: An array of updated skills of the jobseeker.
+
+### Response
+
+- Status: 200 OK if successful, error status otherwise.
+- Body: JSON response indicating whether the profile update was successful or not.
+
+### Notes
+
+- Ensure to include the authorization token in the request header.
+- The request body should contain the fields to be updated in the jobseeker's profile.
+- If the profile update is successful, a success message is returned in the response body.
+- If there are any errors during the update process, appropriate error messages are returned in the response.
+
+---
+### Examples
+
+#### Request Example
+
+```json
+{
+    "first_name": "Test Chaisom",
+    "last_name": "Test Anand",
+    "about": "I am Jobseeker",
+    "user_email": "job_seeker@gmail.com",
+    "country_code": "+66",
+    "mobile_no": "111111111",
+    "date_of_birth": "1995-11-25",
+    "gender": 1,
+    "location": "Bangkok, Thailand",
+    "work_status": 1,
+    "available_to_join": 1,
+    "known_language": [
+        "Gujarati",
+        "English",
+        "Thai"
+    ],
+    "skills": [
+        "Supervision",
+        "Data analysis",
+        "Management"
+    ]
+}
+```
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65bc8a08ee10fd14593b0ce8",
+        "country_code": "+66",
+        "mobile_no": "111111111",
+        "first_name": "Test Chaisom",
+        "last_name": "Test Anand",
+        "user_email": "job_seeker@gmail.com",
+        "user_type": 1,
+        "language": 1,
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "about": "I am Jobseeker",
+        "date_of_birth": "1995-11-25T00:00:00.000Z",
+        "gender": 1,
+        "location": "Bangkok, Thailand",
+        "work_position": "Hotel Manager",
+        "work_status": 1,
+        "profile_img": "images/photo.jpeg",
+        "identity_type": 1,
+        "identity_card": "images/id_card.jpeg",
+        "skills": [
+            "Supervision",
+            "Data analysis",
+            "Management"
+        ],
+        "known_language": [
+            "Gujarati",
+            "English",
+            "Thai"
+        ],
+        "notification": true,
+        "open_to_work": true,
+        "available_to_join": 1
+    },
+    "msg": "Basic detail updated"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```

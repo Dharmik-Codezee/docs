@@ -77,6 +77,8 @@
         "api-reference/job-api",
         "api-reference/employment-api",
         "api-reference/education-api",
+        "api-reference/certificate-api",
+        "api-reference/profile-api",
         "api-reference/common-api"
       ]
     },
