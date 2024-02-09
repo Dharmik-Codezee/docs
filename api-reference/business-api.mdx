@@ -837,3 +837,554 @@ Error Response Example
   }
 }
 ```
+
+
+
+# View Business Profile API
+
+## Endpoint
+
+`GET /api/business/profile/view/:business_id`
+
+This endpoint is used to view the profile of a business.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `business_id`: The ID of the business whose profile is to be viewed.
+
+### Response
+
+- Status: 200 OK if successful, error status otherwise.
+- Body: JSON response containing the profile data of the business.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `business_id` parameter must be a valid MongoDB ObjectID with a length of 24 characters.
+
+### Notes
+
+- This endpoint retrieves the profile information of a business, including its basic details and location data.
+- If the business profile is found, the response contains the profile data in the body.
+- If the business profile is not found or the user is not authorized, appropriate error messages are returned in the response.
+
+---
+
+#### Example
+
+### Response header
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65bc7b14bf1407cea573a9c6",
+        "country_code": "+66",
+        "mobile_no": "222222222",
+        "first_name": "Test Business Owner",
+        "user_email": "owner@gmail.com",
+        "user_type": 2,
+        "language": 1,
+        "locationData": [
+            {
+                "_id": "65bc7b14bf1407cea573a9d9",
+                "business_id": "65bc7b14bf1407cea573a9cc",
+                "address": "101, Main Street",
+                "city": "Bangkok, Thailand",
+                "zip_code": "987654"
+            }
+        ],
+        "owner_id": "65bc7b14bf1407cea573a9c6",
+        "logo": "images/photo.jpeg",
+        "business_name": "Test Thai Hotel",
+        "business_country_code": "+66",
+        "business_mobile_no": "655597453",
+        "business_email": "thai@gmail.com",
+        "business_category_id": "65b8c331d3aa1143d135b72c",
+        "business_details": "Thai food hotel"
+    },
+    "msg": "Profile data"
+}
+```
+
+Error Response Example
+
+```json
+{
+  "status": 400,
+  "error": {
+    "message": "Validation error",
+    "details": ["Please enter a valid mobile number"]
+  }
+}
+```
+
+
+
+
+# Update Business Profile API
+
+## Endpoint
+
+`PATCH /api/business/profile/update/:business_id`
+
+This endpoint is used to update the profile of a business.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `business_id`: The ID of the business whose profile is to be updated.
+
+### Body
+
+- `logo`: URL of the business logo.
+- `business_name`: Name of the business.
+- `business_email`: Email address of the business.
+- `business_category_id`: ID of the business category.
+- `business_details`: Details about the business.
+- `first_name`: First name of the user associated with the business.
+- `user_email`: Email address of the user associated with the business.
+- `language`: Preferred language of the user associated with the business.
+
+### Response
+
+- Status: 200 OK if successful, error status otherwise.
+- Body: JSON response containing the updated profile data of the business.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `business_id` parameter must be a valid MongoDB ObjectID with a length of 24 characters.
+- The `business_category_id` must be a valid MongoDB ObjectID if provided.
+- The `logo`, `business_email`, and `user_email` fields must contain valid email addresses if provided.
+- The `language` field must be a number.
+
+### Notes
+
+- This endpoint updates the profile information of a business, including its basic details and category.
+- Only authorized users who are members of the business can update the profile.
+- If the business profile is not found, or the user is not authorized, appropriate error messages are returned in the response.
+
+---
+
+### Examples
+
+#### Request Example
+
+```json
+{
+    "first_name": "Test Business Owner",
+    "user_email": "owner@gmail.com",
+    "language": 1,
+    "logo": "images/photo.jpeg",
+    "business_name": "Test Thai Hotel",
+    "business_email": "thai@gmail.com",
+    "business_category_id": "65b8c331d3aa1143d135b72c",
+    "business_details": "Test Food Hotel"
+}
+```
+
+Successful Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65bc7b14bf1407cea573a9cc",
+        "country_code": "+66",
+        "mobile_no": "222222222",
+        "first_name": "Test Business Owner",
+        "user_email": "owner@gmail.com",
+        "user_type": 2,
+        "language": 1,
+        "owner_id": "65bc7b14bf1407cea573a9c6",
+        "logo": "images/photo.jpeg",
+        "business_name": "Test Thai Hotel",
+        "business_country_code": "+66",
+        "business_mobile_no": "655597453",
+        "business_email": "thai@gmail.com",
+        "business_category_id": "65b8c331d3aa1143d135b72c",
+        "business_details": "Test Food Hotel",
+        "notification": true,
+        "created_by": "65bc7b14bf1407cea573a9c6",
+        "updated_by": "65bc7b14bf1407cea573a9c6"
+    },
+    "msg": "Profile detail updated"
+}
+```
+Error Response Example
+
+```json
+{
+  "status": 400,
+  "error": {
+    "message": "Validation error",
+    "details": ["Please enter a valid mobile number"]
+  }
+}
+```
+
+
+
+
+# Send OTP for Business Mobile Number Verification API
+
+## Endpoint
+
+`POST /api/business/mobile/send-otp/:business_id`
+
+This endpoint is used to send an OTP to the mobile number associated with a business for verification purposes.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `business_id` (required): The ID of the business for which the OTP is being sent.
+
+### Response
+
+- Status: 200 OK if the OTP is successfully sent, error status otherwise.
+- Body: JSON response indicating the result of the OTP sending operation.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `business_id` parameter must be provided in the URL and should be a valid MongoDB ObjectID with a length of 24 characters.
+
+### Notes
+
+- This endpoint sends an OTP to the mobile number associated with a business for verification purposes.
+- The OTP is sent only if the user making the request is a member of the business.
+- If the business does not exist or if the user is not a member of the business, appropriate error messages are returned in the response.
+
+---
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "Otp sent to business mobile no"
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response (If token is expired):
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "Token Expired"
+}
+```
+
+
+
+
+# Verify OTP for Business Mobile Number API
+
+## Endpoint
+
+`POST /api/business/mobile/verify-otp/:business_id`
+
+This endpoint is used to verify the OTP sent to the mobile number associated with a business.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `business_id` (required): The ID of the business for which the OTP is being verified.
+
+#### Body
+
+- `otp` (required): The OTP to be verified.
+
+### Response
+
+- Status: 200 OK if the OTP is successfully verified, error status otherwise.
+- Body: JSON response indicating the result of the OTP verification operation.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `business_id` parameter must be provided in the URL and should be a valid MongoDB ObjectID with a length of 24 characters.
+- The `otp` parameter must be provided in the request body and should be a numeric value.
+
+### Notes
+
+- This endpoint verifies the OTP sent to the mobile number associated with a business.
+- The OTP is verified only if the user making the request is a member of the business.
+- If the business does not exist, if the user is not a member of the business, or if the OTP is invalid or not found, appropriate error messages are returned in the response.
+
+---
+### Example
+### Request Body
+
+```json
+{
+    "otp": 1234
+}
+```
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "OTP verified"
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response (If token is expired):
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "Token Expired"
+}
+```
+
+
+
+
+# Send OTP to Update Business Mobile Number API
+
+## Endpoint
+
+`POST /api/business/update-mobile/send-otp/:business_id`
+
+This endpoint is used to send an OTP to verify the update of the mobile number associated with a business.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `business_id` (required): The ID of the business for which the OTP is being sent.
+
+#### Body
+
+- `country_code` (required): The country code of the new mobile number.
+- `mobile_no` (required): The new mobile number.
+- `otp` (required): The OTP to be sent and verified.
+
+### Response
+
+- Status: 200 OK if the OTP is successfully sent, error status otherwise.
+- Body: JSON response indicating the result of the OTP sending operation.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `business_id` parameter must be provided in the URL and should be a valid MongoDB ObjectID with a length of 24 characters.
+- The `country_code`, `mobile_no`, and `otp` parameters must be provided in the request body. `country_code` and `mobile_no` should be numeric values, and `otp` should be a numeric value.
+
+### Notes
+
+- This endpoint sends an OTP to the specified mobile number to verify the update of the mobile number associated with a business.
+- The OTP is sent only if the user making the request is a member of the business.
+- If the business does not exist or if the user is not a member of the business, appropriate error messages are returned in the response.
+
+---
+### Example
+### Request Body
+
+```json
+{
+    "country_code": "+66",
+    "mobile_no": 222222223,
+    "otp": 1234
+}
+```
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "Otp sent to your entered mobile no"
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response (If token is expired):
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "Token Expired"
+}
+```
+
+
+
+
+# Verify OTP to Update Business Mobile Number API
+
+## Endpoint
+
+`POST /api/business/update-mobile/verify-otp/:business_id`
+
+This endpoint is used to verify the OTP sent for updating the mobile number associated with a business.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `business_id` (required): The ID of the business for which the OTP is being verified.
+
+#### Body
+
+- `country_code` (required): The country code of the new mobile number.
+- `mobile_no` (required): The new mobile number.
+- `otp` (required): The OTP to be verified.
+
+### Response
+
+- Status: 200 OK if the OTP is successfully verified and the mobile number is updated, error status otherwise.
+- Body: JSON response indicating the result of the OTP verification operation.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `business_id` parameter must be provided in the URL and should be a valid MongoDB ObjectID with a length of 24 characters.
+- The `country_code`, `mobile_no`, and `otp` parameters must be provided in the request body. `country_code` and `mobile_no` should be numeric values, and `otp` should be a numeric value.
+
+### Notes
+
+- This endpoint verifies the OTP sent for updating the mobile number associated with a business.
+- The mobile number is updated only if the user making the request is a member of the business and the OTP is valid.
+- If the business does not exist, the user is not a member of the business, or the OTP is invalid, appropriate error messages are returned in the response.
+
+---
+### Example
+### Request Body
+
+```json
+{
+    "country_code": "+66",
+    "mobile_no": 222222223,
+    "otp": 4321
+}
+```
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65bc8b03ee10fd14593b0cfb",
+        "owner_id": "65bc7b14bf1407cea573a9c6",
+        "logo": "images/photo.jpeg",
+        "business_name": "Thai Bar",
+        "business_country_code": "+66",
+        "business_mobile_no": "222222223",
+        "business_email": "thai@gmail.com",
+        "business_category_id": "65b8c331d3aa1143d135b72c",
+        "business_details": "Thai Food hotel",
+        "notification": true,
+        "deleted": false,
+        "created_by": "65bc7b14bf1407cea573a9c6",
+        "updated_by": "65bc7b14bf1407cea573a9c6",
+        "created_at": "2024-02-02T06:26:11.206Z",
+        "updated_at": "2024-02-02T06:39:39.447Z",
+        "__v": 0
+    },
+    "msg": "Mobile no updated"
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response (If token is expired):
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "Token Expired"
+}
+```

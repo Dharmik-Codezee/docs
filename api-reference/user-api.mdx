@@ -459,3 +459,342 @@ This API endpoint is used to delete a user account.
   "msg": "Token Expired"
 }
 ```
+
+
+
+
+# Send OTP to Mobile API
+
+## Endpoint
+
+`POST /api/user/mobile/send-otp`
+
+This endpoint is used to send a one-time password (OTP) to the mobile number associated with the user's account.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+### Response
+
+- Status: 200 OK if successful, error status otherwise.
+- Body: JSON response indicating the success of the OTP sending operation.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+
+### Notes
+
+- This endpoint sends a randomly generated OTP to the mobile number associated with the user's account.
+- The OTP is generated as a four-digit number (e.g., 1234) for testing purposes. This should be replaced with a proper OTP generation mechanism in a production environment.
+- The OTP is associated with the user's account and stored in the database for verification purposes.
+- If the user account is not found or the operation encounters an error, appropriate error messages are returned in the response.
+
+---
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "Otp sent to your account mobile no"
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response (If token is expired):
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "Token Expired"
+}
+```
+
+
+
+
+# Verify Mobile OTP API
+
+## Endpoint
+
+`POST /api/user/mobile/verify-otp`
+
+This endpoint is used to verify the one-time password (OTP) sent to the user's mobile number.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Body
+
+- `otp` (required): The OTP received on the user's mobile device.
+
+### Response
+
+- Status: 200 OK if the OTP is successfully verified, error status otherwise.
+- Body: JSON response indicating the result of the OTP verification operation.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The request body must contain the `otp` parameter, which should be a numeric value.
+
+### Notes
+
+- This endpoint verifies the OTP sent to the user's mobile number.
+- The OTP is compared with the OTP stored in the database for the user.
+- If the OTP matches, a success response indicating that the OTP is verified is returned.
+- If the OTP does not match or is not found, appropriate error messages are returned in the response.
+
+---
+
+### Example
+### Request Body
+
+```json
+{
+    "otp": 1234
+}
+```
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "OTP verified"
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response (If token is expired):
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "Token Expired"
+}
+```
+
+
+
+
+# Send OTP for Updating Mobile Number API
+
+## Endpoint
+
+`POST /api/user/update-mobile/send-otp`
+
+This endpoint is used to send a one-time password (OTP) to the user's new mobile number for updating the mobile number associated with the user account.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Body Parameters
+
+- `country_code` (required): The country code of the new mobile number.
+- `mobile_no` (required): The new mobile number.
+- `otp` (required): The OTP received on the current mobile number.
+
+### Response
+
+- Status: 200 OK if the OTP is successfully sent, error status otherwise.
+- Body: JSON response indicating the result of the OTP sending operation.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The request body must contain the following parameters:
+  - `country_code`: The country code of the new mobile number, which should be a numeric value.
+  - `mobile_no`: The new mobile number, which should be a numeric value.
+  - `otp`: The OTP received on the current mobile number, which should be a numeric value.
+
+### Notes
+
+- This endpoint sends an OTP to the user's new mobile number for verifying the mobile number update process.
+- The OTP is compared with the OTP previously sent to the user's current mobile number.
+- If the OTP matches, the new mobile number is updated for the user account.
+- If the OTP does not match or there are other errors, appropriate error messages are returned in the response.
+
+---
+
+### Example
+### Request Body
+
+```json
+{
+    "country_code": "+66",
+    "mobile_no": 222222223,
+    "otp": 1234
+}
+```
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "Otp sent to your entered mobile no"
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response (If token is expired):
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "Token Expired"
+}
+```
+
+
+
+
+# Verify OTP for Updating Mobile Number API
+
+## Endpoint
+
+`POST /api/user/update-mobile/verify-otp`
+
+This endpoint is used to verify the OTP sent to the user's new mobile number for updating the mobile number associated with the user account.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Body Parameters
+
+- `country_code` (required): The country code of the new mobile number.
+- `mobile_no` (required): The new mobile number.
+- `otp` (required): The OTP received on the new mobile number.
+
+### Response
+
+- Status: 200 OK if the OTP is successfully verified and the mobile number is updated, error status otherwise.
+- Body: JSON response indicating the result of the OTP verification operation.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The request body must contain the following parameters:
+  - `country_code`: The country code of the new mobile number, which should be a numeric value.
+  - `mobile_no`: The new mobile number, which should be a numeric value.
+  - `otp`: The OTP received on the new mobile number, which should be a numeric value.
+
+### Notes
+
+- This endpoint verifies the OTP sent to the user's new mobile number for completing the mobile number update process.
+- If the OTP matches, the new mobile number is updated for the user account.
+- If the OTP does not match or there are other errors, appropriate error messages are returned in the response.
+
+---
+
+### Example
+### Request Body
+
+```json
+{
+    "country_code": "+66",
+    "mobile_no": 222222223,
+    "otp": 4321
+}
+```
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65bc7b14bf1407cea573a9c6",
+        "country_code": "+66",
+        "mobile_no": "222222223",
+        "first_name": "Test Business Owner",
+        "user_email": "owner@gmail.com",
+        "user_type": 2,
+        "language": 1,
+        "deleted": false,
+        "created_at": "2024-02-02T05:18:12.413Z",
+        "updated_at": "2024-02-08T11:51:30.380Z",
+        "__v": 0
+    },
+    "msg": "Mobile no updated"
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response (If token is expired):
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "Token Expired"
+}
+```

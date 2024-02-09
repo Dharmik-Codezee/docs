@@ -130,6 +130,226 @@ You Are Not Allowed:
 
 
 
+
+# Send OTP for Job Post Verification API
+
+## Endpoint
+
+`POST /api/job/post/send-otp`
+
+This endpoint is used to send an OTP for verifying a job post via email.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Body
+
+- `job_id` (required): The ID of the job post to verify. Should be a valid MongoDB ObjectID with a length of 24 characters.
+- `email_id` (required): The email address where the OTP will be sent.
+
+### Response
+
+- Status: 200 OK if the OTP is successfully sent, error status otherwise.
+- Body: JSON response indicating the result of the OTP sending operation.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `job_id` parameter must be provided in the request body and should be a valid MongoDB ObjectID with a length of 24 characters.
+- The `email_id` parameter must be provided in the request body.
+
+### Notes
+
+- This endpoint sends an OTP to the provided email address for verifying a job post.
+- The OTP is sent only if the user making the request exists and is associated with the job's business.
+- If the job or business does not exist, or the user is not a member of the business, appropriate error messages are returned in the response.
+
+---
+### Request Body
+
+```json
+{
+    "job_id": "65bc9a4f31e4bb6a9aed7d6c",
+    "email_id": "owner.business@gmail.com"
+}
+```
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "Otp sent to your email id"
+}
+```
+
+Email id not matched:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Business email id not matched"
+}
+```
+
+Business Not Found:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "Business not found"
+}
+
+```
+
+You Are Not Allowed:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "You are not member of this business"
+}
+```
+
+
+
+
+# Verify OTP for Job Post API
+
+## Endpoint
+
+`POST /api/job/post/verify-otp`
+
+This endpoint is used to verify a job post using an OTP sent to an email address.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Body
+
+- `job_id` (required): The ID of the job post to verify. Should be a valid MongoDB ObjectID with a length of 24 characters.
+- `email_id` (required): The email address where the OTP was sent.
+- `otp` (required): The OTP received via email.
+
+### Response
+
+- Status: 200 OK if the job post is successfully verified, error status otherwise.
+- Body: JSON response indicating the result of the verification operation.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `job_id` parameter must be provided in the request body and should be a valid MongoDB ObjectID with a length of 24 characters.
+- The `email_id` parameter must be provided in the request body.
+- The `otp` parameter must be provided in the request body and should be numeric.
+
+### Notes
+
+- This endpoint verifies a job post using the OTP sent to the specified email address.
+- The job post is considered verified if the OTP provided matches the OTP sent for the job post.
+- If the job, business, or user does not exist, or if the OTP is invalid or not generated for the specified email address, appropriate error messages are returned in the response.
+
+---
+
+### Request Body
+
+```json
+{
+    "job_id": "65bc9a4f31e4bb6a9aed7d6c",
+    "email_id": "owner.business@gmail.com",
+    "otp": 1234
+}
+```
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65bc9a4f31e4bb6a9aed7d5b",
+        "job_title": "Test Case Manager",
+        "business_id": "65bc8b03ee10fd14593b0cfb",
+        "business_location_id": "65bc8b03ee10fd14593b0d08",
+        "experience": 1,
+        "workplace_type": 1,
+        "job_type": 1,
+        "salary": 0,
+        "specialization_id": "65b8c4ed5c60878b99602caa",
+        "description": "Lorem ipsum dolor sit amet.",
+        "description_img": "images/photo.jpeg",
+        "status": 0,
+        "verified": true,
+        "deleted": false,
+        "created_by": "65bc7b14bf1407cea573a9c6",
+        "updated_by": "65bc7b14bf1407cea573a9c6",
+        "created_at": "2024-02-02T07:31:27.815Z",
+        "updated_at": "2024-02-09T09:54:52.163Z",
+        "__v": 0,
+        "active": true,
+        "promoted": false
+    },
+    "msg": "Job post verified successfully"
+}
+```
+
+Email id not matched:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Business email id not matched"
+}
+```
+
+Business Not Found:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "Business not found"
+}
+
+```
+
+You Are Not Allowed:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "You are not member of this business"
+}
+```
+
+
+
+
+
 # Job List API
 
 ## Endpoint
