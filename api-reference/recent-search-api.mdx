@@ -1,0 +1,157 @@
+---
+title: Recent Search API
+excludeFromToc: true
+---
+
+
+
+# List Recent Search API
+
+## Endpoint
+
+`GET /api/jobseeker/recent-search/list`
+
+This endpoint retrieves a list of recent searches performed by a jobseeker, along with suggested searches based on the most commonly searched keywords.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+### Response
+
+- Status: 200 OK if the recent search list is successfully retrieved, error status otherwise.
+- Body: JSON response containing the recent search list and suggested searches.
+
+### Recent Search List Structure
+
+- `recent_search`: An array of recent search objects, each containing the following fields:
+  - `search_keyword`: The keyword or phrase searched by the user.
+
+### Suggested Search List Structure
+
+- `suggested_search`: An array of suggested search objects, each containing the following fields:
+  - `search_keyword`: The suggested keyword or phrase.
+  - `count`: The number of times the keyword or phrase has been searched.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+
+### Notes
+
+- This endpoint retrieves a list of recent searches performed by a jobseeker, along with suggested searches based on the most commonly searched keywords.
+- The recent search list is sorted based on the timestamp of the searches, with the most recent searches appearing first.
+- The suggested search list is generated based on the frequency of searches for each keyword or phrase.
+- If the user does not exist or an error occurs during the retrieval process, an appropriate error message is returned in the response.
+
+---
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "recent_search": [
+            {
+                "_id": "65ca07fcb82ab3cf77cf2539",
+                "search_keyword": "HR"
+            },
+            {
+                "_id": "65ca0748b82ab3cf77cf252f",
+                "search_keyword": "Front Desk Supervisor"
+            }
+        ],
+        "suggested_search": [
+            {
+                "search_keyword": "Front Desk Supervisor"
+            },
+            {
+                "search_keyword": "HR"
+            }
+        ]
+    },
+    "msg": "List of recent_search"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+
+
+
+# Update Recent Search API
+
+## Endpoint
+
+`POST /api/jobseeker/recent-search/update/:recent_search_id`
+
+This endpoint allows updating or deleting a recent search performed by a jobseeker.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `recent_search_id`: The ID of the recent search to update or delete.
+
+### Request Body
+
+- `deleted`: Boolean flag indicating whether to delete the recent search. If `true`, the recent search will be deleted.
+
+### Response
+
+- Status: 200 OK if the recent search is successfully updated or deleted, error status otherwise.
+- Body: JSON response containing the result of the update or delete operation.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `recent_search_id` parameter must be a valid ObjectID with a length of 24 characters.
+
+### Notes
+
+- This endpoint allows updating or deleting a recent search performed by a jobseeker.
+- To delete a recent search, set the `deleted` flag to `true` in the request body.
+- If the recent search is successfully deleted, a success message is returned in the response.
+- If the recent search data is not found or an error occurs during the update or delete process, an appropriate error message is returned in the response.
+- If `recent_search_id` is not provided and `userId` exists, all recent search data associated with the user will be cleared.
+
+---
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "acknowledged": true,
+        "deletedCount": 2
+    },
+    "msg": "All recent search data cleared"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```

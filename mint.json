@@ -79,6 +79,7 @@
         "api-reference/education-api",
         "api-reference/certificate-api",
         "api-reference/profile-api",
+        "api-reference/recent-search-api",
         "api-reference/common-api"
       ]
     },
