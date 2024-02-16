@@ -111,9 +111,6 @@ If user not exist:
 
 This endpoint is used to upload a file.
 
-### Request Headers
-- **Authorization:** Bearer type JWT token for authentication.
-
 ### Request Body Parameters
 - `file` (Body parameter): The file to be uploaded.(Note: Ensure that the file is uploaded using the "form-data" option in the request body.)
 
@@ -148,16 +145,6 @@ Response header
     "msg": "File uploaded successfully"
 }
 
-```
-
-If user not exist:
-
-```json
-{
-  "err": 1,
-  "data": {},
-  "msg": "User not exist"
-}
 ```
 
 File not uploaded

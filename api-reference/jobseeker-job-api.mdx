@@ -1,0 +1,500 @@
+---
+title: Jobseeker Job API
+excludeFromToc: true
+---
+
+
+
+# View Job API
+
+## Endpoint
+
+`POST /api/jobseeker/view-job/:job_id`
+
+This endpoint allows a jobseeker to view details of a specific job.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `job_id`: The ID of the job to view.
+
+### Response
+
+- Status: 200 OK if the job details are successfully retrieved, error status otherwise.
+- Body: JSON response containing the details of the requested job.
+
+### Request Body
+
+This endpoint does not require a request body.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `job_id` parameter must be a valid MongoDB ObjectId.
+
+### Notes
+
+- This endpoint retrieves details of a job based on its ID.
+- The job details include information such as job title, experience required, workplace type, job type, salary, specialization, business details, location, and description.
+- The endpoint also records the job view activity of the jobseeker and prevents duplicate views by checking if the job has been previously viewed by the user.
+- If the job details are successfully retrieved, they are returned in the response along with a success message. Otherwise, an appropriate error message is returned.
+
+---
+### Request Body
+
+```json
+{
+    "latitude": 13.7563,
+    "longitude":  100.5019
+}
+```
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65bc9a4f31e4bb6a9aed7d5b",
+        "job_title": "Test Case Manager",
+        "experience": 1,
+        "workplace_type": 1,
+        "job_type": 1,
+        "salary": 0,
+        "description": "Lorem ipsum dolor sit amet.",
+        "description_img": "images/photo.jpeg",
+        "businessData": {
+            "_id": "65bc8b03ee10fd14593b0cfb",
+            "logo": "images/photo.jpeg",
+            "business_name": "Thai Bar",
+            "business_country_code": "+66",
+            "business_mobile_no": "222222223",
+            "business_email": "thai@gmail.com",
+            "owner_name": "Test Business Owner",
+            "business_category": "Retail",
+            "business_details": "Thai Food hotel",
+            "latitude": 13.7564,
+            "longitude": 100.5019,
+            "location": "Amnat Charoen, Thailand",
+            "address": "99, Last Street, Amnat Charoen, Thailand, 987654",
+            "distance": "0 km from your location"
+        },
+        "specialization": "Sales and Customer Service",
+        "location": "Amnat Charoen, Thailand"
+    },
+    "msg": "Job detail"
+}
+```
+
+Job_id is wrong or invalid:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "Job not exist"
+}
+
+```
+
+User not exist:
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+
+
+
+# Keep Job API
+
+## Endpoint
+
+`POST /api/jobseeker/keep-job/:job_id/:is_keep`
+
+This endpoint allows a jobseeker to keep or remove a job from their saved jobs list.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `job_id`: The ID of the job to keep or remove.
+- `is_keep`: A boolean value indicating whether to keep (`true`) or remove (`false`) the job.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the updated status of the job (kept or removed).
+
+### Request Body
+
+This endpoint does not require a request body.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `job_id` parameter must be a valid MongoDB ObjectId.
+- The `is_keep` parameter must be a boolean value (`true` or `false`).
+
+### Notes
+
+- This endpoint allows jobseekers to keep or remove jobs from their saved jobs list.
+- If the `is_keep` parameter is `true`, the job will be kept in the saved jobs list. If it is `false`, the job will be removed from the saved jobs list.
+- The endpoint checks if the job exists and if the user is authorized before performing the operation.
+- If the operation is successful, the response contains the updated status of the job along with a success message. Otherwise, an appropriate error message is returned.
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65cc9f9794dcc00bf0e16e00",
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "job_id": "65bc9a4f31e4bb6a9aed7d5b",
+        "is_keep": true,
+        "deleted": false,
+        "created_at": "2024-02-14T11:10:15.059Z",
+        "__v": 0
+    },
+    "msg": "Job kept"
+}
+```
+
+If job alrady in keep:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Job already in keep"
+}
+```
+
+If job removed from keep:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65cc9f9794dcc00bf0e16e00",
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "job_id": "65bc9a4f31e4bb6a9aed7d5b",
+        "is_keep": false,
+        "deleted": false,
+        "created_at": "2024-02-14T11:10:15.059Z",
+        "__v": 0
+    },
+    "msg": "Job removed from keep"
+}
+```
+
+If job not in keep:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Job not in keep"
+}
+```
+
+User not exist:
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+
+
+
+# List Keep Job API
+
+## Endpoint
+
+`GET /api/jobseeker/keep-job/list`
+
+This endpoint retrieves a list of jobs that the jobseeker has saved or kept.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of kept jobs.
+
+### Request Body
+
+This endpoint does not require a request body.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+
+### Notes
+
+- This endpoint allows jobseekers to retrieve a list of jobs they have saved or kept.
+- It retrieves jobs from the "viewed_job" collection where `is_keep` is `true`.
+- The response includes details such as job ID, title, salary, description image, business name, business logo, job location, and created date.
+- If there are no kept jobs for the user, the response will indicate that no jobs have been kept.
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "job_title": "Test Case Manager",
+            "salary": 0,
+            "description_img": "images/photo.jpeg",
+            "created_at": "2024-02-02T07:31:27.815Z",
+            "job_id": "65bc9a4f31e4bb6a9aed7d5b",
+            "business_name": "Thai Bar",
+            "business_logo": "images/photo.jpeg",
+            "job_location": "Amnat Charoen, Thailand"
+        }
+    ],
+    "msg": "List of keep Job"
+}
+```
+
+If not any job in keep:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": [],
+    "msg": "Not kept any job"
+}
+```
+
+User not exist:
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": [],
+  "msg": "User not exist"
+}
+```
+
+
+
+# Apply Job API
+
+## Endpoint
+
+`POST /api/jobseeker/apply-job/:job_id`
+
+This endpoint allows a jobseeker to apply for a specific job by providing the job ID.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `job_id`: The ID of the job to apply for.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the result of the application process.
+
+### Request Body
+
+This endpoint does not require a request body.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `job_id` parameter must be a valid MongoDB object ID with a minimum length of 24 characters.
+
+### Notes
+
+- This endpoint allows jobseekers to apply for a specific job by providing the job ID in the URL.
+- If the jobseeker has already applied for the job, the API will return an error indicating that the job has already been applied for.
+- Optionally, the jobseeker can provide a resume file (`data.resume`) for the application process.
+- The API creates a new entry in the `appliedJobModel` collection to record the application details.
+- If the application is successful, the API also creates an entry in the `viewedJobModel` collection to record that the job has been viewed by the user.
+- If any error occurs during the application process, an appropriate error message will be returned in the response.
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "job_id": "65bc9a4f31e4bb6a9aed7d5b",
+        "track": 1,
+        "status": 1,
+        "application_submitted": "2024-02-16T13:05:18.176Z",
+        "reviewed_by_company": null,
+        "screening_interview": null,
+        "technical_interview": null,
+        "final_hr_interview": null,
+        "team_matching": null,
+        "offer_letter": null,
+        "deleted": false,
+        "created_by": "65bc8a08ee10fd14593b0ce5",
+        "updated_by": "65bc8a08ee10fd14593b0ce5",
+        "created_at": "2024-02-16T13:05:18.133Z",
+        "updated_at": "2024-02-16T13:05:18.133Z",
+        "_id": "65cf5d8e98e616a893af7b2c",
+        "__v": 0
+    },
+    "msg": "Job applied successfully"
+}
+```
+
+If already applied:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Already applied"
+}
+```
+
+User not exist:
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+
+
+
+# List Applied Job API
+
+## Endpoint
+
+`GET /api/jobseeker/applied-job/list`
+
+This endpoint retrieves a list of jobs that the jobseeker has applied for.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of applied jobs.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+
+### Notes
+
+- This endpoint allows jobseekers to retrieve a list of jobs they have applied for.
+- The API aggregates data from the `applied_job`, `business`, and `business_location` collections to provide comprehensive job details.
+- Each job in the response includes information such as job title, salary, business name, business logo, job location, creation date, and application status.
+- If there are no applied jobs for the user, the API will return a message indicating that no jobs have been applied for.
+- If any error occurs during the process, an appropriate error message will be returned in the response.
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "job_title": "Test Case Manager",
+            "salary": 0,
+            "description_img": "images/photo.jpeg",
+            "created_at": "2024-02-02T07:31:27.815Z",
+            "job_id": "65bc9a4f31e4bb6a9aed7d5b",
+            "business_name": "Thai Bar",
+            "business_logo": "images/photo.jpeg",
+            "job_location": "Amnat Charoen, Thailand",
+            "status": 1
+        }
+    ],
+    "msg": "List of applied Job"
+}
+```
+
+If not applied to any job:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": [],
+    "msg": "Not applied any job"
+}
+```
+
+User not exist:
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": [],
+  "msg": "User not exist"
+}
+```

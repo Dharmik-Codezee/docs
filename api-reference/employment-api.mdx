@@ -25,8 +25,6 @@ This endpoint is used to add employment details for a jobseeker.
 - `company_name`: Name of the company.
 - `work_from`: Start date of the employment (formatted as a date).
 - `work_to` (optional): End date of the employment (formatted as a date).
-- `exp_year`: Number of years of experience (numeric).
-- `exp_month`: Number of months of experience (numeric).
 - `work_description` (optional): Description of the job responsibilities.
 
 ### Validation
@@ -56,8 +54,6 @@ This endpoint is used to add employment details for a jobseeker.
     "company_name": "Test Hotel",
     "work_from": "2022-02-17",
     "work_to": "2023-01-15",
-    "exp_year":1,
-    "exp_month": "2",
     "work_description": "Hotel supervisor"
 }
 ```
@@ -331,8 +327,6 @@ Authorization: your_auth_token
     "company_name": "Test Hotel",
     "work_from": "2022-02-17",
     "work_to": "2023-01-15",
-    "exp_year":1,
-    "exp_month": "2",
     "work_description": "Hotel supervisor"
 }
 ```
