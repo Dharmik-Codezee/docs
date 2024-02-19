@@ -1,0 +1,361 @@
+---
+title: Job Alert API
+excludeFromToc: true
+---
+
+
+
+
+# Create Job Alert API
+
+## Endpoint
+
+`POST /api/jobseeker/alert/create`
+
+This endpoint allows job seekers to create a new job alert.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Body Parameters
+
+- `alert_title` (string, required): The title of the job alert.
+- `location_id` (string, required): The ID of the location for which the job alert is created.
+- `alert_frequency` (number, required): The frequency of receiving job alerts (numeric value).
+- `notification_via` (number, required): The method of receiving notifications for job alerts (numeric value).
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing details of the created job alert.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `alert_title` in the request body must not be empty.
+- The `location_id` in the request body must be a valid MongoDB ObjectId with a minimum length of 24 characters.
+- The `alert_frequency` in the request body must be a numeric value.
+- The `notification_via` in the request body must be a numeric value.
+
+### Notes
+
+- This endpoint allows authorized job seekers to create job alerts based on their preferences.
+- The API validates the user's authorization and the correctness of the provided parameters.
+- If a job alert with the same title and location already exists for the user, the API returns an error message indicating that the job alert already exists.
+- Upon successful creation of the job alert, the API returns details of the created job alert.
+- If the job alert creation fails, the API returns an error message prompting the user to try again.
+
+---
+### Examples
+
+#### Request Example
+
+```json
+{
+    "alert_title": "HR Manager",
+    "location_id": "65bb44cdc384371c9b8f3376",
+    "alert_frequency": 1,
+    "notification_via": 1
+}
+```
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "alert_title": "HR Manager",
+        "location_id": "65bb44cdc384371c9b8f3376",
+        "alert_frequency": 1,
+        "notification_via": 1,
+        "deleted": false,
+        "created_by": "65bc8a08ee10fd14593b0ce5",
+        "updated_by": "65bc8a08ee10fd14593b0ce5",
+        "deleted_by": "65bc8a08ee10fd14593b0ce5",
+        "created_at": "2024-02-19T12:41:39.333Z",
+        "updated_at": "2024-02-19T12:41:39.333Z",
+        "_id": "65d34c83d573ddb2a21bb68f",
+        "__v": 0
+    },
+    "msg": "Job alert created"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+If same detail already exist:
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Job alert already exist"
+}
+```
+
+
+
+
+# List Job Alerts API
+
+## Endpoint
+
+`GET /api/jobseeker/alert/list`
+
+This endpoint allows job seekers to retrieve a list of their job alerts.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of job alerts associated with the user.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+
+### Notes
+
+- This endpoint retrieves a list of job alerts for the authorized job seeker.
+- The API validates the user's authorization.
+- If job alerts exist for the user, the API returns a list of job alerts with details such as alert title, location, frequency, and notification method.
+- If the user has not created any job alerts yet, the API returns a message prompting the user to add at least one alert.
+
+---
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65d34c83d573ddb2a21bb68f",
+            "user_id": "65bc8a08ee10fd14593b0ce5",
+            "alert_title": "HR Manager",
+            "location_id": "65bb44cdc384371c9b8f3376",
+            "alert_frequency": 1,
+            "notification_via": 1,
+            "deleted": false,
+            "location_name": "Bangkok, Thailand"
+        }
+    ],
+    "msg": "Job alert list"
+}
+```
+If no job alert created:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": [],
+    "msg": "Please add atleast one alert"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": [],
+   "msg": "User not exist"
+}
+```
+
+
+
+
+# View Job Alert API
+
+## Endpoint
+
+`GET /api/jobseeker/alert/view/:job_alert_id`
+
+This endpoint allows job seekers to view details of a specific job alert.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `job_alert_id`: The ID of the job alert to view.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the details of the requested job alert.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `job_alert_id` parameter must be a valid MongoDB ObjectId.
+
+### Notes
+
+- This endpoint retrieves the details of a specific job alert based on the provided ID.
+- The API validates the user's authorization and ensures that the job alert belongs to the authorized user.
+- If the requested job alert exists, the API returns its details, including the alert title, location, frequency, and notification method.
+- If the requested job alert does not exist or does not belong to the user, the API returns an appropriate error message.
+
+---
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65d34c83d573ddb2a21bb68f",
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "alert_title": "HR Manager",
+        "location_id": "65bb44cdc384371c9b8f3376",
+        "alert_frequency": 1,
+        "notification_via": 1,
+        "deleted": false,
+        "location_name": "Bangkok, Thailand"
+    },
+    "msg": "List of keep Job"
+}
+```
+
+If job alert not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "Job alert not exist"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+
+
+
+# Update Job Alert API
+
+## Endpoint
+
+`POST /api/jobseeker/alert/update/:job_alert_id`
+
+This endpoint allows job seekers to update a specific job alert.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+#### Parameters
+
+- `job_alert_id`: The ID of the job alert to update.
+
+#### Body
+
+- `alert_title`: Updated title for the job alert.
+- `location_id`: Updated location ID for the job alert.
+- `alert_frequency`: Updated frequency for receiving job alerts.
+- `notification_via`: Updated notification method for receiving job alerts.
+- `deleted`: Boolean indicating whether to delete the job alert.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the updated details of the job alert.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+- The `job_alert_id` parameter must be a valid MongoDB ObjectId.
+- The `alert_title` field must not be empty.
+- The `location_id` field, if provided, must be a valid MongoDB ObjectId.
+- The `alert_frequency` field must be a numeric value.
+- The `notification_via` field must be a numeric value.
+
+### Notes
+
+- This endpoint allows users to update various parameters of a specific job alert, such as the alert title, location, frequency, and notification method.
+- If the `deleted` field is set to `true`, the job alert will be deleted.
+- The API validates the user's authorization and ensures that the job alert belongs to the authorized user.
+- If the requested job alert does not exist or does not belong to the user, the API returns an appropriate error message.
+
+---
+### Request body
+
+```json
+{
+    "alert_title": "HR Manager",
+    "location_id": "65bb44cdc384371c9b8f3376",
+    "alert_frequency": 2,
+    "notification_via": 1
+}
+```
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65d34c83d573ddb2a21bb68f",
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "alert_title": "HR Manager",
+        "location_id": "65bb44cdc384371c9b8f3376",
+        "alert_frequency": 2,
+        "notification_via": 1,
+        "deleted": false,
+        "created_by": "65bc8a08ee10fd14593b0ce5",
+        "updated_by": "65bc8a08ee10fd14593b0ce5",
+        "deleted_by": "65bc8a08ee10fd14593b0ce5",
+        "created_at": "2024-02-19T12:41:39.333Z",
+        "updated_at": "2024-02-19T12:44:56.750Z",
+        "__v": 0
+    },
+    "msg": "Job alert updated successfully"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```

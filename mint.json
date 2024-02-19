@@ -81,6 +81,7 @@
         "api-reference/profile-api",
         "api-reference/recent-search-api",
         "api-reference/jobseeker-job-api",
+        "api-reference/job-alert-api",
         "api-reference/common-api"
       ]
     },
