@@ -446,7 +446,7 @@ If user not exist:
 {
    "status": 401,
    "err": 1,
-   "data": {},
+   "data": [],
    "msg": "User not exist"
 }
 ```
@@ -617,6 +617,84 @@ The API returns a JSON response with status, data, and message fields.
     - Status: Corresponding HTTP status code
     - Data: Empty
     - Message: "Business not updated, please try again."
+
+
+
+
+
+# List Applied Job API
+
+## Endpoint
+
+`GET /api/jobseeker/applied-job/list`
+
+This endpoint retrieves a list of jobs that the jobseeker has applied for.
+
+### Request
+
+#### Headers
+
+- `authorization`: Authorization token.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of applied jobs.
+
+### Validation
+
+- The `authorization` header must be included in the request.
+
+### Notes
+
+- This endpoint allows jobseekers to retrieve a list of jobs they have applied for.
+- The API aggregates data from the `applied_job`, `business`, and `business_location` collections to provide comprehensive job details.
+- Each job in the response includes information such as job title, salary, business name, business logo, job location, creation date, and application status.
+- If there are no applied jobs for the user, the API will return a message indicating that no jobs have been applied for.
+- If any error occurs during the process, an appropriate error message will be returned in the response.
+
+---
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65bc7b14bf1407cea573a9d9",
+            "business_id": "65bc7b14bf1407cea573a9cc",
+            "address": "101, Main Street",
+            "city": "65bb44cdc384371c9b8f3376",
+            "zip_code": "987654",
+            "deleted": false,
+            "location_name": "Bangkok, Thailand"
+        }
+    ],
+    "msg": "Business location list"
+}
+```
+If business not exist:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": [],
+    "msg": "Business not exist"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": [],
+   "msg": "User not exist"
+}
+```
+
 
 
 
