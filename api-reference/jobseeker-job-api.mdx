@@ -183,7 +183,7 @@ This endpoint does not require a request body.
 }
 ```
 
-If job alrady in keep:
+If job already in keep:
 
 ```json
 {
@@ -318,6 +318,209 @@ User not exist:
   "msg": "User not exist"
 }
 ```
+
+
+
+
+# Hide or Unhide Job API
+
+## Endpoint
+
+`POST /api/jobseeker/hide-job/:job_id/:is_hide`
+
+This endpoint allows job seekers to hide or unhide a job listing.
+
+### Request
+
+#### Parameters
+
+- `job_id`: The ID of the job to be hidden or unhidden.
+- `is_hide`: A boolean value indicating whether to hide (`true`) or unhide (`false`) the job listing.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response indicating the result of the operation.
+  - If successful, the response contains the updated job object and a success message.
+  - If unsuccessful, the response contains an empty object and an error message.
+
+### Validation
+
+- The `job_id` parameter must be a valid MongoDB ObjectId.
+- The `is_hide` parameter must be a boolean value (`true` or `false`).
+- The request must include a valid authorization header.
+- If the specified job does not exist, an appropriate error message is returned.
+- If the job is already hidden or not viewed, an appropriate error message is returned.
+
+### Notes
+
+- Job seekers can use this endpoint to hide or unhide job listings based on their preferences.
+- The API performs validations to ensure data integrity and authorization.
+- When hiding a job, the API checks if the job has been viewed before.
+- When unhiding a job, the API checks if the job is already hidden.
+- Hidden jobs will not be visible to the job seeker in the job listings.
+- Unhiding a job restores its visibility in the job listings.
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65cc9f9794dcc00bf0e16e00",
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "job_id": "65bc9a4f31e4bb6a9aed7d5b",
+        "is_keep": true,
+        "deleted": false,
+        "created_at": "2024-02-14T11:10:15.059Z",
+        "__v": 0,
+        "is_hide": true,
+        "updated_at": "2024-02-21T12:31:09.201Z"
+    },
+    "msg": "Job hidden"
+}
+```
+
+If job already hidden:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Job already hiddene"
+}
+```
+
+If job unhide:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65cc9f9794dcc00bf0e16e00",
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "job_id": "65bc9a4f31e4bb6a9aed7d5b",
+        "is_keep": false,
+        "deleted": false,
+        "created_at": "2024-02-14T11:10:15.059Z",
+        "__v": 0
+    },
+    "msg": "Job unhide"
+}
+```
+
+If job not hidden:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Job did not hidden"
+}
+```
+
+User not exist:
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+
+
+
+
+# List Hidden Jobs API
+
+## Endpoint
+
+`GET /api/jobseeker/hide-job/list`
+
+This endpoint retrieves a list of jobs that the job seeker has hidden.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of hidden jobs.
+  - If there are hidden jobs, the response includes an array of job objects.
+  - If there are no hidden jobs, the response contains an empty array.
+  - Each job object in the response includes details such as job ID, title, salary, business name, business logo, job location, creation date, and last update date.
+
+### Notes
+
+- This endpoint allows job seekers to retrieve a list of jobs they have hidden.
+- The API performs authorization to ensure that only authenticated users can access the list of hidden jobs.
+- If there are hidden jobs, the API provides detailed information about each hidden job.
+- If there are no hidden jobs, the API returns an appropriate message indicating that there are no hidden jobs.
+- Hidden jobs are not visible to the job seeker in the regular job listings.
+- Job seekers can use this API to manage their hidden job preferences.
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "job_title": "Test Case Manager",
+            "salary": 30,
+            "description_img": "images/photo.jpeg",
+            "created_at": "2024-02-02T07:31:27.815Z",
+            "updated_at": "2024-02-21T11:23:38.917Z",
+            "job_id": "65bc9a4f31e4bb6a9aed7d5b",
+            "business_name": "Thai Bar",
+            "business_logo": "images/photo.jpeg",
+            "job_location": "Bangkok, Thailand"
+        }
+    ],
+    "msg": "List of hide Job"
+}
+```
+
+If any job not hidden:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": [],
+    "msg": "Not hidden any job"
+}
+```
+
+User not exist:
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": [],
+  "msg": "User not exist"
+}
+
+
+
+
 
 
 

@@ -911,5 +911,70 @@ Job post does not exist
 }
 ```
 
-User does not have permission for applicant list:
 
+
+# Application Status Update API
+
+## Endpoint
+
+`GET /api/job/application/:_id/:status`
+
+This endpoint updates the status of a job application.
+
+### Request
+
+#### Parameters
+
+- `_id`: The ID of the job application for which the status is to be updated.
+- `status`: The new status to be applied to the job application.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response indicating the result of the operation.
+  - If successful, the response contains an empty object and a success message.
+  - If unsuccessful, the response contains an empty object and an error message.
+
+### Validation
+
+- The `_id` parameter must be a valid MongoDB ObjectId.
+- The `status` parameter must be a numeric value.
+- The status value must be within the range of 1 to 4.
+- The request must be made by an authorized user who is not a job seeker.
+- If the specified application does not exist, an appropriate error message is returned.
+- If an invalid status is provided, an appropriate error message is returned.
+
+### Notes
+
+- This endpoint allows authorized users to update the status of a job application.
+- The API performs validations to ensure data integrity and authorization.
+- Possible status values are:
+  - 1: Application received
+  - 2: Application under review
+  - 3: Application accepted
+  - 4: Application rejected
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "Application status updated"
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
