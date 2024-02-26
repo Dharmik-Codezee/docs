@@ -242,9 +242,14 @@ User not exist:
 
 ## Endpoint
 
-`GET /api/jobseeker/keep-job/list`
+`GET /api/jobseeker/keep-job/list/:start/:limit`
 
 This endpoint retrieves a list of jobs that the jobseeker has saved or kept.
+
+#### Parameters
+
+- `start`: The starting index of the job list to retrieve.
+- `limit`: The maximum number of jobs to retrieve.
 
 ### Request
 
@@ -445,9 +450,14 @@ User not exist:
 
 ## Endpoint
 
-`GET /api/jobseeker/hide-job/list`
+`GET /api/jobseeker/hide-job/list/:start/:limit`
 
 This endpoint retrieves a list of jobs that the job seeker has hidden.
+
+#### Parameters
+
+- `start`: The starting index of the job list to retrieve.
+- `limit`: The maximum number of jobs to retrieve.
 
 ### Request
 
@@ -627,9 +637,14 @@ User not exist:
 
 ## Endpoint
 
-`GET /api/jobseeker/applied-job/list`
+`GET /api/jobseeker/applied-job/list/:start/:limit`
 
 This endpoint retrieves a list of jobs that the jobseeker has applied for.
+
+#### Parameters
+
+- `start`: The starting index of the job list to retrieve.
+- `limit`: The maximum number of jobs to retrieve.
 
 ### Request
 
@@ -701,6 +716,96 @@ User not exist:
   "msg": "User not exist"
 }
 ```
+
+
+
+
+# Applied Job Status API
+
+## Endpoint
+
+`GET /api/jobseeker/applied-job/status/:job_id`
+
+This endpoint retrieves the status of an applied job for the authenticated job seeker.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `job_id`: The ID of the job for which the status is requested.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the status of the applied job.
+  - If the job exists and the user has applied for it, the response includes detailed information about the job status.
+  - If the job does not exist, the response contains an appropriate message indicating that the job does not exist.
+  - If the user has not applied for the job, the response indicates that the job status information is not found.
+  - The response includes details such as job title, salary, experience required, workplace type, job type, business name, business logo, job location, application submission status, review status by the company, shortlisting status, rejection status, and acceptance status.
+
+### Notes
+
+- This endpoint allows job seekers to retrieve the status of a job they have applied for.
+- The API performs authorization to ensure that only authenticated job seekers can access the status of applied jobs.
+- If the job exists and the user has applied for it, the API provides detailed information about the job status.
+- If the job does not exist, the API returns an appropriate message indicating that the job does not exist.
+- If the user has not applied for the job, the API indicates that the job status information is not found.
+
+---
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "job_title": "Test Case Manager",
+        "experience": 1,
+        "workplace_type": 1,
+        "job_type": 1,
+        "salary": 30,
+        "description_img": "images/photo.jpeg",
+        "created_at": "2024-02-02T07:31:27.815Z",
+        "job_id": "65bc9a4f31e4bb6a9aed7d5b",
+        "business_name": "Thai Bar",
+        "business_logo": "images/photo.jpeg",
+        "job_location": "Bangkok, Thailand",
+        "status": 3,
+        "application_submitted": "2024-02-19T05:35:20.070Z",
+        "reviewed_by_company": "2024-02-21T10:34:16.421Z"
+    },
+    "msg": "Status of applied job."
+}
+```
+
+Job_id is wrong or invalid:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "Job not exist"
+}
+
+```
+
+User not exist:
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
 
 
 
