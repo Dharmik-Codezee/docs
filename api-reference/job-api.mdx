@@ -986,7 +986,7 @@ User does not exist
 
 ## Endpoint
 
-`POST /api/job-jobseeker/list/:type/:start/:limit`
+`POST /api/search-job-jobseeker/list/:type/:start/:limit`
 
 This endpoint retrieves a list of jobs or job seekers based on the specified type, start index, and limit.
 
@@ -1118,7 +1118,7 @@ If business does not exist
             },
         ]
     },
-    "msg": "listOfJobseekersSuccess"
+    "msg": "Jobseeker list found."
 }
 ```
 
@@ -1141,6 +1141,123 @@ Job post does not exist
     "err": 1,
     "data": {},
     "msg": "Applicants not found"
+}
+```
+
+User does not have permission for applicant list:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "You are not member of this business"
+}
+```
+
+
+
+
+# Job Jobseeker List API
+
+## Endpoint
+
+`GET /api/job/jobseeker/list/:business_id/:jobseeker_id/:start/:limit`
+
+This endpoint retrieves a list of jobs for a specific job seeker associated with a particular business.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `business_id`: ID of the business for which the jobs are being retrieved.
+  - `jobseeker_id`: ID of the job seeker for whom the jobs are being retrieved.
+  - `start`: Index of the first item to retrieve.
+  - `limit`: Maximum number of items to retrieve.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of jobs for the specified job seeker and business.
+  - The response includes details of each job, such as job title, salary, description image, created at, updated at, active status, promoted status, location, and whether the job has been applied for by the job seeker.
+  - The response also includes pagination information such as total count and the subset of items based on the start and limit parameters.
+
+### Notes
+
+- This endpoint allows retrieving a list of jobs for a specific job seeker associated with a particular business.
+- The API performs authorization to ensure that only authenticated users can access the list of jobs.
+- The business_id parameter specifies the business for which the jobs are being retrieved.
+- The jobseeker_id parameter specifies the job seeker for whom the jobs are being retrieved.
+- The start and limit parameters control pagination of the results.
+
+---
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_job": 4,
+        "job_list": [
+            {
+                "business_name": "Thai Bar",
+                "_id": "65bc9a4f31e4bb6a9aed7d5b",
+                "job_title": "Test Case Manager",
+                "salary": 30,
+                "description_img": "images/photo.jpeg",
+                "created_at": "2024-02-02T07:31:27.815Z",
+                "updated_at": "2024-02-21T11:23:38.917Z",
+                "active": false,
+                "promoted": false,
+                "location": "65bb44cdc384371c9b8f3376",
+                "location_name": "Bangkok, Thailand",
+                "applied": true
+            },
+            {
+                "business_name": "Thai Bar",
+                "_id": "65bcc0d22f9b1c63c84a02c4",
+                "job_title": "Test Case HR Manager",
+                "salary": 0,
+                "description_img": "images/photo.jpeg",
+                "created_at": "2024-02-02T10:15:46.854Z",
+                "updated_at": "2024-02-02T10:15:46.854Z",
+                "active": true,
+                "promoted": false,
+                "location": "65bb44cdc384371c9b8f3382",
+                "location_name": "Chumphon, Thailand",
+                "applied": false
+            },
+        ]
+    },
+    "msg": "Here is the list of available jobs."
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+if Jobseeker not found:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "No jobseeker list found."
 }
 ```
 

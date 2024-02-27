@@ -1466,3 +1466,252 @@ This endpoint is used to verify the OTP sent for updating the mobile number asso
   "msg": "Token Expired"
 }
 ```
+
+
+
+
+
+# Business Invite Jobseeker Detail API
+
+## Endpoint
+
+`GET /api/business/invite-jobseeker-detail/:business_id/:jobseeker_id`
+
+This endpoint retrieves detailed information about a jobseeker who has been invited by a business.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `business_id`: Unique identifier for the business.
+  - `jobseeker_id`: Unique identifier for the jobseeker.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing detailed information about the jobseeker and the jobs they have applied to.
+  - The response includes various details about the jobseeker, such as their personal information, work experience, education, certificates, and applied jobs.
+  - Each applied job includes details such as job ID, title, experience required, workplace type, job type, salary, description, description image, business name, business logo, and location name.
+
+### Notes
+
+- This endpoint allows businesses to retrieve detailed information about a specific jobseeker they have invited.
+- The API performs authorization to ensure that only authenticated users with appropriate permissions can access the jobseeker details.
+- If the specified business or jobseeker is not found, appropriate error messages are returned in the response.
+
+---
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65c9b66029033adf0860f8f9",
+        "country_code": "+66",
+        "mobile_no": "888888888",
+        "first_name": "Test Case Job",
+        "last_name": "Test Case Seeker",
+        "user_email": "owner@gmail.com",
+        "user_type": 1,
+        "language": 1,
+        "deleted": false,
+        "employmentData": [
+            {
+                "_id": "65c9b8adb1daa6a292a7e3df",
+                "currently_employed": false,
+                "job_title": "Test Case Software Engineer",
+                "company_name": "Test Case ABC Inc.",
+                "work_from": "2019-01-01T00:00:00.000Z",
+                "work_to": "2019-05-23T00:00:00.000Z",
+                "exp_year": 0,
+                "exp_month": 4,
+                "work_description": "Working on web development projects"
+            }
+        ],
+        "educationData": [
+            {
+                "_id": "65c9b77c58f72def2dcdb76f",
+                "education_type": 2,
+                "institute": "VNSG",
+                "course": "B",
+                "specialization": "Gujarat",
+                "duration_from": "2020-06-15T00:00:00.000Z",
+                "duration_to": "2023-04-10T00:00:00.000Z",
+                "grading": "89"
+            }
+        ],
+        "certificateData": [
+            {
+                "_id": "65c9b781b005784000ca60c5",
+                "certificate_name": "Degree_1",
+                "file_url": "images/certificate.text"
+            },
+            {
+                "_id": "65c9b8b21ed6eb1189a501f9",
+                "certificate_name": "Degree_3",
+                "file_url": "images/certificate.text"
+            },
+            {
+                "_id": "65c9bf096c1ae41140b4aa01",
+                "certificate_name": "Degree_2",
+                "file_url": "images/certificate.text"
+            }
+        ],
+        "full_name": "Test Case Job Test Case Seeker",
+        "date_of_birth": "1995-11-25T00:00:00.000Z",
+        "about": "I am Jobseeker",
+        "gender": 1,
+        "location": "65bb44cdc384371c9b8f3376",
+        "location_name": "Bangkok, Thailand",
+        "work_position": "Supervisor",
+        "work_status": 2,
+        "profile_img": "1706529737205_eb411d0102e4a8d022362810cbbcd1cd.jpeg",
+        "identity_type": 1,
+        "identity_card": "images/id_card.jpeg",
+        "skills": [
+            "Supervision",
+            "Data analysis",
+            "Management"
+        ],
+        "known_language": [
+            "Gujarati",
+            "English",
+            "Thai"
+        ],
+        "resume": "valid_resume_data",
+        "open_to_work": true,
+        "available_to_join": 2,
+        "appiedJobData": [
+            {
+                "_id": "65bc9a4f31e4bb6a9aed7d5b",
+                "job_title": "Test Case Manager",
+                "experience": 1,
+                "workplace_type": 1,
+                "job_type": 1,
+                "salary": 30,
+                "description": "Lorem ipsum dolor sit amet.",
+                "description_img": "images/photo.jpeg",
+                "business_name": "Thai Bar",
+                "business_logo": "images/photo.jpeg"
+            },
+            {
+                "_id": "65bc9ab731e4bb6a9aed7d63",
+                "job_title": "Test General Manager",
+                "experience": 1,
+                "workplace_type": 1,
+                "job_type": 1,
+                "salary": 0,
+                "description": "Lorem ipsum dolor sit amet.",
+                "description_img": "images/photo.jpeg",
+                "business_name": "Thai Bar",
+                "business_logo": "images/photo.jpeg"
+            }
+        ]
+    },
+    "msg": "Applicant information."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+If jobseeker data not found:
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "No applicant data found."
+}
+```
+
+
+
+
+# Business Invite Jobseeker API
+
+## Endpoint
+
+`POST /api/business/jobseeker/invite/:job_id/:jobseeker_id`
+
+This endpoint allows a business to invite a jobseeker to apply for a specific job.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `job_id`: Unique identifier for the job.
+  - `jobseeker_id`: Unique identifier for the jobseeker.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing information about the invitation status.
+  - If the invitation is successful, the response includes details about the invitation, such as the job ID, jobseeker ID, status, creation and update timestamps, etc.
+  - If the invitation fails, appropriate error messages are returned in the response.
+
+### Notes
+
+- This endpoint allows businesses to send invitations to jobseekers for specific job openings.
+- The API performs validation to ensure that the provided job ID and jobseeker ID are valid and that the user making the request has appropriate permissions.
+- If the specified job or jobseeker is not found, or if the jobseeker has already applied for the job or has already been invited, appropriate error messages are returned in the response.
+
+---
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "user_id": "65c9b66029033adf0860f8f9",
+        "job_id": "65bcc00f2214cb459d0f0ade",
+        "status": 1,
+        "deleted": false,
+        "created_by": "65bc7b14bf1407cea573a9c6",
+        "updated_by": "65bc7b14bf1407cea573a9c6",
+        "created_at": "2024-02-27T11:00:21.018Z",
+        "updated_at": "2024-02-27T11:00:21.018Z",
+        "_id": "65ddc0c5cdc73f7ae98e7b4c",
+        "__v": 0
+    },
+    "msg": "Invitation sent successfully."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+If invitation already sent:
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "The job has already been applied for."
+}
+```

@@ -1047,3 +1047,173 @@ If not found any job for applied filter
     "msg": "Not found any job"
 }
 ```
+
+
+
+
+# Invitation Status API
+
+## Endpoint
+
+`POST /api/jobseeker/invitation-status/:job_id/:status`
+
+This endpoint allows job seekers to update the status of their invitations to specific jobs.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `job_id`: ID of the job for which the invitation status is being updated.
+  - `status`: Numeric value representing the status to which the invitation is being updated.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the updated invitation status.
+  - The response includes details of the updated invitation, such as the job ID, user ID, status, application submission time, reviewed by company timestamp, whether the application was submitted by invitation, and timestamps for creation and last update.
+
+### Notes
+
+- This endpoint allows job seekers to accept or reject invitations to specific jobs.
+- The API performs authorization to ensure that only authenticated job seekers can update invitation statuses.
+- The job_id parameter specifies the ID of the job for which the invitation status is being updated.
+- The status parameter specifies the numeric value representing the updated status of the invitation.
+- If the status is 2 (accept), the invitation status is updated, and a new applied job record is created.
+- If the status is 3 (reject), the invitation status is updated accordingly.
+- Other status values are considered invalid, and an appropriate error message is returned.
+
+---
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65ddc0c5cdc73f7ae98e7b4c",
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "job_id": "65bcc00f2214cb459d0f0ade",
+        "status": 2,
+        "deleted": false,
+        "created_by": "65bc7b14bf1407cea573a9c6",
+        "updated_by": "65bc7b14bf1407cea573a9c6",
+        "created_at": "2024-02-27T11:00:21.018Z",
+        "updated_at": "2024-02-27T12:05:27.353Z",
+        "__v": 0
+    },
+    "msg": "Invitation accepted successfully."
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+If invitation already accepted
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Invitation already accepted."
+}
+```
+
+
+
+
+
+# Invited Job List API
+
+## Endpoint
+
+`GET /api/jobseeker/invited-job/list/:start/:limit`
+
+This endpoint retrieves a list of jobs to which the job seeker has been invited.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `start`: Numeric value representing the starting index of the list.
+  - `limit`: Numeric value representing the maximum number of items to retrieve.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of invited jobs.
+  - The response includes details of each invited job, such as job ID, title, salary, description image, business name, business logo, job location, creation timestamp, and status.
+
+### Notes
+
+- This endpoint allows job seekers to view a list of jobs to which they have been invited.
+- The API performs authorization to ensure that only authenticated job seekers can access the list of invited jobs.
+- The start and limit parameters control pagination, allowing users to retrieve a subset of the job list.
+- If there are no invited jobs found, an appropriate message is returned in the response.
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_job": 1,
+        "job_list": [
+            {
+                "_id": "65bcc00f2214cb459d0f0ade",
+                "job_title": "Test HR Manager",
+                "salary": 0,
+                "description_img": "images/updated_photo.jpeg",
+                "created_at": "2024-02-02T10:12:31.801Z",
+                "business_name": "Thai Bar",
+                "business_logo": "images/photo.jpeg",
+                "job_location": "Bangkok, Thailand",
+                "status": 2
+            }
+        ]
+    },
+    "msg": "The list of invited jobs has been successfully fetched."
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+If no jobs invited
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "No jobs have been invited yet."
+}
+```
