@@ -978,3 +978,179 @@ User does not exist
     "msg": "User does not exist"
 }
 ```
+
+
+
+
+# Job Jobseeker List API
+
+## Endpoint
+
+`POST /api/job-jobseeker/list/:type/:start/:limit`
+
+This endpoint retrieves a list of jobs or job seekers based on the specified type, start index, and limit.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `type`: Type of the list to retrieve. Should be numeric. `1` for job list, `2` for job seeker list.
+  - `start`: Index of the first item to retrieve.
+  - `limit`: Maximum number of items to retrieve.
+
+- Body
+  - `job_title` (optional): Search keyword to filter jobs or job seekers.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of jobs or job seekers.
+  - If the type is `1` (job list), the response includes details of jobs matching the search criteria.
+  - If the type is `2` (job seeker list), the response includes details of job seekers matching the search criteria.
+  - The response contains details such as job title, salary, description image, business name, business logo, job location, created at, updated at, user name, mobile number, email, profile image, and skills.
+  - The response also includes pagination information such as total count and the subset of items based on the start and limit parameters.
+
+### Notes
+
+- This endpoint allows retrieving a list of jobs or job seekers based on specified criteria.
+- The API performs authorization to ensure that only authenticated users can access the list of jobs or job seekers.
+- The type parameter determines whether to retrieve a list of jobs or job seekers.
+- The start and limit parameters control pagination of the results.
+- Jobs or job seekers can be filtered based on the job title using the optional job_title parameter.
+
+---
+
+### Request Body
+```json
+{
+   "job_title": "test",
+   "city": "65bb44cdc384371c9b8f3376",
+   "business_id": "65bc8b03ee10fd14593b0cf"
+}
+```
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_job": 3,
+        "job_list": [
+            {
+                "_id": "65bc9ab731e4bb6a9aed7d63",
+                "job_title": "Test General Manager",
+                "salary": 0,
+                "description_img": "images/photo.jpeg",
+                "created_at": "2024-02-02T07:33:11.689Z",
+                "updated_at": "2024-02-02T07:33:11.689Z",
+                "business_name": "Thai Bar",
+                "business_logo": "images/photo.jpeg",
+                "job_location": "Bangkok, Thailand"
+            },
+            {
+                "_id": "65bcc00f2214cb459d0f0ade",
+                "job_title": "Test HR Manager",
+                "salary": 0,
+                "description_img": "images/updated_photo.jpeg",
+                "created_at": "2024-02-02T10:12:31.801Z",
+                "updated_at": "2024-02-02T10:12:32.659Z",
+                "business_name": "Thai Bar",
+                "business_logo": "images/photo.jpeg",
+                "job_location": "Bangkok, Thailand"
+            },
+        ]
+    },
+    "msg": "The job list has been successfully fetched."
+}
+```
+
+
+### Request Body
+```json
+{
+   "job_title": "test",
+   "city": "65bb44cdc384371c9b8f3376"
+}
+```
+
+If business does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the business does not exist."
+}
+```
+
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_jobseeker": 6,
+        "jobseeker_list": [
+            {
+                "_id": "65bc8a08ee10fd14593b0ce8",
+                "user_id": "65c9b66029033adf0860f8f9",
+                "user_name": "Test Case Job Test Case Seeker",
+                "mobile_no": "+66 888888888",
+                "user_email": "owner@gmail.com"
+            },
+            {
+                "_id": "65c1c0228e4dc376f478a110",
+                "user_id": "65bc8a08ee10fd14593b0ce5",
+                "user_name": "Test Chaisom Test Anand",
+                "mobile_no": "+66 111111111",
+                "user_email": "job_seeker@gmail.com"
+            },
+        ]
+    },
+    "msg": "listOfJobseekersSuccess"
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+Job post does not exist
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Applicants not found"
+}
+```
+
+User does not have permission for applicant list:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "You are not member of this business"
+}
+```
