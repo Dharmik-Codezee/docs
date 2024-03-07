@@ -1,0 +1,172 @@
+---
+title: Setting Module
+excludeFromToc: true
+---
+
+
+
+
+
+
+# Setting Page API
+
+## Endpoint
+
+`GET /api/setting/:type`
+
+This endpoint retrieves the setting page data based on the specified type.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+- Parameters
+  - `type`: Specifies the type of setting page to retrieve.
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response containing the setting page data.
+  - The response includes the HTML content of the setting page for the specified type.
+  - Error messages are returned if the authenticated user does not exist or if the setting page data for the specified type is not found.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The `type` parameter specifies the type of setting page to retrieve.
+- The response includes the HTML content of the setting page for the specified type.
+- Error messages are returned if the authenticated user does not exist or if the setting page data for the specified type is not found.
+
+---
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65dc24a60ccc8d0fb0f8f5dc",
+        "type": "about",
+        "html": "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>About Us</title><style>body{font-family:Arial,sans-serif;line-height:1.6;margin:0;padding:0;background-color:#f4f4f4}header{background:#333;color:#fff;padding:10px 0;text-align:center}.container{width:80%;margin:auto;padding:20px}</style></head><body><header><h1>About Us</h1></header><div class='container'><h2>Our Company</h2><p>Welcome to our company's about page. Here you'll find information about who we are, what we do, and our mission.</p><h2>Our Team</h2><p>Meet the people behind our company:</p><ul><li>John Doe - CEO</li><li>Jane Smith - COO</li><li>Michael Johnson - CTO</li></ul><h2>Our Mission</h2><p>Our mission is to provide the best possible service to our customers and make a positive impact in the communities we serve.</p><h2>Contact Us</h2><p>If you have any questions or inquiries, feel free to <a href='contact.html'>contact us</a>.</p></div></body></html>"
+    },
+    "msg": "Page found."
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+If wrong type 
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Page not found."
+}
+```
+
+
+
+
+
+# Notification Status API
+
+## Endpoint
+
+`POST /api/setting/notification/:status`
+
+This endpoint updates the notification status for the user or business.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+- Parameters
+  - `status`: Specifies the notification status. Should be a boolean value.
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response indicating the status of the notification update.
+  - If the update is successful, a success message is returned.
+  - If the update fails, an error message is returned.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The `status` parameter specifies the new notification status, which should be a boolean value.
+- If the user is a job seeker, the notification status is updated for the job seeker.
+- If the user is a business member, the notification status is updated for the business.
+- Error messages are returned for various scenarios such as user not existing, business not existing, user not being a member of the business, etc.
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65c1c0228e4dc376f478a110",
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "about": "I am Jobseeker",
+        "date_of_birth": "1995-11-25T00:00:00.000Z",
+        "gender": 1,
+        "location": "65bb44cdc384371c9b8f337d",
+        "work_position": "Hotel Manager",
+        "work_status": 1,
+        "profile_img": "1706529737205_eb411d0102e4a8d022362810cbbcd1cd.jpeg",
+        "identity_type": 1,
+        "identity_card": "images/id_card.jpeg",
+        "skills": [
+            "Supervision",
+            "Data analysis",
+            "Management"
+        ],
+        "known_language": [
+            "Gujarati",
+            "English",
+            "Thai"
+        ],
+        "notification": true,
+        "open_to_work": true,
+        "deleted": false,
+        "created_at": "2024-02-06T05:14:10.858Z",
+        "updated_at": "2024-03-04T04:57:11.223Z",
+        "__v": 0,
+        "available_to_join": 1,
+        "resume": "resume/generated/65bc8a08ee10fd14593b0ce5.pdf"
+    },
+    "msg": "Status successfully updated."
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```

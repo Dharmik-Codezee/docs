@@ -1715,3 +1715,418 @@ If invitation already sent:
   "msg": "The job has already been applied for."
 }
 ```
+
+
+
+
+
+# List Notifications API
+
+## Endpoint
+
+`GET /api/business/notification/list/:business_id/:start/:limit`
+
+This endpoint retrieves a list of notifications for a specific business.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Params
+  - `business_id`: The ID of the business for which notifications are requested.
+  - `start`: The index of the first notification to retrieve.
+  - `limit`: The maximum number of notifications to retrieve.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of notifications.
+  - If notifications are found, the response includes details such as the total number of unread notifications, total notifications, and the list of notifications within the specified range.
+  - If no notifications are found, an appropriate message indicating an empty list is returned in the response body.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The `business_id` parameter specifies the ID of the business for which notifications are to be retrieved. It must be a valid MongoDB ObjectID.
+- The `start` parameter indicates the index of the first notification to retrieve, and `limit` specifies the maximum number of notifications to return.
+- The API checks if the authenticated user has permission to access notifications for the specified business.
+- It retrieves notifications based on the business ID and filters out any deleted notifications.
+- The response includes the total number of unread notifications, total notifications, and a list of notifications within the specified range.
+- Proper error handling is implemented to handle scenarios such as unauthorized access, invalid input, or database errors.
+
+---
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_unread_notification": 0,
+        "total_notification": 1,
+        "notification_list": [
+            {
+                "_id": "65e6bb7c06a63969a5ccfb1d",
+                "notification_for": "65bc8b03ee10fd14593b0cfb",
+                "notification_type": 1,
+                "title": "Setting updated",
+                "icon_type": 1,
+                "message": "Notifcation status changed.",
+                "is_read": true,
+                "deleted": false,
+                "created_by": "65bc7b14bf1407cea573a9c6",
+                "updated_by": "65bc7b14bf1407cea573a9c6",
+                "deleted_by": "65bc7b14bf1407cea573a9c6",
+                "created_at": "2024-03-05T06:28:12.861Z",
+                "updated_at": "2024-03-05T06:28:12.861Z",
+                "__v": 0
+            }
+        ]
+    },
+    "msg": "The notification list has been successfully retrieved."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+If business id not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+
+
+
+
+# Business Dashboard Count API
+
+## Endpoint
+
+`GET /api/business/dashboard-count/:business_id`
+
+This endpoint retrieves various counts and statistics for a business dashboard.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Params
+  - `business_id`: The ID of the business for which dashboard counts are requested.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the counts and statistics for the business dashboard.
+  - The response includes counts for:
+    - Shortlisted applicants.
+    - Rejected applicants.
+    - Applications received today.
+    - Profile completion percentage.
+    - Number of unread notifications.
+  - If successful, the response provides detailed data for each count.
+  - If an error occurs or the requested data is not found, an appropriate error message is returned in the response body.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The `business_id` parameter specifies the ID of the business for which dashboard counts are to be retrieved. It must be a valid MongoDB ObjectID.
+- The API fetches counts for various metrics such as shortlisted applicants, rejected applicants, today's application count, profile completion percentage, and unread notification count.
+- Internal API calls are made to retrieve the necessary data for each count, including shortlisted applicants, rejected applicants, today's application count, profile completion percentage, and unread notification count.
+- Proper error handling is implemented to handle scenarios such as unauthorized access, invalid input, or database errors.
+
+---
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "shortlisted_count": 2,
+        "rejected_count": 1,
+        "today_application_count": 0,
+        "profile_percent": 100,
+        "notification_count": 0
+    },
+    "msg": "Please find dashboard data."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+If business id not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+
+
+
+# Business Dashboard Banner API
+
+## Endpoint
+
+`GET /api/business/dashboard-banner/:business_id`
+
+This endpoint retrieves a list of banners for display on the business dashboard.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Params
+  - `business_id`: The ID of the business for which banners are requested.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of banners.
+  - The response includes an array of banner objects.
+  - Each banner object contains information such as banner ID, banner path, visibility status, creation date, etc.
+  - If successful, the response provides the list of banners.
+  - If no banners are found, an empty array is returned in the response body.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The `business_id` parameter specifies the ID of the business for which banners are to be retrieved. It must be a valid MongoDB ObjectID.
+- Banners are randomly sampled from the database, with a maximum of 5 banners returned in the response.
+- Proper error handling is implemented to handle scenarios such as unauthorized access, invalid input, or database errors.
+
+---
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65e571df047020336ebd528a",
+            "banner_by": "65bc7b14bf1407cea573a9cc",
+            "banner_path": "1709535711587_Snake_River_(5mb).jpeg",
+            "deleted": false,
+            "created_by": "65bc7b14bf1407cea573a9c6",
+            "updated_by": "65bc7b14bf1407cea573a9c6",
+            "deleted_by": "65bc7b14bf1407cea573a9c6",
+            "created_at": "2024-03-04T07:01:51.674Z",
+            "updated_at": "2024-03-04T07:01:51.674Z",
+            "__v": 0,
+            "is_visible": true
+        },
+        {
+            "_id": "65e841899cfd51c8c4e58d64",
+            "banner_by": "65d3013054a70c5740dcca9d",
+            "banner_path": "1709719945736_image_cropper_609F8766-8442-4A6B-A05A-A817A91AA5FC-2605-000015FE7A46D801.jpg",
+            "is_visible": true,
+            "banner_type": 2,
+            "deleted": false,
+            "created_by": "65d3013054a70c5740dcca97",
+            "updated_by": "65d3013054a70c5740dcca97",
+            "deleted_by": "65d3013054a70c5740dcca97",
+            "created_at": "2024-03-06T10:12:25.774Z",
+            "updated_at": "2024-03-06T10:12:25.774Z",
+            "__v": 0
+        },
+        {
+            "_id": "65e56b70bc9fee05b484e001",
+            "banner_by": "65bc7b14bf1407cea573a9cc",
+            "banner_path": "1709534064693_Snake_River_(5mb).jpeg",
+            "deleted": false,
+            "created_by": "65bc7b14bf1407cea573a9c6",
+            "updated_by": "65bc7b14bf1407cea573a9c6",
+            "deleted_by": "65bc7b14bf1407cea573a9c6",
+            "created_at": "2024-03-04T06:34:24.857Z",
+            "updated_at": "2024-03-04T06:34:24.857Z",
+            "__v": 0,
+            "is_visible": true
+        },
+        {
+            "_id": "65e56c3c6f0be6c7fe43b9ee",
+            "banner_by": "65bc7b14bf1407cea573a9cc",
+            "banner_path": "1709534268661_Snake_River_(5mb).jpeg",
+            "deleted": false,
+            "created_by": "65bc7b14bf1407cea573a9c6",
+            "updated_by": "65bc7b14bf1407cea573a9c6",
+            "deleted_by": "65bc7b14bf1407cea573a9c6",
+            "created_at": "2024-03-04T06:37:48.817Z",
+            "updated_at": "2024-03-04T06:37:48.817Z",
+            "__v": 0,
+            "is_visible": true
+        },
+        {
+            "_id": "65e83d463d19dd9d8f03686c",
+            "banner_by": "65d3013054a70c5740dcca9d",
+            "banner_path": "1709718854024_i8AF9.jpg",
+            "is_visible": true,
+            "banner_type": 2,
+            "deleted": false,
+            "created_by": "65d3013054a70c5740dcca97",
+            "updated_by": "65d3013054a70c5740dcca97",
+            "deleted_by": "65d3013054a70c5740dcca97",
+            "created_at": "2024-03-06T09:54:14.047Z",
+            "updated_at": "2024-03-06T09:54:14.047Z",
+            "__v": 0
+        }
+    ],
+    "msg": "Here is the list of banners currently available."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+If business id not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+
+
+
+
+# Business Notification Status API
+
+## Endpoint
+
+`GET /api/business/notification/status/:business_id/:notification_id`
+
+This endpoint updates the status of a notification for a specific business, marking it as read.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Params
+  - `business_id`: The ID of the business to which the notification belongs.
+  - `notification_id`: The ID of the notification whose status is to be updated.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the updated notification object.
+  - The response includes the updated notification object with the `is_read` field set to `true`.
+  - If the notification was already marked as read, an appropriate error message is returned.
+  - If the provided IDs are invalid or the notification does not belong to the specified business, appropriate error messages are returned.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- Both `business_id` and `notification_id` parameters must be valid MongoDB ObjectIDs with a minimum length of 24 characters.
+- The endpoint checks if the notification exists and belongs to the specified business before updating its status.
+- If the notification is successfully updated, the response includes the updated notification object.
+- Proper error handling is implemented to handle scenarios such as unauthorized access, invalid input, or database errors.
+
+---
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "The notification has been successfully marked as read."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+If notification already mark as read:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "The notification has already been marked as read."
+}
+```

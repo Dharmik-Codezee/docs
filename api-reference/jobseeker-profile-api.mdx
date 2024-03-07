@@ -306,3 +306,92 @@ If user not exist:
    "msg": "User not exist"
 }
 ```
+
+
+
+
+
+# Update Open-to-Work Status API
+
+## Endpoint
+
+`POST /api/jobseeker/profile/open-to-work/:status`
+
+This endpoint updates the open-to-work status for the jobseeker profile.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `status`: Boolean value representing the open-to-work status.
+
+### Response
+
+- Status:
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response containing the updated open-to-work status.
+  - The response includes the updated jobseeker profile object with the new open-to-work status.
+  - If the update is successful, a success message is returned.
+  - Error messages are returned if the authenticated user does not exist, the status parameter is missing or not a boolean, or an error occurs during the update process.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The response includes the updated open-to-work status of the jobseeker profile.
+- A notification is created when the open-to-work status is updated.
+- Error messages are returned if the authenticated user does not exist, the status parameter is missing or not a boolean, or an error occurs during the update process.
+
+---
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65c1c0228e4dc376f478a110",
+        "user_id": "65bc8a08ee10fd14593b0ce5",
+        "about": "I am Jobseeker",
+        "date_of_birth": "1995-11-25T00:00:00.000Z",
+        "gender": 1,
+        "location": "65bb44cdc384371c9b8f337d",
+        "work_position": "Hotel Manager",
+        "work_status": 1,
+        "profile_img": "1706529737205_eb411d0102e4a8d022362810cbbcd1cd.jpeg",
+        "identity_type": 1,
+        "identity_card": "images/id_card.jpeg",
+        "skills": [
+            "Supervision",
+            "Data analysis",
+            "Management"
+        ],
+        "known_language": [
+            "Gujarati",
+            "English",
+            "Thai"
+        ],
+        "notification": true,
+        "open_to_work": true,
+        "deleted": false,
+        "created_at": "2024-02-06T05:14:10.858Z",
+        "updated_at": "2024-03-04T04:57:11.223Z",
+        "__v": 0,
+        "available_to_join": 1,
+        "resume": "resume/generated/65bc8a08ee10fd14593b0ce5.pdf"
+    },
+    "msg": "Status successfully updated."
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```

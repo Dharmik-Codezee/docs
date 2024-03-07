@@ -1271,3 +1271,211 @@ User does not have permission for applicant list:
     "msg": "You are not member of this business"
 }
 ```
+
+
+
+
+
+# New Application List API
+
+## Endpoint
+
+`GET /api/job/new-application/list/:business_id/:start/:limit`
+
+This endpoint retrieves a list of jobs along with the count of new applications for each job within a specified business.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Params
+  - `business_id`: The ID of the business for which the job applications are to be fetched.
+  - `start`: The starting index of the jobs to retrieve (pagination).
+  - `limit`: The maximum number of jobs to retrieve (pagination).
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of jobs with new application counts.
+  - The response includes metadata such as the total number of jobs (`total_job`) and a list of job objects (`job_list`).
+  - Each job object contains details such as `job_title`, `salary`, `description_img`, `created_at`, `updated_at`, `active`, `promoted`, `new_application`, `location`, and `location_name`.
+  - Pagination is supported based on the `start` and `limit` parameters.
+  - If no jobs are found for the specified business, an appropriate error message is returned.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The `business_id` parameter must be a valid MongoDB ObjectID with a minimum length of 24 characters.
+- Pagination is implemented to efficiently handle large datasets.
+- The endpoint fetches jobs along with the count of new applications for each job within the specified business.
+- Proper error handling is implemented to handle scenarios such as unauthorized access, invalid input, or database errors.
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_job": 1,
+        "job_list": [
+            {
+                "business_name": "Thai Bar",
+                "_id": "65bc9ab731e4bb6a9aed7d63",
+                "job_title": "Test General Manager",
+                "salary": 0,
+                "description_img": "images/65bc9ab731e4bb6a9aed7d63.jpeg",
+                "created_at": "2024-02-02T07:33:11.689Z",
+                "updated_at": "2024-02-02T07:33:11.689Z",
+                "active": true,
+                "promoted": false,
+                "new_application": 0,
+                "location": "65bb44cdc384371c9b8f3376",
+                "location_name": "Bangkok, Thailand"
+            }
+        ]
+    },
+    "msg": "Here is the list of available jobs."
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+User does not have permission for applicant list:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "You are not member of this business"
+}
+```
+
+
+
+
+
+# Job Application Status API
+
+## Endpoint
+
+`GET /api/job/application-status/:business_id/:status/:start/:limit`
+
+This endpoint retrieves a list of job applicants based on their application status for a specific business.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Params
+  - `business_id`: The ID of the business for which the applicant list is requested.
+  - `status`: The status of the applications to filter (optional). If not provided, all applications are considered.
+  - `start`: The starting index of the applicant list (optional, default is 1).
+  - `limit`: The maximum number of applicants to retrieve (optional, default is 10).
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of applicants based on the specified criteria.
+  - The response includes information about each applicant, such as their name, contact details, application status, etc.
+  - If no applicants are found based on the provided criteria, an appropriate error message is returned.
+  - If the provided business ID is invalid or the user does not have permission to access the business, appropriate error messages are returned.
+  - Proper error handling is implemented to handle scenarios such as unauthorized access, invalid input, or database errors.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The `status` parameter is optional. If provided, only applicants with the specified status are retrieved.
+- Both `business_id` and `status` parameters must be valid MongoDB ObjectIDs (with a minimum length of 24 characters) and numeric status values between 1 and 5.
+- Pagination is supported through the `start` and `limit` parameters to control the number of applicants returned.
+- The response includes the total number of applicants and a subset of the applicant list based on the provided `start` and `limit`.
+- The endpoint checks if the business exists and if the authenticated user is a member of the business before fetching the applicant list.
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_applicant": 2,
+        "applicant_list": [
+            {
+                "_id": "65bc9ab731e4bb6a9aed7d63",
+                "job_title": "Test General Manager",
+                "applicant_id": "65c9b66029033adf0860f8f9",
+                "user_name": "Test Case Job Test Case Seeker",
+                "mobile_no": "+66 888888888",
+                "user_email": "owner@gmail.com",
+                "profile_img": "1706529737205_eb411d0102e4a8d022362810cbbcd1cd.jpeg",
+                "skills": [
+                    "Supervision",
+                    "Data analysis",
+                    "Management"
+                ],
+                "application_id": "65dd907020139478b8dfe7c5",
+                "applied_date": "2024-03-01T00:35:19.941Z",
+                "status": 3
+            },
+            {
+                "_id": "65bcc00f2214cb459d0f0ade",
+                "job_title": "Test HR Manager",
+                "applicant_id": "65bc8a08ee10fd14593b0ce5",
+                "user_name": "Test Chaisom Test Anand",
+                "mobile_no": "+66 111111111",
+                "user_email": "job_seeker@gmail.com",
+                "profile_img": "1706529737205_eb411d0102e4a8d022362810cbbcd1cd.jpeg",
+                "skills": [
+                    "Supervision",
+                    "Data analysis",
+                    "Management"
+                ],
+                "application_id": "65ddd007eee9c37165859d88",
+                "applied_date": "2024-02-27T12:05:27.311Z",
+                "status": 3
+            }
+        ]
+    },
+    "msg": "List of applicants."
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+If not found any  application:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "No applicants found."
+}
+```

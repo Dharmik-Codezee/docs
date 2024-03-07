@@ -1,0 +1,203 @@
+---
+title: Jobseeker Dashboard
+excludeFromToc: true
+---
+
+
+
+
+
+# Jobseeker Dashboard Count API
+
+## Endpoint
+
+`GET /api/jobseeker/dashboard-count`
+
+This endpoint retrieves dashboard count data for the authenticated jobseeker user.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the jobseeker dashboard count data.
+  - The response includes the jobseeker's profile completion percentage and the count of unread notifications.
+  - If the authenticated user is not a jobseeker or does not exist, appropriate error messages are returned.
+  - Proper error handling is implemented to handle scenarios such as unauthorized access, invalid input, or database errors.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The response includes the jobseeker's profile completion percentage and the count of unread notifications.
+- The profile completion percentage indicates how much of the jobseeker's profile has been completed.
+- The notification count represents the number of unread notifications for the jobseeker.
+- Error messages are returned if the authenticated user is not a jobseeker or if an error occurs during data retrieval.
+- The endpoint ensures that only jobseeker users can access the dashboard count data.
+
+---
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "profile_percent": 100,
+        "notification_count": 0
+    },
+    "msg": "Please find dashboard data."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+
+
+
+
+# Jobseeker Dashboard Banner API
+
+## Endpoint
+
+`GET /api/jobseeker/dashboard-banner`
+
+This endpoint retrieves banner data for the jobseeker dashboard.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response containing the banner data for the jobseeker dashboard.
+  - The response includes an array of banners sorted by creation date in descending order.
+  - If banners are found, they are randomly sampled to return a maximum of 5 banners.
+  - If no banners are found, an empty array is returned.
+  - Error handling is implemented to handle scenarios such as unauthorized access, database errors, or no banners found.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The response includes banner data to be displayed on the jobseeker dashboard.
+- Banners are sorted by creation date in descending order to prioritize newer banners.
+- A maximum of 5 banners are randomly sampled from the available banners.
+- Error messages are returned if the authenticated user is not a jobseeker or if an error occurs during data retrieval.
+
+---
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65e97dd8957ba0505eb6c113",
+            "banner_by": "65cf53b77101aa03bf1baa86",
+            "banner_path": "1709800920899_image_cropper_1709800832019.jpg",
+            "is_visible": true,
+            "banner_type": 2,
+            "deleted": false,
+            "created_by": "65cf53b77101aa03bf1baa80",
+            "updated_by": "65cf53b77101aa03bf1baa80",
+            "deleted_by": "65cf53b77101aa03bf1baa80",
+            "created_at": "2024-03-07T08:42:00.981Z",
+            "updated_at": "2024-03-07T08:42:00.981Z",
+            "__v": 0
+        },
+        {
+            "_id": "65e83d463d19dd9d8f03686c",
+            "banner_by": "65d3013054a70c5740dcca9d",
+            "banner_path": "1709718854024_image_cropper_C54C89E1-2325-4C28-8D6B-81CB1FA717D3-2605-000015007F548AF9.jpg",
+            "is_visible": true,
+            "banner_type": 2,
+            "deleted": false,
+            "created_by": "65d3013054a70c5740dcca97",
+            "updated_by": "65d3013054a70c5740dcca97",
+            "deleted_by": "65d3013054a70c5740dcca97",
+            "created_at": "2024-03-06T09:54:14.047Z",
+            "updated_at": "2024-03-06T09:54:14.047Z",
+            "__v": 0
+        },
+        {
+            "_id": "65e7f6dbdfe383f4b9c50222",
+            "banner_by": "65d3013054a70c5740dcca9d",
+            "banner_path": "1709700826992_image_cropper_D71EA6A8-928E-4069-A6F6-11912CB13BB3-2605-0000049B5CAACE16.jpg",
+            "deleted": true,
+            "created_by": "65d3013054a70c5740dcca97",
+            "updated_by": "65d3013054a70c5740dcca97",
+            "deleted_by": "65d3013054a70c5740dcca97",
+            "created_at": "2024-03-06T04:53:47.010Z",
+            "updated_at": "2024-03-06T04:53:47.010Z",
+            "__v": 0,
+            "is_visible": true
+        },
+        {
+            "_id": "65e841699cfd51c8c4e58d58",
+            "banner_by": "65d3013054a70c5740dcca9d",
+            "banner_path": "1709719913175_image_cropper_220AE4DE-0CCA-4449-A583-8EEA7358E229-2605-000015F74950C687.jpg",
+            "is_visible": true,
+            "banner_type": 2,
+            "deleted": true,
+            "created_by": "65d3013054a70c5740dcca97",
+            "updated_by": "65d3013054a70c5740dcca97",
+            "deleted_by": "65d3013054a70c5740dcca97",
+            "created_at": "2024-03-06T10:11:53.201Z",
+            "updated_at": "2024-03-06T10:11:53.201Z",
+            "__v": 0
+        },
+        {
+            "_id": "65e56b70bc9fee05b484e000",
+            "banner_by": "65bc7b14bf1407cea573a9cc",
+            "banner_path": "1709534064692_eb411d0102e4a8d022362810cbbcd1cd.jpeg",
+            "deleted": false,
+            "created_by": "65bc7b14bf1407cea573a9c6",
+            "updated_by": "65bc7b14bf1407cea573a9c6",
+            "deleted_by": "65bc7b14bf1407cea573a9c6",
+            "created_at": "2024-03-04T06:34:24.857Z",
+            "updated_at": "2024-03-04T06:34:24.857Z",
+            "__v": 0,
+            "is_visible": true
+        }
+    ],
+    "msg": "Here is the list of banners currently available."
+}
+```
+
+If banner is not available:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "The banner is not available."
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```

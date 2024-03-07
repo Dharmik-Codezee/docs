@@ -1,0 +1,165 @@
+---
+title: Jobseeker Resume
+excludeFromToc: true
+---
+
+
+
+
+
+# List Predefined Resume Templates API
+
+## Endpoint
+
+`GET /api/jobseeker/resume/predefine-list`
+
+This endpoint retrieves a list of predefined resume templates for jobseekers.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response containing the list of predefined resume templates.
+  - The response includes an array of predefined resume templates with their respective image and number.
+  - If predefined resume templates are found, they are returned in the response.
+  - If no predefined resume templates are found, an empty array is returned.
+  - Error messages are returned if the authenticated user does not exist or if an error occurs during data retrieval.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The response includes a list of predefined resume templates available for jobseekers.
+- Each resume template contains information such as the template image and number.
+- Error messages are returned if the authenticated user does not exist or if an error occurs during data retrieval.
+
+---
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65c4cb12108d9f36f3e5e0d7",
+            "image": "resume/preview/1.png",
+            "number": 1
+        },
+        {
+            "_id": "65c4cb12108d9f36f3e5e0d8",
+            "image": "resume/preview/2.png",
+            "number": 2
+        },
+        {
+            "_id": "65c4cb12108d9f36f3e5e0d9",
+            "image": "resume/preview/3.png",
+            "number": 3
+        },
+        {
+            "_id": "65c4cb12108d9f36f3e5e0da",
+            "image": "resume/preview/4.png",
+            "number": 4
+        },
+        {
+            "_id": "65c4cb12108d9f36f3e5e0db",
+            "image": "resume/preview/5.png",
+            "number": 5
+        }
+    ],
+    "msg": "Here is the list of predefined resumes."
+}
+```
+
+User does not exist
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+
+
+
+
+# Generate Resume API
+
+## Endpoint
+
+`POST /api/jobseeker/resume/generate`
+
+This endpoint generates a resume for the authenticated jobseeker based on the provided resume number.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+- Body
+  - `resume_number`: Numeric value indicating the desired resume template number.
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response containing the generated resume information.
+  - If the resume is successfully generated, the response includes the path to the generated PDF file.
+  - If an error occurs during generation, the response includes an error message.
+  - Error messages are returned if the authenticated user does not exist, the provided resume number is invalid, or an error occurs during the resume generation process.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The `resume_number` parameter specifies the desired resume template to be used for generating the resume.
+- The generated resume is saved as a PDF file in the system.
+- If the resume is successfully generated, the path to the generated PDF file is returned in the response.
+- Error messages are returned if the authenticated user does not exist, the provided resume number is invalid, or an error occurs during the resume generation process.
+
+---
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "resume": "resume/generated/65bc8a08ee10fd14593b0ce5.pdf"
+    },
+    "msg": "Congratulations! The resume has been generated successfully."
+}
+```
+
+User does not exist:
+
+```json
+{
+    "status": 401,
+    "err": 1,
+    "data": {},
+    "msg": "User does not exist"
+}
+```
+
+If wrong number selected:
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, resume data could not be found."
+}
+```

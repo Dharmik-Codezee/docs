@@ -1,0 +1,249 @@
+---
+title: Banner API
+excludeFromToc: true
+---
+
+
+
+
+
+# Banner Upload API
+
+## Endpoint
+
+`POST /api/banner/upload`
+
+This endpoint allows users to upload banner images.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Body
+  - `files`: Array of banner image files to be uploaded. Maximum 6 files allowed.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing information about the uploaded banner images.
+  - If the upload is successful, the response includes details about the uploaded banners, such as banner ID, file name, visibility status, creation and update timestamps, etc.
+  - If the upload fails, appropriate error messages are returned in the response.
+
+### Notes
+
+- This endpoint allows users to upload banner images, with a maximum limit of 6 files per request.
+- The API performs validation to ensure that the user making the request is authenticated and has appropriate permissions.
+- If the user is a business user, the API checks if the business exists and if the user is a member of that business before proceeding with the banner upload.
+- Each uploaded banner is associated with the user who uploaded it or the business (if uploaded by a business user).
+- Uploaded banners are stored with metadata including the file path, visibility status, and creation/update information.
+- The response includes detailed information about the uploaded banners or error messages if the upload fails.
+
+---
+
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "banner_by": "65bc7b14bf1407cea573a9cc",
+            "banner_path": "1709794874107_Snake_River_(5mb).jpeg",
+            "is_visible": true,
+            "banner_type": 2,
+            "deleted": false,
+            "created_by": "65bc7b14bf1407cea573a9c6",
+            "updated_by": "65bc7b14bf1407cea573a9c6",
+            "deleted_by": "65bc7b14bf1407cea573a9c6",
+            "created_at": "2024-03-07T07:01:14.315Z",
+            "updated_at": "2024-03-07T07:01:14.315Z",
+            "_id": "65e9663a7d07a084e2139415",
+            "__v": 0
+        }
+    ],
+    "msg": "Files uploaded successfully."
+}
+```
+If file to be uploaded not found:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": [],
+    "msg": "Please upload valid data"
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": [],
+   "msg": "User not exist"
+}
+```
+
+
+
+
+
+# Banner List API
+
+## Endpoint
+
+`POST /api/banner/list/:start/:limit`
+
+This endpoint retrieves a list of banners.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Params
+  - `start`: The starting index of the banners to retrieve.
+  - `limit`: The maximum number of banners to retrieve.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response containing the list of banners.
+  - If banners are found, the response includes details about each banner, such as banner ID, file path, visibility status, creation and update timestamps, etc.
+  - If no banners are found, an empty array is returned in the response body.
+
+### Notes
+
+- This endpoint allows users to retrieve a list of banners, either for the authenticated user or for a specific business if provided.
+- The API performs validation to ensure that the user making the request is authenticated and has appropriate permissions.
+- If the `business_id` parameter is provided, the API checks if the business exists and if the user is a member of that business before proceeding with the banner retrieval.
+- The `start` and `limit` parameters are used for pagination to retrieve a subset of banners from the overall list.
+- Banners are filtered based on the `banner_by` field, which represents the user or business that uploaded the banner.
+- The response includes detailed information about the retrieved banners or appropriate error messages if the operation fails.
+
+---
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_banner": 1,
+        "banner_list": [
+            {
+                "banner_type": 1,
+                "_id": "65e56a1f51a9d9ed8af9bc78",
+                "banner_by": "65bc7b14bf1407cea573a9cc",
+                "banner_path": "1709533726975_Snake_River_(5mb).jpeg",
+                "deleted": false,
+                "created_by": "65bc7b14bf1407cea573a9c6",
+                "updated_by": "65bc7b14bf1407cea573a9c6",
+                "deleted_by": "65bc7b14bf1407cea573a9c6",
+                "created_at": "2024-03-04T06:28:47.139Z",
+                "updated_at": "2024-03-04T06:28:47.139Z",
+                "__v": 0,
+                "is_visible": true
+            },
+        ]
+    },
+    "msg": "Here is the list of banners currently available."
+}
+```
+
+If banner is not available:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "The banner is not available."
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```
+
+
+
+
+
+# Update Banner API
+
+## Endpoint
+
+`POST /api/banner/update/:_id/:deleted/:is_visible`
+
+This endpoint allows updating the status of a banner.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Params
+  - `_id`: The ID of the banner to update.
+  - `deleted`: Boolean indicating whether to delete the banner.
+  - `is_visible`: Boolean indicating the visibility status of the banner.
+
+### Response
+
+- Status: 200 OK if the operation is successful, error status otherwise.
+- Body: JSON response indicating the result of the update operation.
+  - If the operation is successful, the response contains a success message.
+  - If the operation fails, an appropriate error message is returned in the response body.
+
+### Notes
+
+- This endpoint allows users to update the status of a banner, such as marking it as deleted or changing its visibility status.
+- The API performs validation to ensure that the user making the request is authenticated and has appropriate permissions to update the banner.
+- The `_id` parameter specifies the ID of the banner to be updated, and it must be a valid MongoDB ObjectID.
+- The `deleted` parameter indicates whether the banner should be deleted. If set to `"true"`, the banner will be marked as deleted.
+- The `is_visible` parameter indicates the visibility status of the banner. If set to `"true"`, the banner will be set as visible; otherwise, it will be set as invisible.
+- The API checks if the banner belongs to the authenticated user or their business before allowing updates.
+- Error messages are returned in case of invalid input data, authorization failure, or if the banner does not exist.
+- Proper error handling is implemented to handle various scenarios, such as permission errors, business membership checks, and database update failures.
+
+---
+### Response header
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "The visibility status has been successfully changed."
+}
+```
+
+If you are not member of business:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "You are not a member of this business."
+}
+```
+
+If user not exist:
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": {},
+   "msg": "User not exist"
+}
+```

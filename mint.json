@@ -78,11 +78,19 @@
         "api-reference/employment-api",
         "api-reference/education-api",
         "api-reference/certificate-api",
-        "api-reference/profile-api",
-        "api-reference/recent-search-api",
+        "api-reference/jobseeker-profile-api",
+        "api-reference/jobseeker-recent-search-api",
         "api-reference/jobseeker-job-api",
         "api-reference/job-alert-api",
-        "api-reference/common-api"
+        "api-reference/common-api",
+        "api-reference/banner-api",
+        "api-reference/jobseeker-dashboard-api",
+        "api-reference/jobseeker-notification-api",
+        "api-reference/jobseeker-profile-api",
+        "api-reference/jobseeker-resume-api",
+        "api-reference/setting-api"
+
+
       ]
     },
     {
