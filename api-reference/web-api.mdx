@@ -1,0 +1,242 @@
+---
+title: Web API Documentation
+---
+
+
+
+
+
+
+# Web Business List API
+
+## Endpoint
+
+`POST /api/web/business/list/:start/:limit`
+
+This endpoint retrieves a random list of businesses to be displayed on the web platform.
+
+### Request Headers
+
+No specific request headers are required for this endpoint.
+
+### Request Parameters
+
+- `start` (URL parameter): Specifies the starting index for fetching businesses in the list.
+- `limit` (URL parameter): Specifies the maximum number of businesses to fetch.
+
+### Notes
+
+- This API is used to fetch a list of businesses for display on a web platform.
+- The response includes a random sample of businesses based on the specified limit and the total count of non-deleted businesses.
+
+### Middleware
+
+The `webBusinessListMid` middleware is applied to handle the request processing.
+
+### Business List Retrieval Process
+
+The API fetches a random sample of businesses based on the specified limit. It counts the total number of non-deleted businesses and returns the sampled businesses along with the total count.
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "datacount": 65,
+        "business_list": [
+            {
+                "_id": "65c6228ae33a6ddcf51b37b9",
+                "logo": "images/photo.jpeg",
+                "business_name": "Test Case Restaurant",
+                "deleted": false,
+                "created_at": "2024-02-09T13:03:06.215Z"
+            },
+            {
+                "_id": "65d310e4e9485533dafad1ff",
+                "logo": "1708343357060_image_cropper_90FD69CD-BC2F-46A0-8FC6-A0EE5EF6200A-2723-00001B6837EED439.jpg",
+                "business_name": "Mirai minds",
+                "deleted": false,
+                "created_at": "2024-02-19T08:27:16.283Z"
+            },
+            //...more business list
+        ]
+    },
+    "msg": "Business list fetched successfully."
+}
+```
+
+
+
+
+
+
+# Web Job List API
+
+## Endpoint
+
+`POST /api/web/job/list/:start/:limit`
+
+This endpoint is used to retrieve a list of jobs for display on a web platform.
+
+### Request Headers
+
+No specific request headers are required for this endpoint.
+
+### Request Parameters
+
+- `start` (URL parameter): Specifies the starting index for fetching jobs in the list.
+- `limit` (URL parameter): Specifies the maximum number of jobs to fetch.
+- `city` (Optional URL parameter): Specifies the city ID to filter jobs by city.
+
+### Notes
+
+- This API is used to fetch a list of jobs for display on a web platform.
+- The response includes a total count of jobs and the list of jobs based on the specified start and limit parameters, along with optional filtering by city.
+
+### Middleware
+
+The `webJobListMid` middleware is applied to handle the request processing.
+
+### Job List Retrieval Process
+
+The API fetches a list of active and verified jobs based on the specified parameters. It includes filtering by job title and city. The response includes a total count of jobs and the list of jobs based on the start and limit parameters.
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_job": 1,
+        "job_list": [
+            {
+                "_id": "65f96710aefa8a12873aa0b4",
+                "job_title": "Mobile repairing",
+                "salary": 45000,
+                "description_img": null,
+                "created_at": "2024-03-19T10:21:04.713Z",
+                "updated_at": "2024-03-19T11:45:10.626Z",
+                "business_name": "Codezee",
+                "business_logo": "1708343121308_image_cropper_14712BAF-53B0-4D1C-AB04-EA1581E44348-2723-00001B31357F81E6.jpg",
+                "job_location": "Bangkok, Thailand"
+            }
+        ]
+    },
+    "msg": "The job list has been successfully fetched."
+}
+```
+
+### Error response (job not found)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "No jobs were found."
+}
+```
+
+
+
+
+
+
+# Web Job View API
+
+## Endpoint
+
+`GET /api/web/job/view/:job_id`
+
+This endpoint is used to view details of a specific job based on its ID.
+
+### Request Headers
+
+No specific request headers are required for this endpoint.
+
+### Request Parameters
+
+- `job_id` (URL parameter): Specifies the ID of the job to view. It must be a valid job ID with a minimum length of 24 characters.
+
+### Notes
+
+- This API is used to retrieve detailed information about a specific job based on its ID.
+- The response includes the job details along with the business owner's information and business details.
+
+### Middleware
+
+The `webJobViewMid` middleware is applied to handle the request processing.
+
+### Job View Process
+
+The API retrieves detailed information about the specified job, including its title, description, location, salary, and business details. It also includes the owner's name, business logo, contact information, job status, and other relevant data. If the job is found, the API returns a success response with the job details; otherwise, it returns an error response.
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65d4638616c4228aab7c3720",
+        "job_title": "MEAN Developer",
+        "experience": 1,
+        "workplace_type": 1,
+        "job_type": 2,
+        "salary": 110000,
+        "description": "[{\"insert\":\"Asd\\n\"}]",
+        "description_img": "1708417926319_image_cropper_6C27D10B-9325-4965-B37D-8D37EDC0760F-3244-00000CC41F682FDE.jpg",
+        "businessData": {
+            "_id": "65cf05dc7101aa03bf1ba6b5",
+            "logo": "1708585783543_image_cropper_2B5B6400-7507-4168-867C-58A999A4D6AD-2144-000004E48D413EFE.jpg",
+            "business_name": "Thai Bar",
+            "business_country_code": "+66",
+            "business_mobile_no": "655597453",
+            "business_email": "thai@gmail.com",
+            "business_details": "[{\"insert\":\"Thai Food hotelsadasdad\\n\"}]",
+            "latitude": 15.87,
+            "longitude": 100.9925,
+            "location": "Bangkok, Thailand",
+            "address": "1560, Latphrao Road, Wangthonglang, Bangkok, Thailand, 10310",
+            "distance": null
+        },
+        "location": "Bangkok, Thailand"
+    },
+    "msg": "Here are the details for the job."
+}
+```
+
+### Error response (job not exist)
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the job does not exist. Please check the job details or explore other opportunities."
+}
+```
+
+### Error response (if job id is empty in parameter)
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":job_id",
+                "msg": "Please vaild job id",
+                "path": "job_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```

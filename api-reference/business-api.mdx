@@ -251,12 +251,17 @@ The API returns a JSON response with status, data, and message fields.
 
 ## Endpoint
 
-`GET /api/business/list`
+`GET /api/business/list/:start/:limit`
 
 This endpoint is used to retrieve a list of businesses associated with the authenticated user.
 
 ### Request Headers
 - `authorization` (Header): Authorization token for user authentication.
+
+### Request Parameters
+
+- `start` (number): The starting index for pagination.
+- `limit` (number): The maximum number of agents to fetch.
 
 ### Middleware
 The endpoint utilizes a middleware function, `listBusinessMid`, which performs input validation and invokes the business listing process.
@@ -622,39 +627,40 @@ The API returns a JSON response with status, data, and message fields.
 
 
 
-# List Applied Job API
+
+
+# Business Location List API
 
 ## Endpoint
 
-`GET /api/jobseeker/applied-job/list`
+`GET /api/business/list-location/:business_id`
 
-This endpoint retrieves a list of jobs that the jobseeker has applied for.
+This endpoint is used to fetch the list of locations associated with a specific business.
 
-### Request
+### Request Headers
 
-#### Headers
+- `Authorization`: Authorization header is required and must not be empty.
 
-- `authorization`: Authorization token.
+### Request Parameters
 
-### Response
-
-- Status: 200 OK if the operation is successful, error status otherwise.
-- Body: JSON response containing the list of applied jobs.
-
-### Validation
-
-- The `authorization` header must be included in the request.
+- `business_id` (URL parameter): Specifies the ID of the business for which to fetch the locations. It must be a valid business ID.
 
 ### Notes
 
-- This endpoint allows jobseekers to retrieve a list of jobs they have applied for.
-- The API aggregates data from the `applied_job`, `business`, and `business_location` collections to provide comprehensive job details.
-- Each job in the response includes information such as job title, salary, business name, business logo, job location, creation date, and application status.
-- If there are no applied jobs for the user, the API will return a message indicating that no jobs have been applied for.
-- If any error occurs during the process, an appropriate error message will be returned in the response.
+- This API is used to fetch the list of locations associated with a specific business.
+- The middleware listLocationMid handles authorization and request validation for this endpoint.
+- The response includes details about each location such as address, city, zip code, coordinates, and location name.
 
----
-### Response header
+### Middleware
+
+This middleware function `listLocationMid` handles the request validation and authorization.
+
+### Business Location List Process
+
+The API checks the user's authorization, validates the business ID, and then fetches the list of locations associated with the specified business. The response includes details about each location such as address, city, zip code, coordinates, and location name.
+
+### Success Response Example
+
 ```json
 {
     "status": 200,
@@ -670,9 +676,10 @@ This endpoint retrieves a list of jobs that the jobseeker has applied for.
             "location_name": "Bangkok, Thailand"
         }
     ],
-    "msg": "Business location list"
+    "msg": "The business location list has been successfully fetched."
 }
 ```
+
 If business not exist:
 
 ```json
@@ -692,6 +699,27 @@ If user not exist:
    "err": 1,
    "data": [],
    "msg": "User not exist"
+}
+```
+
+If business id field is empty
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
 }
 ```
 
@@ -2046,5 +2074,709 @@ If notification already mark as read:
     "err": 1,
     "data": {},
     "msg": "The notification has already been marked as read."
+}
+```
+
+
+
+
+
+# View Agent API
+
+## Endpoint
+
+`GET /api/business/agent/view/:agent_id`
+
+This endpoint retrieves details of a specific agent by their agent ID.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+- Parameters
+  - `agent_id`: Specifies the agent's ID. It should be a string of length 24 characters.
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures (e.g., 401 for unauthorized access).
+- Body: JSON response containing the agent's details or error message.
+  - If the agent is found and details are retrieved successfully, the response includes the agent's information.
+  - If the agent is not found or an error occurs during retrieval, an error message is returned.
+
+### Notes
+
+- Authentication is required via the `authorization` header.
+- The `agent_id` parameter is used to specify which agent's details to fetch.
+- Successful responses include the agent's details such as name, contact information, and bio.
+- Error messages are returned for scenarios like the agent not existing, unauthorized access, or internal server errors.
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65efe525f5dae1ed2a2fed26",
+        "country_code": "+66",
+        "mobile_no": "444444441",
+        "first_name": "Agent_1",
+        "user_email": "agent_1@gmail.com",
+        "user_type": 4,
+        "language": 1,
+        "deleted": false,
+        "created_at": "2024-03-12T05:16:21.240Z",
+        "updated_at": "2024-03-12T05:16:21.240Z",
+        "__v": 0,
+        "about_agent": "I am JobNow agent"
+    },
+    "msg": "Here are the details of the agent."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### If agent id not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":agent_id",
+                "msg": "Please vaild agent_id",
+                "path": "agent_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+### If agent id is wrong
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the agent does not exist."
+}
+```
+
+
+
+
+
+# Invite Agent API
+
+## Endpoint
+
+`GET /api/business/agent/invite/:business_id/:agent_id`
+
+This endpoint sends an invitation to an agent to join a specific business.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `business_id`: Specifies the business ID. Should be a string of length 24 characters.
+  - `agent_id`: Specifies the agent's ID. Should be a string of length 24 characters.
+
+### Response
+
+- Status:
+  - 200 OK if the invitation is sent successfully.
+  - Error status codes for failures (e.g., 401 for unauthorized access).
+
+- Body: JSON response indicating the result of the invitation attempt.
+  - If the invitation is sent successfully, a success message is returned along with relevant data.
+  - If the invitation fails (e.g., due to user not existing, business not existing, permission errors, etc.), an error message is returned.
+
+### Notes
+
+- Authentication is required via the `authorization` header.
+- The `business_id` parameter specifies the ID of the business to which the agent is invited.
+- The `agent_id` parameter specifies the ID of the agent being invited.
+- Various checks are performed during the invitation process, such as user existence, business existence, permission checks, and previous invitation checks.
+- Notifications are sent to the invited agent using Firebase Cloud Messaging (FCM) tokens.
+- Error messages are returned for scenarios like user not existing, business not existing, permission errors, notification errors, etc.
+
+---
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "user_id": "65efe5ccf5dae1ed2a2fed2d",
+        "business_id": "65bc8b03ee10fd14593b0cfb",
+        "status": 1,
+        "invitation_by": 2,
+        "deleted": false,
+        "created_by": "65bc7b14bf1407cea573a9c6",
+        "updated_by": "65bc7b14bf1407cea573a9c6",
+        "created_at": "2024-03-18T10:34:19.673Z",
+        "updated_at": "2024-03-18T10:34:19.673Z",
+        "_id": "65f818abca50493e1f05fafe",
+        "__v": 0
+    },
+    "msg": "Invitation sent successfully."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### If business id and agent id not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            },
+            {
+                "type": "field",
+                "value": ":agent_id",
+                "msg": "Please vaild agent id",
+                "path": "agent_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+### If agent id is not valid
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the agent does not exist."
+}
+```
+
+### If business id is not valid
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the business does not exist."
+}
+```
+
+### If agent has already been invited
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "The agent has already been invited."
+}
+```
+
+
+
+
+
+
+# Business Invitation List API
+
+## Endpoint
+
+`GET /api/business/invitation/list/:business_id/:start/:limit`
+
+This endpoint retrieves a list of invitations sent by a business, based on the business ID, start index, and limit.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `business_id`: Specifies the business ID. Should be a string of length 24 characters.
+  - `start`: Specifies the starting index of the list to retrieve.
+  - `limit`: Specifies the maximum number of items to retrieve.
+
+### Response
+
+- Status:
+  - 200 OK if the operation is successful.
+  - Error status codes for failures (e.g., 401 for unauthorized access).
+
+- Body: JSON response containing the list of invitations or an error message.
+  - If invitations are found, the response includes the total number of invitations and a list of invitation details.
+  - If no invitations are found or an error occurs, an error message is returned.
+
+### Notes
+
+- Authentication is required via the `authorization` header.
+- The `business_id` parameter specifies the ID of the business whose invitations are to be retrieved.
+- The `start` parameter specifies the starting index of the list (pagination).
+- The `limit` parameter specifies the maximum number of items to retrieve per request.
+- Invitations are filtered based on specific criteria such as status, invitation type, and deletion status.
+- The response includes pagination information for handling large invitation lists efficiently.
+- Error messages are returned for scenarios like unauthorized access, invalid parameters, or internal server errors.
+
+---
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_invitation": 2,
+        "invitation_list": [
+            {
+                "_id": "65f01f9e2ae3ebfa0fabab8a",
+                "deleted": false,
+                "user_id": "65efe616f5dae1ed2a2fed41",
+                "user_name": "Agent_5",
+                "profile_img_agent": "1710313412797_image_cropper_7E59F57F-425F-4BC1-99BA-E62E4927B0B9-8381-00000B96C7944195.jpg",
+                "about_agent": "I am JobNow agent",
+                "address": "Bangkok",
+                "gender": 1
+            },
+            {
+                "_id": "65f818abca50493e1f05fafe",
+                "deleted": false,
+                "user_id": "65efe5ccf5dae1ed2a2fed2d",
+                "user_name": "Agent_2",
+                "profile_img_agent": "1710313412797_image_cropper_7E59F57F-425F-4BC1-99BA-E62E4927B0B9-8381-00000B96C7944195.jpg",
+                "about_agent": "I am JobNow agent",
+                "address": "Bangkok",
+                "gender": 1
+            }
+        ]
+    },
+    "msg": "List of invitations."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### If business id not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+### If business id is not valid
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "No invitations found."
+}
+```
+
+
+
+
+
+
+# Acknowledge Agent Invitation API
+
+## Endpoint
+
+`POST /api/business/acknowledge-invitation/:business_id/:agent_id/:status`
+
+This endpoint allows users to acknowledge and respond to invitations sent by a business to an agent.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `business_id`: Specifies the business ID. Should be a string of length 24 characters.
+  - `agent_id`: Specifies the agent's ID. Should be a string of length 24 characters.
+  - `status`: Specifies the acknowledgment status (2 for accept, 3 for reject).
+
+### Response
+
+- Status:
+  - 200 OK if the operation is successful.
+  - Error status codes for failures (e.g., 401 for unauthorized access).
+
+- Body: JSON response indicating the result of the acknowledgment.
+  - If the acknowledgment is successful, a success message is returned along with relevant data.
+  - If the acknowledgment fails (e.g., due to user not existing, invitation not found, invalid status, etc.), an error message is returned.
+
+### Notes
+
+- Authentication is required via the `authorization` header.
+- The `business_id` parameter specifies the ID of the business whose invitation is being acknowledged.
+- The `agent_id` parameter specifies the ID of the agent to whom the invitation was sent.
+- The `status` parameter specifies the acknowledgment status (2 for accept, 3 for reject).
+- Various checks are performed during acknowledgment, such as user existence, invitation existence, notification acknowledgment, and status validation.
+- Invitations can be accepted or rejected based on the provided status.
+- Error messages are returned for scenarios like unauthorized access, invalid parameters, invitation not found, or internal server errors.
+
+---
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65f81c5c9a69f36673da5fbe",
+        "user_id": "65efe525f5dae1ed2a2fed26",
+        "business_id": "65bc7b14bf1407cea573a9cc",
+        "about": "hiiiiii",
+        "status": 2,
+        "invitation_by": 1,
+        "deleted": false,
+        "created_by": "65efe525f5dae1ed2a2fed26",
+        "updated_by": "65efe525f5dae1ed2a2fed26",
+        "created_at": "2024-03-18T10:50:04.809Z",
+        "updated_at": "2024-03-18T11:38:08.986Z",
+        "__v": 0
+    },
+    "msg": "Invitation accepted successfully."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### If business id,agent id and status not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            },
+            {
+                "type": "field",
+                "value": ":agent_id",
+                "msg": "Please vaild agent id",
+                "path": "agent_id",
+                "location": "params"
+            },
+            {
+                "type": "field",
+                "value": ":status",
+                "msg": "Invalid value",
+                "path": "status",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+### If business id is not valid
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Invitation for the job does not exist."
+}
+```
+
+### If agent id is not valid
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the agent does not exist."
+}
+```
+
+### If status is not valid
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Please apply with a valid status."
+}
+```
+
+
+
+
+
+
+# Conversation Group Member List API
+
+## Endpoint
+
+`POST /api/business/conversation-group-member/list/:business_id/:group_id`
+
+This endpoint is used to fetch the list of members in a conversation group associated with a specific business.
+
+### Request Headers
+
+- `Authorization`: Authorization header is required and must not be empty.
+
+### Request Parameters
+
+- `business_id` (URL parameter): The ID of the business to fetch group members for.
+- `group_id` (URL parameter): The ID of the conversation group to fetch members from.
+
+### Notes
+
+- This API is used to fetch the list of members in a conversation group associated with a specific business.
+- The middleware groupMemberListMid handles authorization and request validation for this endpoint.
+- The response includes details about each group member, such as name, role, profile image, and member type.
+
+### Middleware
+
+This middleware function `groupMemberListMid` handles the request validation and authorization.
+
+### Group Member List Process
+
+The API checks the user's authorization, validates the request parameters, and then fetches the list of members in the specified conversation group associated with the given business ID.
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65bc7b14bf1407cea573a9d3",
+            "business_id": "65bc7b14bf1407cea573a9cc",
+            "user_id": "65bc7b14bf1407cea573a9c6",
+            "role": 1,
+            "staff_profile_image": null,
+            "is_group_member": true,
+            "member_name": "Test Business Owner"
+        },
+        {
+            "_id": "65f827a1ca50493e1f05fb5c",
+            "business_id": "65bc7b14bf1407cea573a9cc",
+            "user_id": "65efe525f5dae1ed2a2fed26",
+            "member_type": 4,
+            "is_group_member": false,
+            "member_name": "Agent_1"
+        }
+    ],
+    "msg": "List of group members."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response for invalid business id
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, you are not a member of this business. Please contact the administrator for access."
+}
+```
+
+### Error Response for empty fields
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+
+
+
+
+
+# FCM Business API
+
+## Endpoint
+
+`POST /api/business/switch`
+
+This endpoint is used to switch the FCM token to a different business.
+
+### Request Headers
+
+- `authorization`: The authorization token for authentication. It must not be empty.
+
+### Request Body
+
+- `fcm_token`: The FCM token to be switched. It must not be empty.
+
+### Notes
+
+- This API is used to switch the FCM token to a different business.
+- It requires authorization through the authorization header.
+- The FCM token must be provided in the request body.
+
+### Middleware
+
+The `setFcmBusinessMid` middleware is applied to handle the request processing.
+
+### FCM Business Switch Process
+
+The API switches the FCM token to the specified business. If the operation is successful, it returns a success response; otherwise, it returns an error response.
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "The business is set with the FCM token."
+}
+```
+### Error response
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "The business is not set with the FCM token. Please try again.."
+}
+```
+
+### Error response(Not member of business)
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, you are not a member of this business. Please contact the administrator for access."
+}
+```
+
+### Error Response for empty fields
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": "",
+                "msg": "Invalid value",
+                "path": "fcm_token",
+                "location": "body"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
 }
 ```

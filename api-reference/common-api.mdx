@@ -6,7 +6,61 @@ excludeFromToc: true
 
 # User Verification API
 
-## Verify OTP
+# Send OTP API
+
+This endpoint is used to send an OTP (One-Time Password).
+
+## Endpoint
+
+`POST /api/common/send-otp?for=<used_for>`
+
+## Request Headers
+
+- `Authorization`: The authorization header is required for authentication.
+
+## Middleware
+
+This middleware function checks the presence and format of the authorization header.
+
+## OTP Sending Process
+
+The `SEND_OTP` function handles the OTP sending process based on the provided data.
+
+## Request Body
+
+```json
+{
+    "job_id": "65bc9a4f31e4bb6a9aed7d5b",
+    "email_id": "dharmik.codezee@gmail.com"
+}
+```
+
+## Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "msg": "Otp sent to your email id"
+}
+```
+
+## Error message for invalid email
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "Business email id not matched"
+}
+```
+
+
+
+
+
+## Verify OTP API
 
 Endpoint to verify user identity using OTP.
 
@@ -164,5 +218,57 @@ Other errors
     "err": 1,
     "data": {},
     "msg": <error_message>
+}
+```
+
+
+
+
+
+
+# City List API
+
+## Endpoint
+
+`GET /api/common/city/list`
+
+This endpoint is used to retrieve a list of cities.
+
+## Middleware
+
+This middleware function `cityListMid` is responsible for handling the city list request.
+
+## City List Retrieval Process
+
+The `CITY_LIST` function retrieves the list of cities from the database.
+
+## Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65bb44cdc384371c9b8f3376",
+            "city_name": "Bangkok, Thailand"
+        },
+        {
+            "_id": "65bb44cdc384371c9b8f3377",
+            "city_name": "Amnat Charoen, Thailand"
+        },
+        //...more cities
+    ],
+    "msg": "CIty list"
+}
+
+## Error message if city list not found
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": [],
+    "msg": "City list not found"
 }
 ```

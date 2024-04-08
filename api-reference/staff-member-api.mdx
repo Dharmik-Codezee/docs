@@ -87,3 +87,450 @@ Error Response Example
   }
 }
 ```
+
+
+
+
+
+
+# Business Member List API
+
+## Endpoint
+
+`POST /api/business/member/list/:business_id/:type/:start/:limit`
+
+This endpoint retrieves a list of members belonging to a business based on the business ID, member type, start index, and limit.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `business_id`: Specifies the business ID. Should be a string of length 24 characters.
+  - `type`: Specifies the member type (numeric value).
+  - `start`: Specifies the starting index of the list to retrieve.
+  - `limit`: Specifies the maximum number of items to retrieve.
+
+### Response
+
+- Status:
+  - 200 OK if the operation is successful.
+  - Error status codes for failures (e.g., 401 for unauthorized access).
+
+- Body: JSON response containing the list of members or an error message.
+  - If members are found, the response includes the total number of members and a list of member details.
+  - If no members are found or an error occurs, an error message is returned.
+
+### Notes
+
+- Authentication is required via the `authorization` header.
+- The `business_id` parameter specifies the ID of the business whose members are to be retrieved.
+- The `type` parameter specifies the type of members to retrieve (e.g., 1 for staff, 2 for managers, etc.).
+- The `start` parameter specifies the starting index of the list (pagination).
+- The `limit` parameter specifies the maximum number of items to retrieve per request.
+- Members are filtered based on specific criteria such as business ID, member type, and deletion status.
+- The response includes pagination information for handling large member lists efficiently.
+- Error messages are returned for scenarios like unauthorized access, invalid parameters, business not existing, or internal server errors.
+
+---
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_member": 2,
+        "member_list": [
+            {
+                "_id": "65f02d4a3485f066bf155fcb",
+                "user_id": "65f02d4a3485f066bf155fc8",
+                "staff_email": "john@gmail.com",
+                "about": "hiiiiiiiii",
+                "role": 1,
+                "staff_profile_image": "1710318311453_image_cropper_E281586E-AEF6-47AA-8E7A-25C7A63E1630-3657-0000100AA9BBDF4A.jpg",
+                "is_active": true,
+                "is_accepted": true,
+                "invite_by": "65d3013054a70c5740dcca97",
+                "deleted": false,
+                "created_by": "65d3013054a70c5740dcca97",
+                "updated_by": "65d3013054a70c5740dcca97",
+                "created_at": "2024-03-12T10:24:10.589Z",
+                "updated_at": "2024-03-13T08:56:28.101Z",
+                "staff_full_name": "John Cena",
+                "country_code": "+66",
+                "mobile_no": "7845129630"
+            },
+            {
+                "_id": "65f02d9c3485f066bf155fdb",
+                "user_id": "65f02d9c3485f066bf155fd8",
+                "staff_email": "amber@gmail.com",
+                "about": "hiiiiiiii",
+                "role": 2,
+                "staff_profile_image": "1710239132467_image_cropper_09031965-82B9-4647-B842-C64382E42EF0-3977-000016F128F4C399.jpg",
+                "is_active": true,
+                "is_accepted": true,
+                "invite_by": "65d3013054a70c5740dcca97",
+                "deleted": false,
+                "created_by": "65d3013054a70c5740dcca97",
+                "updated_by": "65d3013054a70c5740dcca97",
+                "created_at": "2024-03-12T10:25:32.691Z",
+                "updated_at": "2024-03-13T08:24:00.482Z",
+                "staff_full_name": "Amber",
+                "country_code": "+66",
+                "mobile_no": "7878784545"
+            }
+        ]
+    },
+    "msg": "Members of the business."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### If business id and type not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            },
+            {
+                "type": "field",
+                "value": ":type",
+                "msg": "Invalid value",
+                "path": "type",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+### If business id is not valid
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the business does not exist."
+}
+```
+
+
+
+
+
+# Business Member View API
+
+## Endpoint
+
+`GET /api/business/member/view/:business_member_id`
+
+This endpoint retrieves details of a specific business member based on the business member ID.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `business_member_id`: Specifies the business member ID. Should be a string of length 24 characters.
+
+### Response
+
+- Status:
+  - 200 OK if the operation is successful.
+  - Error status codes for failures (e.g., 401 for unauthorized access).
+
+- Body: JSON response containing the details of the business member or an error message.
+  - If the business member details are found, the response includes the member's information.
+  - If the member is not found, an error message is returned.
+
+### Notes
+
+- Authentication is required via the `authorization` header.
+- The `business_member_id` parameter specifies the ID of the business member whose details are to be retrieved.
+- Business members are filtered based on specific criteria such as ID and deletion status.
+- The response includes the business member's profile information, including profile image, full name, email, role, contact details, about, creation details, and update details.
+- Error messages are returned for scenarios like unauthorized access, invalid parameters, business member not existing, or internal server errors.
+
+---
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65f02d4a3485f066bf155fcb",
+        "staff_email": "john@gmail.com",
+        "about": "hiiiiiiiii",
+        "role": 1,
+        "staff_profile_image": "1710318311453_image_cropper_E281586E-AEF6-47AA-8E7A-25C7A63E1630-3657-0000100AA9BBDF4A.jpg",
+        "deleted": false,
+        "created_by": "65d3013054a70c5740dcca97",
+        "updated_by": "65d3013054a70c5740dcca97",
+        "created_at": "2024-03-12T10:24:10.589Z",
+        "updated_at": "2024-03-13T08:56:28.101Z",
+        "staff_full_name": "John Cena",
+        "country_code": "+66",
+        "mobile_no": "7845129630"
+    },
+    "msg": "Members of the business."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### If business id and type not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_member_id",
+                "msg": "Please vaild business member id",
+                "path": "business_member_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+### If business id is not valid
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the business does not exist."
+}
+```
+
+
+
+
+
+# Update Business Member API
+
+## Endpoint
+
+`POST /api/business/member/update/:business_member_id`
+
+This endpoint updates the details of a specific business member.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+- Parameters
+  - `business_member_id`: Specifies the business member ID. Should be a string of length 24 characters.
+
+- Body
+  - `is_active` (optional): Specifies the active status of the member. Should be a boolean value.
+  - `staff_profile_image` (optional): Specifies the URL of the staff profile image.
+  - `staff_full_name` (optional): Specifies the full name of the staff member.
+  - `staff_email` (optional): Specifies the email address of the staff member.
+  - `role` (optional): Specifies the role of the staff member. Should be a numeric value.
+  - `about` (optional): Specifies additional information about the staff member.
+
+### Response
+
+- Status:
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+
+- Body: JSON response indicating the status of the update operation.
+  - If the update is successful, a success message is returned along with the updated member details.
+  - If the update fails or validation errors occur, an error message is returned.
+
+### Notes
+
+- Authentication is required via the `authorization` header.
+- The `business_member_id` parameter specifies the ID of the business member to be updated.
+- Updates can include modifying the active status, profile image, full name, email, role, and about information of the member.
+- Validation checks are performed for required fields and data types.
+- Error messages are returned for scenarios such as unauthorized access, invalid parameters, member not existing, or internal server errors.
+
+---
+
+### Request body if there were is_active field exist in body
+
+```json
+{
+    "staff_full_name": "ABC Test",
+    "staff_profile_image": "image.jpg",
+    "role": 2,
+    "staff_email": "staff@gmail.com",
+    "is_active": true,
+    "about": "This is General Manager"
+}
+```
+
+### Success Response (200 OK) Update only is_active field
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65fa80d88bc8374fde4903de",
+        "business_id": "65fa80d88bc8374fde4903d7",
+        "user_id": "65c9ebf860a4897c8f843a7d",
+        "staff_full_name": "ABC Test",
+        "staff_email": "staff@gmail.com",
+        "role": 2,
+        "member_type": 1,
+        "is_active": true,
+        "is_accepted": true,
+        "invite_by": "65c9ebf860a4897c8f843a7d",
+        "deleted": false,
+        "created_by": "65c9ebf860a4897c8f843a7d",
+        "updated_by": "65c9ebf860a4897c8f843a7d",
+        "created_at": "2024-03-20T06:23:20.259Z",
+        "updated_at": "2024-03-20T06:41:17.681Z",
+        "__v": 0,
+        "about": "This is General Manager",
+        "staff_profile_image": "image.jpg"
+    },
+    "msg": "isActive updated"
+}
+```
+
+### Request body if there were no is_active field
+
+```json
+{
+    "staff_full_name": "ABC Test",
+    "staff_profile_image": "image.jpg",
+    "role": 2,
+    "staff_email": "staff@gmail.com",
+    "about": "This is General Manager"
+}
+```
+
+### Success Response (200 OK) Update according to body
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65fa80d88bc8374fde4903de",
+        "business_id": "65fa80d88bc8374fde4903d7",
+        "user_id": "65c9ebf860a4897c8f843a7d",
+        "staff_full_name": "ABC Test",
+        "staff_email": "staff@gmail.com",
+        "role": 2,
+        "member_type": 1,
+        "is_active": true,
+        "is_accepted": true,
+        "invite_by": "65c9ebf860a4897c8f843a7d",
+        "deleted": false,
+        "created_by": "65c9ebf860a4897c8f843a7d",
+        "updated_by": "65c9ebf860a4897c8f843a7d",
+        "created_at": "2024-03-20T06:23:20.259Z",
+        "updated_at": "2024-03-20T06:44:32.678Z",
+        "__v": 0,
+        "about": "This is General Manager",
+        "staff_profile_image": "image.jpg",
+        "country_code": "+66",
+        "mobile_no": "1234567890"
+    },
+    "msg": "Staff member details successfully updated."
+}
+```
+
+### Staff full name is null
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "staff full name is null"
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### If business id and type not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_member_id",
+                "msg": "Please vaild business member id",
+                "path": "business_member_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+### If business id is not valid
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the business does not exist."
+}
+```

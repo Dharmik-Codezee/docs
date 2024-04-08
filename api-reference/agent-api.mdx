@@ -1,0 +1,1248 @@
+---
+title: Agent API
+---
+
+# Agent List API
+
+## Endpoint
+
+`POST /api/agent/list/:business_id/:start/:limit`
+
+This endpoint is used to fetch a list of agents for a specific business.
+
+### Request Headers
+
+- `Authorization` (string): Token for authentication.
+
+### Request Parameters
+
+- `business_id` (string): The ID of the business for which agents are to be listed.
+- `start` (number): The starting index for pagination.
+- `limit` (number): The maximum number of agents to fetch.
+
+### Notes
+
+- Pagination is implemented to limit the number of agents fetched per request.
+- Authorization is required to access the agent list.
+- The response includes details like agent ID, name, contact information, status, and more.
+
+### Middleware
+
+This middleware function `listAgentMid` handles the request validation and authorization.
+
+### Agent List Process
+
+The API checks the user's authorization, validates the request parameters, and then fetches the list of agents based on the provided business ID.
+
+### Response
+
+The response contains the list of agents for the specified business.
+
+#### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_agent": 5,
+        "agent_list": [
+            {
+                "_id": "65efe525f5dae1ed2a2fed26",
+                "country_code": "+66",
+                "mobile_no": "444444441",
+                "first_name": "Agent_1",
+                "user_email": "agent_1@gmail.com",
+                "deleted": false,
+                "created_at": "2024-03-12T05:16:21.240Z",
+                "updated_at": "2024-03-12T05:16:21.240Z",
+                "about": "I am JobNow agent",
+                "status": 2
+            },
+            //...more agents
+        ]
+    },
+    "msg": "List of agents."
+}
+```
+
+### Error response 
+
+If user not exist
+
+```json
+{
+   "status": 401,
+   "err": 1,
+   "data": [],
+   "msg": "User not exist"
+}
+```
+
+If business id is not valid 
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the business does not exist."
+}
+```
+
+If business id not provide in params
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+
+
+
+
+
+
+# Invitation List API
+
+## Endpoint
+
+`POST /api/agent/invitation/list/:start/:limit`
+
+This endpoint is used to fetch the list of invitations for an agent.
+
+### Request Headers
+
+- `Authorization`: Authorization header is required and must not be empty.
+
+### Request Parameters
+
+- `start` (URL parameter): The starting index of the list.
+- `limit` (URL parameter): The maximum number of invitations to fetch.
+
+### Notes
+
+- This API is used to fetch the list of invitations for an agent based on the provided start index and limit.
+- The middleware invitationListMid handles authorization and request validation for this endpoint.
+- The response includes the total number of invitations and a list of invitation details.
+
+### Middleware
+
+This middleware function `invitationListMid` handles the request validation and authorization.
+
+### Invitation List Process
+
+The API checks the user's authorization, validates the request parameters, and then fetches the list of invitations based on the user's ID and optional status.
+
+### Success Response Example (For status 3)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_invitation": 2,
+        "invitation_list": [
+            {
+                "_id": "65f16ba97db78075a9095b95",
+                "status": 3,
+                "deleted": false,
+                "created_at": "2024-03-13T09:02:33.122Z",
+                "business_id": "65d86e9bfc9ae2313bd4d03e",
+                "business_name": "Mj",
+                "business_logo": "1708682907020_image_cropper_1708682897240.jpg",
+                "location_name": "Chaiyaphum, Thailand"
+            },
+            {
+                "_id": "65f16b867db78075a9095b2a",
+                "status": 3,
+                "deleted": false,
+                "created_at": "2024-03-13T09:01:58.028Z",
+                "business_id": "65d310e4e9485533dafad1ff",
+                "business_name": "Mirai minds",
+                "business_logo": "1708343357060_image_cropper_90FD69CD-BC2F-46A0-8FC6-A0EE5EF6200A-2723-00001B6837EED439.jpg",
+                "location_name": "Bangkok, Thailand"
+            }
+        ]
+    },
+    "msg": "List of invitations."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error response if invitation not found
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "No invitations found."
+}
+```
+
+
+
+
+
+
+
+# Acknowledge Invitation API
+
+## Endpoint
+
+`POST /api/agent/acknowledge-invitation/:business_id/:status`
+
+This endpoint is used to acknowledge or respond to a business invitation.
+
+### Request Headers
+
+- `Authorization`: Authorization header is required and must not be empty.
+
+### Request Parameters
+
+- `business_id` (URL parameter): The ID of the business for which the invitation is being acknowledged. It should be a valid MongoDB ObjectID.
+- `status` (URL parameter): The status indicating the response to the invitation. It should be a numeric value:
+  - `2`: Accept the invitation.
+  - `3`: Reject the invitation.
+
+### Notes
+
+- This API is used to acknowledge or respond to a business invitation with either acceptance or rejection.
+- The middleware acknowledgeBusinessInvitaionMid handles authorization and request validation for this endpoint.
+- The response message varies based on the success or failure of the acknowledgment process.
+
+### Middleware
+
+This middleware function `acknowledgeBusinessInvitaionMid` handles the request validation and authorization.
+
+### Acknowledge Business Invitation Process
+
+The API checks the user's authorization and validates the request parameters. It then processes the acknowledgment of the invitation based on the provided status.
+
+### Success Response for status 2
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "66028c9e3e08c01a0bd089e8",
+        "user_id": "65efe5ccf5dae1ed2a2fed2d",
+        "business_id": "65bc8b03ee10fd14593b0cfb",
+        "about": "I am agent",
+        "status": 2,
+        "invitation_by": 2,
+        "deleted": false,
+        "created_by": "65efe5ccf5dae1ed2a2fed2d",
+        "updated_by": "65efe5ccf5dae1ed2a2fed2d",
+        "created_at": "2024-03-26T08:51:42.665Z",
+        "updated_at": "2024-03-26T10:51:08.661Z",
+        "__v": 0
+    },
+    "msg": "Invitation accepted successfully."
+}
+```
+
+### Success Response for status 3
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "66028c9e3e08c01a0bd089e8",
+        "user_id": "65efe5ccf5dae1ed2a2fed2d",
+        "business_id": "65bc8b03ee10fd14593b0cfb",
+        "about": "I am agent",
+        "status": 3,
+        "invitation_by": 2,
+        "deleted": false,
+        "created_by": "65efe5ccf5dae1ed2a2fed2d",
+        "updated_by": "65efe5ccf5dae1ed2a2fed2d",
+        "created_at": "2024-03-26T08:51:42.665Z",
+        "updated_at": "2024-03-26T10:47:10.270Z",
+        "__v": 0
+    },
+    "msg": "Invitation rejected."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error response for invitation not exists
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Invitation for the job does not exist."
+}
+```
+
+### Error response for notification not exists
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "The notification does not exist."
+}
+```
+
+### Error Response for invalid business id
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the business does not exist."
+}
+```
+
+### Error response for invalid status
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Please apply with a valid status."
+}
+```
+
+### Error Response for empty fields
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+
+
+
+
+
+# All Business List API
+
+## Endpoint
+
+`POST /api/agent/all-business/list/:is_member/:start/:limit`
+
+This endpoint is used to fetch the list of all businesses, optionally filtered by whether the user is a member or not.
+
+### Request Headers
+
+- `Authorization`: Authorization header is required and must not be empty.
+
+### Request Parameters
+
+- `is_member` (URL parameter): Specifies whether to fetch businesses where the user is a member (`true`), not a member (`false`), or all businesses (`null`).
+- `start` (URL parameter): The starting index for pagination.
+- `limit` (URL parameter): The maximum number of businesses to fetch per request.
+
+### Notes
+
+- This API is used to fetch the list of all businesses optionally filtered by membership status.
+- The middleware allBusinessListMid handles authorization and request validation for this endpoint.
+- The response includes details about each business such as name, logo, contact details, and membership status.
+- Pagination is supported using the start and limit parameters.
+
+### Middleware
+
+This middleware function `allBusinessListMid` handles the request validation and authorization.
+
+### All Business List Process
+
+The API checks the user's authorization, validates the request parameters, and then fetches the list of all businesses based on the membership status provided (`is_member`). The response includes information about each business such as name, logo, contact details, and membership status
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "total_business": 6,
+        "business_list": [
+            {
+                "_id": "65c6228ae33a6ddcf51b37b9",
+                "logo": "images/photo.jpeg",
+                "business_name": "Test Case Restaurant",
+                "business_country_code": "+66",
+                "business_mobile_no": "655597453",
+                "business_email": "thai@gmail.com",
+                "deleted": false,
+                "created_at": "2024-02-09T13:03:06.215Z",
+                "is_member": false
+            },
+            {
+                "_id": "65c1f1a471044a988e888728",
+                "logo": "images/photo.jpeg",
+                "business_name": "Test Case Bar",
+                "business_country_code": "+66",
+                "business_mobile_no": "655597453",
+                "business_email": "thai@gmail.com",
+                "deleted": false,
+                "created_at": "2024-02-06T08:45:24.257Z",
+                "is_member": false
+            },
+            // ...more business list
+        ]
+    },
+    "msg": "Business list fetched successfully."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+
+
+
+
+
+# Invite Business API
+
+## Endpoint
+
+`POST /api/agent/invite/business/:business_id`
+
+This endpoint is used to invite an agent to collaborate on a business.
+
+### Request Headers
+
+- `Authorization`: Authorization header is required and must not be empty.
+
+### Request Parameters
+
+- `business_id` (URL parameter): The ID of the business to which the agent is invited. It must be a valid ID with a minimum length of 24 characters.
+
+### Notes
+
+- This API invites an agent to collaborate on a business by creating an invitation record and sending a notification.
+- The middleware inviteBusinessMid handles authorization and request validation for this endpoint.
+- It returns success or error responses based on the invitation process and notification sending.
+
+### Middleware
+
+This middleware function `inviteBusinessMid` handles the request validation and authorization.
+
+### Invite Business Process
+
+The API invites an agent to collaborate on a business by sending a notification and creating an invitation record.
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "user_id": "65efe5ccf5dae1ed2a2fed2d",
+        "business_id": "65bc8b03ee10fd14593b0cfb",
+        "about": "I am agent",
+        "status": 1,
+        "invitation_by": 1,
+        "deleted": false,
+        "created_by": "65efe5ccf5dae1ed2a2fed2d",
+        "updated_by": "65efe5ccf5dae1ed2a2fed2d",
+        "created_at": "2024-03-26T08:51:42.665Z",
+        "updated_at": "2024-03-26T08:51:42.665Z",
+        "_id": "66028c9e3e08c01a0bd089e8",
+        "__v": 0
+    },
+    "msg": "Invitation sent successfully."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response (Already Invited)
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "An invitation has already been sent to the business."
+}
+```
+
+### Error Response (Already Member)
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "You are already a member of this business."
+}
+```
+
+### Error Response for invalid business id
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the business does not exist."
+}
+```
+
+### Error Response for empty business id
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+
+
+
+
+
+
+# View Agent Profile API
+
+## Endpoint
+
+`GET /api/agent/view/profile`
+
+This endpoint is used to view the profile details of an agent.
+
+### Request Headers
+
+- `Authorization`: Authorization header is required and must not be empty.
+
+### Notes
+
+- This API fetches and calculates the profile details and completeness percentage of an agent.
+- The middleware viewAgentProfileMid handles authorization and request processing for this endpoint.
+- It returns a success response with the agent's profile details and completeness percentage or error responses for cases like user not found or internal server error.
+
+### Middleware
+
+This middleware function `viewAgentProfileMid` is responsible for authorization and processing the request.
+
+### Request Parameters
+
+This endpoint does not require any request parameters.
+
+### Profile Details
+
+The API returns the following profile details of the agent:
+
+- `first_name`: First name of the agent.
+- `mobile_no`: Mobile number of the agent.
+- `user_email`: Email address of the agent.
+- `about_agent`: About section of the agent's profile.
+- `profile_img_agent`: Profile image of the agent.
+- `date_of_birth`: Date of birth of the agent.
+- `gender`: Gender of the agent.
+- `address`: Address of the agent.
+
+Additionally, it calculates the `profile_percent` based on the completeness of the profile. Each completed field contributes to the percentage.
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65efe5ccf5dae1ed2a2fed2f",
+        "country_code": "+66",
+        "mobile_no": "444444442",
+        "first_name": "Agent_2",
+        "user_email": "agent_2@gmail.com",
+        "user_type": 4,
+        "language": 1,
+        "deleted": false,
+        "created_at": "2024-03-12T05:19:08.034Z",
+        "updated_at": "2024-03-12T05:19:08.034Z",
+        "__v": 0,
+        "user_id": "65efe5ccf5dae1ed2a2fed2d",
+        "about_agent": "I am JobNow agent",
+        "address": "Bangkok",
+        "date_of_birth": "1990-03-12T05:16:21.240Z",
+        "gender": 1,
+        "profile_img_agent": "1710313412797_image_cropper_7E59F57F-425F-4BC1-99BA-E62E4927B0B9-8381-00000B96C7944195.jpg",
+        "notification": true,
+        "profile_percent": 100
+    },
+    "msg": "The profile details have been successfully fetched."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+
+
+
+
+
+
+# Agent Dashboard Count API
+
+## Endpoint
+
+`GET /api/agent/dashboard-count`
+
+This endpoint is used to fetch various counts related to the agent's dashboard.
+
+### Request Headers
+
+- `Authorization`: Authorization header is required and must not be empty.
+
+### Notes
+
+- This API fetches various counts related to the agent's dashboard, including profile completion, notifications, invitations, and total businesses.
+- The middleware agentDashboardCountMid handles authorization and request processing for this endpoint.
+- It returns a success response with the dashboard counts or error responses for cases like user not found, data not found, or internal server error.
+
+### Middleware
+
+This middleware function `agentDashboardCountMid` is responsible for authorization and processing the request.
+
+### Request Parameters
+
+This endpoint does not require any request parameters.
+
+### Dashboard Counts
+
+- `profile_percent`: Percentage of completion of the agent's profile.
+- `notification_count`: Number of unread notifications for the agent.
+- `pending_invitation_count`: Number of pending invitations for the agent.
+- `rejected_invitation_count`: Number of rejected invitations for the agent.
+- `total_business`: Total number of businesses associated with the agent.
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "profile_percent": 0,
+        "notification_count": 0,
+        "pending_invitation_count": 0,
+        "rejected_invitation_count": 2,
+        "total_business": 8
+    },
+    "msg": "Please find dashboard data."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+
+
+
+
+
+
+
+# Business Detail API
+
+## Endpoint
+
+`GET /api/agent/business-detail/:business_id`
+
+This endpoint is used to retrieve details about a specific business.
+
+### Request Headers
+
+- `Authorization` (string): Token for authentication.
+
+### Request Parameters
+
+- `business_id` (string): The ID of the business to retrieve details for.
+
+### Notes
+
+- This API retrieves detailed information about a specific business based on the provided business ID.
+- It performs validation checks on the business ID parameter.
+- If the business is found, its details are returned in the response.
+
+### Response
+
+The response contains details about the specified business.
+
+#### Successful Response
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "_id": "65bc8b03ee10fd14593b0cfb",
+        "owner_id": "65bc7b14bf1407cea573a9c6",
+        "logo": "images/photo.jpeg",
+        "business_name": "Thai Bar",
+        "business_country_code": "+66",
+        "business_mobile_no": "655597453",
+        "business_email": "thai@gmail.com",
+        "business_category_id": "65b8c331d3aa1143d135b72c",
+        "business_details": "[{\"insert\":\"Thai Food Hotel…..\\n\"}]",
+        "deleted": false,
+        "created_by": "65bc7b14bf1407cea573a9c6",
+        "updated_by": "65bc7b14bf1407cea573a9c6",
+        "created_at": "2024-02-02T06:26:11.206Z",
+        "updated_at": "2024-02-19T06:06:53.773Z",
+        "owner_name": "Test Business Owner",
+        "address": "99, Last Street, Bangkok, Thailand - 987654",
+        "location_name": "Bangkok, Thailand"
+    },
+    "msg": "List of invitations."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error response for invalid business id
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "No invitations found."
+}
+```
+
+### Error response if business id is empty
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+
+
+
+
+
+
+# Create Business Send OTP API 
+
+## Endpoint
+
+`POST /api/agent/business/create/send-otp`
+
+This endpoint is used to send an OTP (One-Time Password) for creating a new business.
+
+### Request Headers
+
+- `Authorization`: Authorization header is required and must not be empty.
+
+### Request Body Parameters
+
+- `owner_name` (Body parameter): Name of the business owner. It must not be empty.
+- `owner_country_code` (Body parameter): Country code of the business owner's phone number. It must not be empty.
+- `owner_mobile_no` (Body parameter): Mobile number of the business owner. It must not be empty.
+- `owner_email` (Body parameter): Email address of the business owner. It must not be empty.
+- `business_name` (Body parameter): Name of the business. It must not be empty.
+- `business_country_code` (Body parameter): Country code of the business's phone number. It must not be empty.
+- `business_mobile_no` (Body parameter): Mobile number of the business. It must not be empty.
+- `business_email` (Body parameter): Email address of the business. It must not be empty.
+- `business_category_id` (Body parameter): ID of the business category. It must not be empty and should be a valid category ID.
+- `business_details` (Body parameter): Details about the business. It must not be empty.
+- `address` (Body parameter): Business address. It must not be empty.
+- `city` (Body parameter): City where the business is located. It must not be empty.
+- `zip_code` (Body parameter): Zip code of the business location. It must not be empty.
+- `otp` (Body parameter): One-Time Password received by the user. It must not be empty and should be numeric.
+
+### Notes
+
+- This API sends an OTP to verify the creation of a new business.
+- Various validation checks are performed on the request body fields.
+- An error response is returned if the user or business category does not exist.
+
+### Middleware
+
+This middleware function `createBusinessSendOtpMid` handles the request validation.
+
+### OTP Sending Process
+
+The `CREATE_BUSINESS_SEND_OTP` function handles the OTP sending process for creating a new business. It checks user existence, validates request parameters, and sends an OTP to the specified mobile number.
+
+### Request Body
+
+```json
+{
+    "owner_name": "Test Business Owner 2",
+    "owner_country_code": "+66",
+    "owner_mobile_no": 333333333,
+    "owner_email": "owner@gmail.com",
+    "business_name": "Thai Hotel123",
+    "business_country_code": "+66",
+    "business_mobile_no": 655597453,
+    "business_email": "thai@gmail.com",
+    "business_category_id": "65b8c7b25c60878b99602cd0",
+    "business_details": "Thai food hotel",
+    "logo": "images/photo.jpeg",
+    "address": "101, Main Street",
+    "city": "65bb44cdc384371c9b8f3376",
+    "zip_code": "987654",
+    "longitude": 100.5018,
+    "latitude": 13.7563
+}
+```
+
+### Success Response Example
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "OTP sent to the mobile number you entered."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error response for business name already exists
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Business name already exists."
+}
+```
+
+### Error response for business category not found
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "The business category was not found."
+}
+```
+
+### Error response for required fields
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": "",
+                "msg": "Invalid value",
+                "path": "business_mobile_no",
+                "location": "body"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+
+
+
+
+
+# Create Business with OTP Verification API
+
+## Endpoint
+
+`POST /api/agent/business/create/verify-otp`
+
+This endpoint is used to create a new business with OTP verification.
+
+### Request Headers
+
+- `Authorization`: Authorization header is required and must not be empty.
+
+### Request Body Parameters
+
+- `owner_name` (Body parameter): The name of the business owner. It must not be empty.
+- `owner_country_code` (Body parameter): The country code of the business owner's phone number. It must not be empty.
+- `owner_mobile_no` (Body parameter): The mobile number of the business owner. It must not be empty.
+- `owner_email` (Body parameter): The email address of the business owner. It must not be empty.
+- `business_name` (Body parameter): The name of the business. It must not be empty.
+- `business_country_code` (Body parameter): The country code of the business's phone number. It must not be empty.
+- `business_mobile_no` (Body parameter): The mobile number of the business. It must not be empty.
+- `business_email` (Body parameter): The email address of the business. It must not be empty.
+- `business_category_id` (Body parameter): The ID of the business category. It must not be empty and should be a valid ID.
+- `business_details` (Body parameter): Details about the business. It must not be empty.
+- `address` (Body parameter): The address of the business. It must not be empty.
+- `city` (Body parameter): The city where the business is located. It must not be empty.
+- `zip_code` (Body parameter): The zip code of the business location. It must not be empty.
+- `otp` (Body parameter): The OTP (One-Time Password) for verification. It must not be empty and should be numeric.
+
+### Notes
+
+- This API verifies the OTP received for creating a new business and then creates the business if the OTP is valid.
+- Various validation checks are performed on the request body fields.
+- An error response is returned if the user does not exist, OTP validation fails, or the business category is not found.
+
+### Middleware
+
+This middleware function `createBusinessVerifyOtpMid` handles the request validation.
+
+### Business Creation Process with OTP Verification
+
+The `CREATE_BUSINESS_VERIFY_OTP` function handles the creation of a new business with OTP verification. It validates user existence, checks the OTP, and then creates the business if all conditions are met.
+
+### Request Body
+
+```json
+{
+    "otp": 1234,
+    "owner_name": "Test Business Owner 2",
+    "owner_country_code": "+66",
+    "owner_mobile_no": 333333333,
+    "owner_email": "owner@gmail.com",
+    "business_name": "Thai Hotel123",
+    "business_country_code": "+66",
+    "business_mobile_no": 655597453,
+    "business_email": "thai@gmail.com",
+    "business_category_id": "65b8c7b25c60878b99602cd0",
+    "business_details": "Thai food hotel",
+    "logo": "images/photo.jpeg",
+    "address": "101, Main Street",
+    "city": "65bb44cdc384371c9b8f3376",
+    "zip_code": "987654",
+    "longitude": 100.5018,
+    "latitude": 13.7563
+}
+```
+
+### Success Response Example (Business Created) 
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "owner_id": "65bcc4ea492a720b902eb5a2",
+        "logo": "images/photo.jpeg",
+        "business_name": "Thai Hotel123",
+        "business_country_code": "+66",
+        "business_mobile_no": "655597453",
+        "business_email": "thai@gmail.com",
+        "business_category_id": "65b8c7b25c60878b99602cd0",
+        "business_details": "Thai food hotel",
+        "add_by_type": 3,
+        "notification": true,
+        "deleted": false,
+        "created_by": "65bcc4ea492a720b902eb5a2",
+        "updated_by": "65bcc4ea492a720b902eb5a2",
+        "created_at": "2024-03-26T05:52:48.957Z",
+        "updated_at": "2024-03-26T05:52:48.957Z",
+        "_id": "660262b15340b44dab101a66",
+        "__v": 0
+    },
+    "msg": "Business created successfully."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error Response (Invalid OTP)
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Invalid OTP (One-Time Password). Please double-check the code and try again."
+}
+```
+
+### Error response for business name already exists
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Business name already exists."
+}
+```
+
+### Error response for business category not found
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "The business category was not found."
+}
+```
+
+### Error response for required fields
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": "",
+                "msg": "Invalid value",
+                "path": "business_mobile_no",
+                "location": "body"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+
+
+
+
+
+
+# Find Business Owner API 
+
+## Endpoint
+
+`POST /api/agent/find/business/owner`
+
+This endpoint is used to find the business owner based on the provided criteria.
+
+### Request Headers
+
+- `Authorization`: Authorization header is required and must not be empty.
+
+### Request Body Parameters
+
+- `owner_country_code` (Body parameter): The country code of the business owner's phone number. It must not be empty.
+- `owner_mobile_no` (Body parameter): The mobile number of the business owner. It must not be empty.
+
+### Notes
+
+- This API is used to find the business owner based on their country code and mobile number.
+- The middleware findBusinessOwnerMid handles request validation for this endpoint.
+- It returns a success response if the owner is found, and error responses for cases like owner not found, user not exist, or empty field.
+
+### Middleware
+
+This middleware function `findBusinessOwnerMid` handles the request validation.
+
+### Business Owner Search Process
+
+The `FIND_BUSINESS_OWNER` function searches for the business owner based on the provided country code and mobile number.
+
+### Success Response Example (Owner Found)
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {
+        "_id": "65bcc4ea492a720b902eb5a2",
+        "country_code": "+66",
+        "mobile_no": "333333333",
+        "first_name": "Test Business Owner 2",
+        "user_email": "owner@gmail.com",
+        "user_type": 2,
+        "language": 1,
+        "deleted": false,
+        "created_at": "2024-02-02T10:33:14.996Z",
+        "updated_at": "2024-02-02T10:33:14.996Z",
+        "__v": 0
+    },
+    "msg": "The business owner already exists."
+}
+```
+
+### Error Response (Owner Not Found)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "Business owner does not exist."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```
+
+### Error response for empty field
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": "",
+                "msg": "Invalid value",
+                "path": "owner_mobile_no",
+                "location": "body"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```

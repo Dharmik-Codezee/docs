@@ -30,9 +30,9 @@ This middleware processes the login request.
 
 ### Flow:
 
-1. Validate input parameters using the defined middleware.
-2. If validation fails, return a validation error response using the `errorValidationResponse` function from the `commonController` module.
-3. If validation passes, call the `LOGIN` function from the `userApiController` module.
+- Validate input parameters using the defined middleware.
+- If validation fails, return a validation error response using the `errorValidationResponse` function from the `commonController` module.
+- If validation passes, call the `LOGIN` function from the `userApiController` module.
 
 ## `LOGIN` Function
 
@@ -40,13 +40,13 @@ This function handles the actual login process.
 
 ### Flow:
 
-1. Check conditions for specific test cases related to mobile numbers.
-2. Generate or retrieve an OTP (One-Time Password).
-3. Create a payload with `country_code`, `mobile_no`, `otp`, and `created_at`.
-4. Delete existing OTP records for the specified user.
-5. Create a new OTP record in the `otpModel`.
-6. Optionally, integrate with an SMS gateway to send the OTP to the user's mobile number.
-7. Return a success message.
+- Check conditions for specific test cases related to mobile numbers.
+- Generate or retrieve an OTP (One-Time Password).
+- Create a payload with `country_code`, `mobile_no`, `otp`, and `created_at`.
+- Delete existing OTP records for the specified user.
+- Create a new OTP record in the `otpModel`.
+- Optionally, integrate with an SMS gateway to send the OTP to the user's mobile number.
+- Return a success message.
 
 ## Example Usage
 
@@ -61,6 +61,91 @@ const data = {
 app.post('/api/user/login', data, (response) => {
   console.log(response);
 });
+
+
+
+
+
+
+# Verify OTP API
+
+## Endpoint
+
+### POST /api/user/verify-otp
+
+This endpoint is used to verify the OTP (One-Time Password) sent to the user's mobile number during login.
+
+### Flow
+
+- The country_code, mobile_no, and otp fields are required in the request body.
+- OTP is checked against the stored OTP in the database for the provided mobile number.
+- If OTP verification is successful, an authentication token is generated and returned.
+- The authentication token is used for further authorized API requests.
+- Error messages are returned for scenarios such as invalid OTP, OTP not generated, account not found, or internal server errors.
+- The authentication token has a Bearer token type and should be included in the Authorization header for subsequent authenticated requests.
+
+
+### Request Body
+  
+```json
+{
+    "fcm_token": "e8EI1AguQeuGfSdfQN-EdP:APA91bHUQdVCgH3wifZU31Gsn7eiIs_Anzp7yitX0tnHL_PnMpoKZY9u3ENxNR5Rrs8J_A6NPm_XJHSK9eFh1HmDCdyUPsxQgwCNdWH7WbElzeoIu-ImZZ-Gl6rrVWP0F80Sr4rBf62P",
+    "country_code": "+66",
+    "mobile_no": 1234567890,
+    "otp": 1234
+}
+```
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "user": {
+            "_id": "65c9ebf860a4897c8f843a7d",
+            "country_code": "+66",
+            "mobile_no": "1234567890",
+            "first_name": "Gautam",
+            "user_email": "gautam@gmail.com",
+            "user_type": 2,
+            "language": 1,
+            "deleted": false,
+            "created_at": "2024-02-12T09:59:20.685Z",
+            "updated_at": "2024-02-12T09:59:20.685Z",
+            "__v": 0
+        },
+        "token_data": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWM5ZWJmODYwYTQ4OTdjOGY4NDNhN2QiLCJjb3VudHJ5X2NvZGUiOiIrNjYiLCJtb2JpbGVfbm8iOiIxMjM0NTY3ODkwIiwiaWF0IjoxNzExMDEzMDg5fQ.9tNXipBYAG3MKM_IblDmIyc0VGrMN1u5WVpdccBrgG0",
+            "tokenType": "Bearer"
+        }
+    },
+    "msg": "Otp verified"
+}
+```
+
+### Error message for Invalid mobile
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": "",
+                "msg": "Invalid value",
+                "path": "mobile_no",
+                "location": "body"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
 
 
 
@@ -99,10 +184,10 @@ This middleware processes the sign-up request.
 
 ### Flow:
 
-1. Validate input parameters using the defined middleware.
-2. If validation fails, return a validation error response using the `errorValidationResponse` function from the `commonController` module.
-3. If an email is provided and is not valid, return a validation error response.
-4. If validation passes, call the `SIGNUP` function from the `userApiController` module.
+- Validate input parameters using the defined middleware.
+- If validation fails, return a validation error response using the `errorValidationResponse` function from the `commonController` module.
+- If an email is provided and is not valid, return a validation error response.
+- If validation passes, call the `SIGNUP` function from the `userApiController` module.
 
 ## `SIGNUP` Function
 
@@ -110,12 +195,12 @@ This function handles the user registration process.
 
 ### Flow:
 
-1. Check if the user already exists based on country code and mobile number.
-2. If the user exists, return an error response.
-3. Validate the user type, mobile number, and other required parameters.
-4. Create a new user based on the provided information.
-5. If the user type is 1 (Job Seeker) or 2 (Business Owner), perform additional steps based on the user type.
-6. If successful, generate a JWT token and return it along with the user and business information.
+- Check if the user already exists based on country code and mobile number.
+- If the user exists, return an error response.
+- Validate the user type, mobile number, and other required parameters.
+- Create a new user based on the provided information.
+- If the user type is 1 (Job Seeker) or 2 (Business Owner), perform additional steps based on the user type.
+- If successful, generate a JWT token and return it along with the user and business information.
 
 ## Request body for jobseeker
 

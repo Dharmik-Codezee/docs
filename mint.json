@@ -89,8 +89,10 @@
         "api-reference/jobseeker-profile-api",
         "api-reference/jobseeker-resume-api",
         "api-reference/setting-api",
-        "api-reference/staff-member-api"
-
+        "api-reference/staff-member-api",
+        "api-reference/FAQ-api",
+        "api-reference/agent-api",
+        "api-reference/web-api"
 
       ]
     },

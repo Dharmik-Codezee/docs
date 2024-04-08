@@ -1,0 +1,68 @@
+---
+title: FAQ API
+---
+
+# List FAQ API
+
+## Endpoint
+
+`GET /api/faq/list`
+
+This endpoint retrieves a list of frequently asked questions (FAQs) from the help center.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
+
+### Response
+
+- Status:
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+
+- Body: JSON response containing the list of FAQs.
+  - If FAQs are found, they are returned in the response.
+  - If no FAQs are available, an empty array is returned.
+
+### Notes
+
+- Authentication is required via the `authorization` header.
+- The API fetches FAQs from the help center database.
+- The response includes a list of FAQs if available.
+- Error messages are returned for scenarios such as unauthorized access or internal server errors.
+
+---
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65ea93cf4b1eaa409cae8e8b",
+            "title": "What is JobNow?",
+            "desc": "JobNow is an innovative online platform designed to connect job seekers with businesses across various industries, streamlining the recruitment process for both parties.",
+            "sort": 1,
+            "created_at": "2024-03-08T04:27:59.924Z",
+            "updated_at": "2024-03-08T04:27:59.924Z",
+            "deleted": false
+        },
+        // ... more FAQs
+    ],
+    "msg": "List of frequently asked questions."
+}
+```
+
+### Error Response (User Not Exist)
+
+```json
+{
+  "status": 401,
+  "err": 1,
+  "data": {},
+  "msg": "User not exist"
+}
+```

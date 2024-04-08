@@ -352,30 +352,45 @@ You Are Not Allowed:
 
 
 
-# Job List API
+
+# List Job API
 
 ## Endpoint
 
-`GET /api/job/list/:business_id`
+`GET /api/job/list/:business_id/:start/:limit/:current_opening`
 
-This endpoint is used to retrieve the list of job posts for a specific business.
+This endpoint retrieves a list of jobs associated with a specific business.
 
-### Request Headers
-- **Authorization:** Bearer type JWT token for authentication.
+### Request
 
-### URL Parameters
-- `business_id` (string): ID of the business for which the job posts are requested.
+- Headers
+  - `authorization`: Authorization token for the authenticated user.
 
-### Middleware
-This middleware function `listPostMid` is responsible for validating the incoming request to retrieve the list of job posts. It checks the presence and format of required fields in the request, and ensures that the request is authenticated with a valid authorization header.
+- Parameters
+  - `business_id`: ID of the business to fetch jobs from.
+  - `start`: Starting index for pagination.
+  - `limit`: Maximum number of jobs to retrieve.
+  - `current_opening`: Filter for current job openings (true/false).
 
-### Validation
-- Validates request parameters using express-validator.
-- Responds with appropriate error messages if validation fails.
+### Response
 
-### Job List Retrieval Process
+- Status:
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
 
-Controller function `LIST_POST` retrieves the list of job posts for a specific business. It validates user existence, owner existence, and ensures that the user has permission to view job posts for the given business. If all validations pass, it fetches the list of job posts along with relevant details.
+- Body: JSON response containing the list of jobs.
+  - If jobs are found, they are returned in the response.
+  - If no jobs are available, an empty array is returned.
+
+### Notes
+
+- Authentication is required via the `authorization` header.
+- Pagination is supported using the `start` and `limit` parameters.
+- The `current_opening` parameter filters jobs based on their current availability.
+- The response includes a list of jobs if available.
+- Error messages are returned for scenarios such as unauthorized access, invalid business ID, or internal server errors.
+
+---
 
 ### Request Body Example
 N/A (This is a GET request)
@@ -386,20 +401,26 @@ N/A (This is a GET request)
 {
     "status": 200,
     "err": 0,
-    "data": [
-        {
-            "_id": "job_id_1",
-            "business_name": "Business Name",
-            "job_title": "Job Title",
-            "salary": "Salary",
-            "description_img": "Image URL",
-            "created_at": "2024-01-25T07:15:44.523Z",
-            "updated_at": "2024-01-25T07:15:44.523Z",
-            "location": "City"
-        },
-        // ... more job posts
-    ],
-    "msg": "List of job"
+    "data": {
+        "total_job": 4,
+        "job_list": [
+            {
+                "business_name": "Thai Bar",
+                "_id": "65bc9a4f31e4bb6a9aed7d5b",
+                "job_title": "Test Case Manager",
+                "salary": 30,
+                "created_at": "2024-02-02T07:31:27.815Z",
+                "updated_at": "2024-02-21T11:23:38.917Z",
+                "active": false,
+                "promoted": false,
+                "location": "65bb44cdc384371c9b8f3376",
+                "location_name": "Bangkok, Thailand"
+            },
+            // ... more job posts
+            
+        ]
+    },
+    "msg": "Here is the list of available jobs."
 }
 ```
 
@@ -435,6 +456,39 @@ No job posts found
     "msg": "No job posts found"
 }
 ```
+
+### If business id is not valid
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "Sorry, the business does not exist."
+}
+```
+
+### If business id not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":business_id",
+                "msg": "Please vaild business id",
+                "path": "business_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
 
 
 
@@ -641,48 +695,198 @@ User does not have permission to update this job post
 
 
 
+
+
+# List Job Categories API
+
+## Endpoint
+
+`GET /api/job/category/list`
+
+This endpoint retrieves a list of job categories along with their associated specializations.
+
+### Response
+
+- Status:
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+
+- Body: JSON response containing the list of job categories and their specializations.
+  - If categories are found, they are returned in the response along with their specializations.
+  - If no categories are available, an empty array is returned.
+
+### Notes
+
+- This API endpoint does not support pagination or filtering.
+- The response includes a list of job categories with their associated specializations if available.
+- Error messages are returned for scenarios such as unauthorized access or internal server errors.
+
+----
+
+### Success Response (200 OK)
+
+```json
+
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65b8c331d3aa1143d135b72c",
+            "deleted": false,
+            "__v": 0,
+            "category_name": "Retail",
+            "specialization": [
+                {
+                    "_id": "65b8c4d05c60878b99602ca8",
+                    "specialization_name": "Store Operations",
+                    "deleted": false,
+                    "__v": 0,
+                    "category_id": "65b8c331d3aa1143d135b72c"
+                },
+                //...more specializations
+            ]
+        },
+        //...more categories
+    ],
+    "msg": "Here is the list of available categories."
+}
+
+```
+
+
+
+
+
+
+# List Job Specializations API
+
+## Endpoint
+
+`GET /api/job/specialization/list/:category_id`
+
+This endpoint retrieves a list of job specializations associated with a specific category.
+
+### Request
+
+- Parameters
+  - `category_id`: ID of the category to fetch specializations from.
+
+### Response
+
+- Status:
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+
+- Body: JSON response containing the list of job specializations.
+  - If specializations are found for the given category, they are returned in the response.
+  - If no specializations are available or the category ID is invalid, an empty array is returned.
+
+### Notes
+
+- The `category_id` parameter is used to specify the category for which specializations are requested.
+- The response includes a list of job specializations if available for the specified category.
+- Error messages are returned for scenarios such as unauthorized access, invalid category ID, or internal server errors.
+
+----
+
+### Success Response (200 OK)
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "65b8c4d05c60878b99602ca8",
+            "specialization_name": "Store Operations",
+            "deleted": false,
+            "__v": 0,
+            "category_id": "65b8c331d3aa1143d135b72c"
+        },
+        {
+            "_id": "65b8c4ed5c60878b99602caa",
+            "specialization_name": "Sales and Customer Service",
+            "deleted": false,
+            "__v": 0,
+            "category_id": "65b8c331d3aa1143d135b72c"
+        },
+        //...more specializations 
+    ],
+    "msg": "Here is the list of available specializations."
+}
+```
+
+### If category id not provide in param:
+
+```json
+{
+    "status": 406,
+    "err": 1,
+    "data": {
+        "errors": [
+            {
+                "type": "field",
+                "value": ":category_id",
+                "msg": "Please vaild category id",
+                "path": "category_id",
+                "location": "params"
+            }
+        ]
+    },
+    "msg": "Please Enter All Fields"
+}
+```
+
+### If category id is not valid
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": [],
+    "msg": "Sorry, the category list could not be found."
+}
+```
+
+
+
+
+
+
 # Applicant List API
 
 ## Endpoint
 
-`GET /api/job/applicant/list/:job_id`
+`GET /api/job/applicant/list/:job_id/:new_application/:start/:limit`
 
 This endpoint retrieves a list of applicants for a specific job.
 
 ### Request
 
-#### Parameters
-
-- `job_id`: The ID of the job for which applicants are requested.
+- Parameters
+  - `job_id`: ID of the job for which applicants are listed.
+  - `new_application`: Filter for new applications (true/false).
+  - `start`: Starting index for pagination.
+  - `limit`: Maximum number of applicants to retrieve.
 
 ### Response
 
-- Status: 200 OK if the operation is successful, error status otherwise.
-- Body: JSON response containing the list of applicants for the specified job.
-  - `total_applicant`: Total number of applicants for the job.
-  - `applicant_list`: Array containing details of individual applicants.
-    - `applicant_id`: ID of the applicant.
-    - `user_name`: Full name of the applicant.
-    - `mobile_no`: Mobile number of the applicant.
-    - `user_email`: Email address of the applicant.
-    - `profile_img`: Profile image of the applicant.
-    - `skills`: Skills of the applicant.
+- Status:
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
 
-### Validation
-
-- The `job_id` parameter must be a valid MongoDB ObjectId.
-- The request must be made by an authorized user who is not a job seeker.
-- The user must be a member of the business associated with the job.
-- Pagination parameters `start` and `limit` are optional. If provided, they should be numeric values indicating the starting index and the maximum number of applicants to return.
+- Body: JSON response containing the list of applicants.
+  - If applicants are found, they are returned in the response.
+  - If no applicants are available, an empty array is returned.
 
 ### Notes
 
-- This endpoint allows authorized users, who are members of the business associated with the job, to view a list of applicants for that job.
-- The API performs validations to ensure data integrity and authorization.
-- If the requested job does not exist, or the user is not a member of the associated business, appropriate error messages are returned.
+- The `new_application` parameter filters applicants based on their application status.
+- Pagination is supported using the `start` and `limit` parameters.
+- The response includes a list of applicants if available.
+- Error messages are returned for scenarios such as invalid job ID, unauthorized access, or internal server errors.
 
----
-### Response
 
 #### Successful Response:
 
@@ -691,24 +895,27 @@ This endpoint retrieves a list of applicants for a specific job.
     "status": 200,
     "err": 0,
     "data": {
-        "total_applicant": 1,
+        "total_applicant": 2,
         "applicant_list": [
             {
-                "_id": "65d2e898651be9e20dcb9b53",
-                "user_id": "65c9b66029033adf0860f8f9",
-                "user_name": "Test Case Job Test Case Seeker",
-                "mobile_no": "+66 888888888",
-                "user_email": "owner@gmail.com",
+                "_id": "65dc343373d835038109bcf7",
+                "status": 3,
+                "reviewed_by_company": "2024-02-21T10:34:16.421Z",
+                "applicant_id": "65bc8a08ee10fd14593b0ce5",
+                "user_name": "Test Chaisom Test Anand",
+                "mobile_no": "+66 111111111",
+                "user_email": "job_seeker@gmail.com",
                 "profile_img": "1706529737205_eb411d0102e4a8d022362810cbbcd1cd.jpeg",
                 "skills": [
                     "Supervision",
                     "Data analysis",
                     "Management"
                 ]
-            }
+            },
+            // ... other applicant
         ]
     },
-    "msg": "List of applicant"
+    "msg": "List of applicants."
 }
 ```
 
@@ -730,7 +937,7 @@ Job post does not exist
     "status": 200,
     "err": 1,
     "data": {},
-    "msg": "Applicants not found"
+    "msg": "No applicants found."
 }
 ```
 
@@ -753,7 +960,7 @@ User does not have permission for applicant list:
 
 ## Endpoint
 
-`GET /api/job/applicant/view/:applicant_id`
+`GET /api/job/applicant/view/:_id`
 
 This endpoint retrieves detailed information about a specific job applicant.
 
