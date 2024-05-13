@@ -1,0 +1,90 @@
+---
+title: chatGPT (Auto text generation) API
+excludeFromToc: true
+---
+
+
+
+
+
+---
+title: Auto Generate Text API Documentation
+---
+
+## Endpoint
+
+`POST /api/text/auto-generate`
+
+This endpoint automatically generates text based on provided data.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for access.
+- Body Parameters
+  - `msg_lang` (Optional): Language code for the generated text (defaults to 'en').
+  - `business_id` (Optional): ID of the business.
+  - `experience`: Experience level required for the job.
+  - `job_title`: Title of the job position.
+  - `salary`: Salary offered for the job.
+  - `location`: Location of the job.
+  - `specialization`: Specialization required for the job.
+  - `job_type`: Type of job (e.g., full-time, part-time).
+  - `workplace_type`: Type of workplace (e.g., office, remote).
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response containing the generated text or error message.
+  - If the text generation is successful, the generated text is returned.
+  - If the text generation fails, an error message is returned.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The request body should include parameters necessary for text generation.
+- Error messages are returned for various scenarios such as user not existing, business not existing, user not being a member of the business, etc.
+
+
+### Request Body
+
+```json
+{
+    "business_id": "65bcb3c9b9b448f7b6d52925",
+    "job_title":"Manager",
+    "specialization":"Sales & Customers services",
+    "job_type": "Full time",
+    "experience": "Fresher",
+    "salary": "50000",
+    "location": "Bangkok",
+    "workplace_type": "On site"
+}
+```
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "text": "\n<b>Job Title:</b>\n<br/>Manager - Sales & Customer Services<b>Salary:</b>\n<br/>THB 50,000 per month<b>Location:</b>\n<br/>Bangkok, Thailand\n\n<b>Employment Type:</b>\n<br/>Full-time, On-site\n\n<b>Job Description:</b>\n<br/>As a Manager of Sales & Customer Services, you will be responsible for overseeing the sales and customer service team to ensure effective and efficient operations. Your role will involve leading and motivating the team to achieve sales targets and deliver exceptional customer service.\n\n<b>Key Responsibilities:</b>\n<br/>- Manage and supervise the sales and customer service team\n<br/>- Develop and implement strategies to increase sales and improve customer satisfaction\n<br/>- Set sales targets and monitor performance to achieve desired results\n<br/>- Train and mentor team members to enhance their skills and knowledge\n<br/>- Resolve any escalated customer issues in a timely and professional manner\n<br/>- Analyze sales data and trends to identify areas for improvement\n<br/>- Collaborate with other departments to ensure smooth business operations\n<br/>- Prepare reports on sales and customer service performance for management review\n\n<b>Requirements:</b>\n<br/>- Bachelor's degree in Business Administration or related field\n<br/>- Proven experience in sales and customer service management\n<br/>- Strong leadership skills with the ability to motivate and develop a team\n<br/>- Excellent communication and interpersonal skills\n<br/>- Ability to work well under pressure and meet tight deadlines\n<br/>- Proficiency in Microsoft Office Suite\n<br/>- Fluent in Thai and English languages\n\nIf you are passionate about driving sales results while providing top-notch customer service, we encourage you to apply for this exciting opportunity! "
+    },
+    "msg": "Text generated successfully."
+}
+```
+
+You Are Not Allowed:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "Sorry, you are not a member of this business. Please contact the administrator for access."
+}
+```

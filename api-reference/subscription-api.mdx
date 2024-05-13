@@ -1,0 +1,353 @@
+---
+title: Subscription Plan API
+excludeFromToc: true
+---
+
+
+
+
+---
+title: Subscription Plan List API Documentation
+---
+
+## Endpoint
+
+`GET /api/subscription-plan/list`
+
+This endpoint retrieves a list of active subscription plans.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for access.
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response containing the list of subscription plans or an error message.
+  - If subscription plans are available, the list is returned.
+  - If no subscription plans are available, an empty array is returned with a corresponding message.
+  - Error messages are returned for various scenarios such as user not existing, database errors, etc.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- Only users who are not administrators can access this endpoint.
+- The response includes the subscription plans that are active and not deleted.
+
+
+### Request Body
+
+```json
+{
+    "business_id": "65bcb3c9b9b448f7b6d52925",
+    "subscription_plan_id": "663db89879f231254e8bc661"
+}
+```
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "663db89879f231254e8bc661",
+            "plan_type": 1,
+            "price": 149,
+            "plan_validity_days": 30,
+            "job_post_limit": -1,
+            "promoted_job_visibility_days": 10,
+            "jobseeker_search_limit": -1,
+            "invitation_limit": -1,
+            "auto_text_use_limit": -1,
+            "description": [
+                "Monthly Plan",
+                "Validity 30 days"
+            ],
+            "deleted": false,
+            "created_by": "65f7f7ace5d099347c38997d",
+            "updated_by": "65f7f7ace5d099347c38997d",
+            "created_at": "2024-05-10T06:03:04.364Z",
+            "updated_at": "2024-05-10T06:03:04.364Z",
+            "__v": 0,
+            "is_active": true,
+            "store_product_id": "subscription_plan",
+            "store_subscription_id": "com.vertical.jobnow.subscription.monthly"
+        },
+        {
+            "_id": "663db8e879f231254e8bc663",
+            "plan_type": 2,
+            "price": 399,
+            "plan_validity_days": 90,
+            "job_post_limit": -1,
+            "promoted_job_visibility_days": 10,
+            "jobseeker_search_limit": -1,
+            "invitation_limit": -1,
+            "auto_text_use_limit": -1,
+            "description": [
+                "Quarterly Plan",
+                "Validity 90 days"
+            ],
+            "deleted": false,
+            "created_by": "65f7f7ace5d099347c38997d",
+            "updated_by": "65f7f7ace5d099347c38997d",
+            "created_at": "2024-05-10T06:04:24.111Z",
+            "updated_at": "2024-05-10T06:04:24.111Z",
+            "__v": 0,
+            "is_active": true,
+            "store_product_id": "subscription_plan",
+            "store_subscription_id": "com.vertical.jobnow.subscription.quarterly"
+        },
+        {
+            "_id": "663dbafd6a7536e9ae4d4fce",
+            "plan_type": 3,
+            "price": 1699,
+            "plan_validity_days": 365,
+            "job_post_limit": -1,
+            "promoted_job_visibility_days": 10,
+            "jobseeker_search_limit": -1,
+            "invitation_limit": -1,
+            "auto_text_use_limit": -1,
+            "description": [
+                "Yearly Plan",
+                "Validity 365 days"
+            ],
+            "deleted": false,
+            "created_by": "65f7f7ace5d099347c38997d",
+            "updated_by": "65f7f7ace5d099347c38997d",
+            "created_at": "2024-05-10T06:13:17.760Z",
+            "updated_at": "2024-05-10T06:13:17.760Z",
+            "__v": 0,
+            "is_active": true,
+            "store_product_id": "subscription_plan",
+            "store_subscription_id": "com.vertical.jobnow.subscription.yearly"
+        }
+    ],
+    "msg": "Subscription plans list."
+}
+```
+
+You Are Not Allowed:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "Sorry, you are not a member of this business. Please contact the administrator for access."
+}
+```
+
+
+
+
+
+
+---
+title: Purchase Subscription Plan API Documentation
+---
+
+## Endpoint
+
+`POST /api/subscription-plan/purchase`
+
+This endpoint allows users to purchase subscription plans for businesses.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for access.
+- Body Parameters
+  - `business_id`: ID of the business. Should be a valid 24-character ID.
+  - `subscription_plan_id`: ID of the subscription plan. Should be a valid 24-character ID.
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response containing the purchased subscription plan details or an error message.
+  - If the purchase is successful, the details of the purchased plan are returned.
+  - If the purchase fails, an error message is returned.
+  - Possible error messages include user not existing, business not existing, user not being a member of the business, plan not available, etc.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The request body should include the IDs of the business and the subscription plan.
+- The purchase can only be made by users who are not administrators.
+- The response includes details of the purchased plan if the purchase is successful.
+
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {
+        "plan_id": "663db89879f231254e8bc661",
+        "business_id": "65bcb3c9b9b448f7b6d52925",
+        "payment_id": null,
+        "expiry_date": "2024-06-12T12:15:39.036Z",
+        "job_posted_count": 0,
+        "jobseeker_searched_count": 0,
+        "jobseeker_invite_count": 0,
+        "auto_text_use_count": 0,
+        "is_expired": false,
+        "deleted": false,
+        "created_by": "65bc7b14bf1407cea573a9c6",
+        "updated_by": "65bc7b14bf1407cea573a9c6",
+        "created_at": "2024-05-13T12:15:39.036Z",
+        "updated_at": "2024-05-13T12:15:39.036Z",
+        "_id": "6642046bf798c696c5b38ef9",
+        "__v": 0
+    },
+    "msg": "The subscription plan was purchased successfully."
+}
+```
+
+If one plan is already active:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "One plan is currently active. Please try again after its expiry."
+}
+```
+
+You Are Not Allowed:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "Sorry, you are not a member of this business. Please contact the administrator for access."
+}
+```
+
+
+
+
+
+---
+title: Business Subscribed Plan List API Documentation
+---
+
+## Endpoint
+
+`GET /api/business-subscribed-plan/list/:business_id`
+
+This endpoint retrieves a list of subscribed plans for a specific business.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for access.
+- Parameters
+  - `business_id`: ID of the business. Should be a valid 24-character ID.
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response containing the list of subscribed plans or an error message.
+  - If subscribed plans are available, the list is returned.
+  - If no subscribed plans are available, an empty array is returned with a corresponding message.
+  - Error messages are returned for various scenarios such as user not existing, business not existing, user not being a member of the business, etc.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- Only users who are members of the specified business can access this endpoint.
+- The response includes details of the subscribed plans, including the subscription plan data and expiry date.
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [
+        {
+            "_id": "6642046bf798c696c5b38ef9",
+            "plan_id": "663db89879f231254e8bc661",
+            "business_id": "65bcb3c9b9b448f7b6d52925",
+            "payment_id": null,
+            "expiry_date": "2024-06-12T12:15:39.036Z",
+            "job_posted_count": 0,
+            "jobseeker_searched_count": 0,
+            "jobseeker_invite_count": 0,
+            "auto_text_use_count": 0,
+            "is_expired": false,
+            "deleted": false,
+            "created_by": "65bc7b14bf1407cea573a9c6",
+            "updated_by": "65bc7b14bf1407cea573a9c6",
+            "created_at": "2024-05-13T12:15:39.036Z",
+            "updated_at": "2024-05-13T12:15:39.036Z",
+            "__v": 0,
+            "subscriptionPlanData": {
+                "_id": "663db89879f231254e8bc661",
+                "plan_type": 1,
+                "price": 149,
+                "plan_validity_days": 30,
+                "job_post_limit": -1,
+                "promoted_job_visibility_days": 10,
+                "jobseeker_search_limit": -1,
+                "invitation_limit": -1,
+                "auto_text_use_limit": -1,
+                "description": [
+                    "Monthly Plan",
+                    "Validity 30 days"
+                ],
+                "deleted": false,
+                "created_by": "65f7f7ace5d099347c38997d",
+                "updated_by": "65f7f7ace5d099347c38997d",
+                "created_at": "2024-05-10T06:03:04.364Z",
+                "updated_at": "2024-05-10T06:03:04.364Z",
+                "__v": 0,
+                "is_active": true,
+                "store_product_id": "subscription_plan",
+                "store_subscription_id": "com.vertical.jobnow.subscription.monthly"
+            }
+        }
+    ],
+    "msg": "List of subscribed plans."
+}
+```
+
+If never subscribed a plan:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": [],
+    "msg": "List of subscribed plans."
+}
+```
+
+You Are Not Allowed:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "Sorry, you are not a member of this business. Please contact the administrator for access."
+}
+```

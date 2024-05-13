@@ -1686,3 +1686,65 @@ If not found any  application:
     "msg": "No applicants found."
 }
 ```
+
+
+
+
+
+---
+title: Promote Job Post API Documentation
+---
+
+## Endpoint
+
+`POST /api/job/promote/:job_id`
+
+This endpoint allows users to promote a job post.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for access.
+- Parameters
+  - `job_id`: ID of the job post. Should be a valid 24-character ID.
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response indicating the result of promoting the job post or an error message.
+  - If the job post is successfully promoted, a success message is returned.
+  - If the job post is already promoted or other errors occur, an error message is returned.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The request parameter should include the ID of the job post to be promoted.
+- Promotion of a job post is subject to conditions such as the user being a member of the business, subscription plan validity, etc.
+- Error messages are returned for scenarios such as user not existing, job post not existing, user not being a member of the business, subscription plan expired, etc.
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "The job has been promoted successfully."
+}
+
+```
+
+If job promoted once:
+
+```json
+{
+    "status": 200,
+    "err": 1,
+    "data": {},
+    "msg": "The job has been promoted once."
+}
+```
