@@ -351,3 +351,87 @@ You Are Not Allowed:
   "msg": "Sorry, you are not a member of this business. Please contact the administrator for access."
 }
 ```
+
+
+
+
+
+---
+title: Cancel Subscription Plan API Documentation
+---
+
+## Endpoint
+
+`POST /api/subscription-plan/cancel`
+
+This endpoint allows users to cancel a subscription plan for a business.
+
+### Request
+
+- Headers
+  - `authorization`: Authorization token for access.
+- Body Parameters
+  - `business_id`: ID of the business. Should be a valid 24-character ID.
+  - `subscription_plan_id`: ID of the subscription plan. Should be a valid 24-character ID.
+
+### Response
+
+- Status: 
+  - 200 OK if the operation is successful.
+  - Error status codes for failures.
+- Body: JSON response indicating the result of the cancellation request or an error message.
+  - If the subscription plan is successfully canceled, a success message is returned.
+  - If the subscription plan is already canceled or other errors occur, an error message is returned.
+
+### Notes
+
+- This endpoint requires authentication via the `authorization` header.
+- The request body should include both the business ID and the subscription plan ID.
+- Cancellation of a subscription plan is subject to conditions such as the user being a member of the business, the subscription plan being active, etc.
+- Error messages are returned for scenarios such as user not existing, business not existing, user not being a member of the business, subscription plan expired, etc.
+
+### Example Request
+
+### Request Body
+
+```json
+{
+  "business_id": "60b6c0f1e1d3b34d4c8a57e2",
+  "subscription_plan_id": "60b6c0f1e1d3b34d4c8a57e3"
+}
+```
+
+### Response
+
+#### Successful Response:
+
+```json
+{
+    "status": 200,
+    "err": 0,
+    "data": {},
+    "msg": "Plan cancelled successfully."
+}
+```
+
+If plan already cancelled
+
+```json
+{
+    "status": 200,
+    "err": 3,
+    "data": {},
+    "msg": "Plan already cancelled."
+}
+```
+
+You Are Not Allowed:
+
+```json
+{
+  "status": 200,
+  "err": 1,
+  "data": {},
+  "msg": "Sorry, you are not a member of this business. Please contact the administrator for access."
+}
+```
